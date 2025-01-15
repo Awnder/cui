@@ -56,7 +56,7 @@ def convert_to_kmc16(image:np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
 
     km = KMeans(n_clusters=16, n_init='auto')
     km.fit(X)
-    pixels = km.labels_.astype(np.uint8)
+    pixels = np.array(km.labels_.astype(np.uint8)).reshape(width, height)
     palette = np.round(km.cluster_centers_, 0).astype(np.uint8)
     return (palette, pixels)
 
@@ -76,9 +76,12 @@ def convert_from_kmc16(colors:np.ndarray, pixels:np.ndarray) -> np.ndarray:
     if not isinstance(pixels, np.ndarray):
         raise ValueError(f"Parameter pixels must be a numpy array")
 
+    print(pixels.shape)
+    print(colors.shape)
     compressed_image = colors[pixels]
+    print(compressed_image.shape)
+    return
     compressed_image = compressed_image.reshape(pixels.shape[0], pixels.shape[1], 3)
-
     return compressed_image
 
 
@@ -96,13 +99,15 @@ def save_kmc_image(colors:np.ndarray, pixels:np.ndarray, filename:str) -> None:
     if not isinstance(colors, np.ndarray):
         raise ValueError(f"Parameter colors must be a numpy array")
 
-    with open(f'{filename}.bmp.kmc', 'w') as file:
-        file.write('KMC:') # file type header
+    with open(filename, 'wb') as file:
+        file.write('KMC:'.encode()) # file type header
+        
         # file.write(len(colors)) # number of colors in palette
-        file.write(pixels.shape[0]) # width
-        file.write(pixels.shape[1]) # height
-        file.write(colors) # palette
-        file.write(pixels) # pixels
+        file.write(pixels.shape[0].to_bytes(2)) # width
+        file.write(pixels.shape[1].to_bytes(2)) # height
+
+        file.write(colors.tobytes())
+        file.write(pixels.tobytes())
 
 
 def load_kmc_image(filename:str) -> Tuple[np.ndarray, np.ndarray]:
@@ -120,27 +125,37 @@ def load_kmc_image(filename:str) -> Tuple[np.ndarray, np.ndarray]:
 
     with open(filename, 'rb') as file:
         header = file.read(4)
-        print(header)
         if header != b'KMC:':
             raise ValueError(f"Invalid file header: {header}")
 
-        width = file.read(2)
-        height = file.read(2)
+        width = int.from_bytes(file.read(2))
+        height = int.from_bytes(file.read(2))
 
-        print(width, height)
-        print(int(width))
+        colors = np.zeros((16, 3), dtype=np.uint8)
+        
+        # pixel byte list to convert to 2d array at end, since unknown size can't declare here
+        pixels = []
+        
+        for i in range(16):
+            colors[i][0] = int.from_bytes(file.read(1))
+            colors[i][1] = int.from_bytes(file.read(1))
+            colors[i][2] = int.from_bytes(file.read(1))
 
-        # colors = np.zeros((16, 3), dtype=np.uint8)
-        pixels = np.zeros((int(width, 2), int(height, 2)), dtype=np.uint8)
+        while True:
+            byte = file.read(1)
+            if not byte:
+                break # eof
+            # pixel = [int.from_bytes(byte)]
+            pixel = int.from_bytes(byte)
+            # byte = file.read(1)
+            # if not byte:
+            #     break # eof
+            # pixel.append(int.from_bytes(byte))
 
+            pixels.append(pixel)
+        
+        pixels = np.array(pixels, dtype=np.uint8)
         print(pixels)
-
-        color_bits = file.read(16*3) # color palette bits
-        for i in range(color_bits):
-            colors[i] = color_bits[i]
-        colors = np.array(file.read(16*3)) # color palette bits
-        pixels = np.array(file.read()) # pixel bits
-        print(colors, pixels)
     return (colors, pixels)
 
 
@@ -150,8 +165,18 @@ def load_kmc_image(filename:str) -> Tuple[np.ndarray, np.ndarray]:
 
 if __name__ == '__main__':
     
-    load_kmc_image('hershey.bmp.kmc')
+    dst_filename = 'hershey_16.bmp.kmc'
+    color_count = 16
+    palette_shape = (4, 4)
+    raw_image = imread('hershey.bmp')
+    colors, pixels = convert_to_kmc16(raw_image)
+    save_kmc_image(colors, pixels, dst_filename)
 
+    # colors, pixels = load_kmc_image('hershey.bmp.kmc')
+    # raw_image = convert_from_kmc16(colors, pixels)
+
+    exit()
+    
     parser = argparse.ArgumentParser(description='Compress images with the KMeans Clustering format')
     parser.add_argument("action", choices=["load", "save"], help="Action to perform: 'load' or 'save'.")
     parser.add_argument("filename", help="The name of the file to load or save.")
