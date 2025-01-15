@@ -75,13 +75,20 @@ def convert_from_kmc16(colors:np.ndarray, pixels:np.ndarray) -> np.ndarray:
         raise ValueError(f"Parameter colors must be a numpy array")
     if not isinstance(pixels, np.ndarray):
         raise ValueError(f"Parameter pixels must be a numpy array")
+    
+    print(' --- convert from kmc16 ---')
+    print('pixels shape',pixels.shape)
+    print('colors shape',colors.shape)
+    print('pixels', pixels)
 
-    print(pixels.shape)
-    print(colors.shape)
+    # try to flatten 2d pixels instead
+    pixels = pixels.flatten()
+    print('flatten',pixels)
     compressed_image = colors[pixels]
-    print(compressed_image.shape)
-    return
-    compressed_image = compressed_image.reshape(pixels.shape[0], pixels.shape[1], 3)
+    print('compressed image',compressed_image)
+    print('compressed before reshape',compressed_image.shape)
+    # compressed_image = compressed_image.reshape(pixels.shape[0], pixels.shape[1], 3)
+    # print('compressed after reshape',compressed_image.shape)
     return compressed_image
 
 
@@ -109,7 +116,6 @@ def save_kmc_image(colors:np.ndarray, pixels:np.ndarray, filename:str) -> None:
         file.write(colors.tobytes())
         file.write(pixels.tobytes())
 
-
 def load_kmc_image(filename:str) -> Tuple[np.ndarray, np.ndarray]:
     """ 
     Reads a compressed image from disk according to the KMC file format:
@@ -122,6 +128,8 @@ def load_kmc_image(filename:str) -> Tuple[np.ndarray, np.ndarray]:
     Returns:
         Tuple[np.ndarray, np.ndarray]: a palette of RGB colors and a 2D lookup array using the original image dimensions and referencing the RGB palette.
     """
+
+    print('--- loading from kmc function ---')
 
     with open(filename, 'rb') as file:
         header = file.read(4)
@@ -145,17 +153,18 @@ def load_kmc_image(filename:str) -> Tuple[np.ndarray, np.ndarray]:
             byte = file.read(1)
             if not byte:
                 break # eof
-            # pixel = [int.from_bytes(byte)]
             pixel = int.from_bytes(byte)
-            # byte = file.read(1)
-            # if not byte:
-            #     break # eof
-            # pixel.append(int.from_bytes(byte))
-
             pixels.append(pixel)
         
         pixels = np.array(pixels, dtype=np.uint8)
-        print(pixels)
+        print('pixels before reshape',pixels.shape)
+        pixels = pixels.reshape(width, height)
+        print('pixels after reshape',pixels.shape)
+
+    print('width,height', width, height)
+    print('colors',colors)
+    print('colors shape', colors.shape)
+
     return (colors, pixels)
 
 
@@ -164,18 +173,23 @@ def load_kmc_image(filename:str) -> Tuple[np.ndarray, np.ndarray]:
 ################################################################################
 
 if __name__ == '__main__':
-    
-    dst_filename = 'hershey_16.bmp.kmc'
-    color_count = 16
-    palette_shape = (4, 4)
-    raw_image = imread('hershey.bmp')
-    colors, pixels = convert_to_kmc16(raw_image)
-    save_kmc_image(colors, pixels, dst_filename)
 
     # colors, pixels = load_kmc_image('hershey.bmp.kmc')
     # raw_image = convert_from_kmc16(colors, pixels)
+    # palette_shape = (4, 4)
+    # color_count = len(colors)
+    # src_filename = 'hershey.bmp.kmc'
+    # dst_filename = src_filename[:-4]
 
-    exit()
+    # # Demo Purposes: only one image to display, the KMC image
+    # plt.figure()
+    # plt.title('KMC Compressed Image')
+    # plt.imshow(raw_image)
+    # plt.axis('off')
+    # plt.tight_layout()
+    # plt.plot()
+
+    
     
     parser = argparse.ArgumentParser(description='Compress images with the KMeans Clustering format')
     parser.add_argument("action", choices=["load", "save"], help="Action to perform: 'load' or 'save'.")
@@ -183,7 +197,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if not os.path.exists(args.filename) or not os.path.isfile(args.filename):
-        print("Error: '{args.filename}' is not a valid file")
+        print(f"Error: '{args.filename}' is not a valid file")
         exit()
 
     try:

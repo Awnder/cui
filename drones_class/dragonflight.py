@@ -3,6 +3,7 @@
 import dji_matrix as djim
 import logging
 import time
+import math
 
 
 #------------------------- BEGIN HeadsUpTello CLASS ----------------------------
@@ -38,6 +39,10 @@ class Dragon():
         self.drone = drone_object
         self.drone.mission_parameters = mission_parameters
         self.drone.LOGGER.setLevel(debug_level)
+        self.x = 0
+        self.y = 0
+        self._max_movement = 500
+        self._min_movement = 20
 
         try:
             self.drone.connect()
@@ -146,6 +151,7 @@ class Dragon():
     def takeoff(self):
         """ Takeoff the drone to around 70 cm """
         print('drone taking off')
+        print(f'battery: {self.get_battery()}')
         return self.drone.takeoff()
 
     def land(self):
@@ -202,7 +208,165 @@ class Dragon():
             print(f'drone flying to {desired_height}')
             self.drone.move_down(down)
             time.sleep(int(down // 10))
+
+    def fly_forward(self, amount):
+        """ move drone forward - considered +x direction """
+        # drone can't move below 20 cm, chose 480 b/c next number divisible by 20 from 500
+        print(f'drone moving from {self.x} to {self.x+amount}')
+        self._fly_xy('forward', amount)
     
+    def fly_backward(self, amount):
+        """ move drone backward - considered -x direction """
+        print(f'drone moving from {self.x} to {self.x-amount}')
+        self._fly_xy('backward', amount)
+
+    def fly_right(self, amount):
+        """ move drone right - considered -y direction """
+        print(f'drone moving from {self.y} to {self.y-amount}')
+        self._fly_xy('right', amount)
+
+    def fly_left(self, amount):
+        """ move drone left - considered +y direction """
+        print(f'drone moving from {self.y} to {self.y-amount}')
+        self._fly_xy('left', amount)
+
+    def fly_home(self, prioritize_x: bool = True):
+        """
+        move drone home from any coordinates in two lines instead of diagonal
+        prioritize_x (bool): if True, drone will move in x direction first, else y direction
+        """
+        print(f'drone moving from {self.x}/{self.y} to 0/0')
+        print(f'prioritizing x: {prioritize_x}')
+
+        absolute_x = abs(self.x)
+        absolute_y = abs(self.y)
+
+        if prioritize_x:
+            if self.x > 0:
+                self.fly_backward(absolute_x)
+            else:
+                self.fly_forward(absolute_x)
+            if self.y > 0:
+                self.fly_right(absolute_y)
+            else:
+                self.fly_left(absolute_y)
+        else:
+            if self.y > 0:
+                self.fly_right(absolute_y)
+            else:
+                self.fly_left(absolute_y)
+            if self.x > 0:
+                self.fly_backward(absolute_x)
+            else:
+                self.fly_forward(absolute_x)
+
+    def _fly_xy(self, direction: str, amount: int):
+        ''' 
+        internal method to move drone 
+        direction (str):
+            forward: +x
+            backward: -x 
+            right: -y
+            left: +y
+        amount (int): cm
+        '''
+        # if 500 < amount < 520
+        if amount > self._max_movement and amount < self._max_movement+20:
+            _max_movement_adjusted = 480
+            amount_times = amount // _max_movement_adjusted
+            amount_extra = amount % _max_movement_adjusted
+
+            # move 480 cm at a time
+            for _ in range(amount_times):
+                match direction:
+                    case 'forward':
+                        self.drone.move_forward(_max_movement_adjusted)
+                        self._update_x(_max_movement_adjusted)
+                    case 'backward':
+                        self.drone.move_back(_max_movement_adjusted)
+                        self._update_x(-_max_movement_adjusted)
+                    case 'right':
+                        self.drone.move_right(_max_movement_adjusted)
+                        self._update_y(-_max_movement_adjusted)
+                    case 'left':
+                        self.drone.move_left(_max_movement_adjusted)
+                        self._update_y(+_max_movement_adjusted)
+                self._wait(_max_movement_adjusted)
+
+            # move the remaining distance
+            match direction:
+                case 'forward':
+                    self.drone.move_forward(amount_extra)
+                    self._update_x(amount_extra)
+                case 'backward':
+                    self.drone.move_back(amount_extra)
+                    self._update_x(-amount_extra)
+                case 'right':
+                    self.drone.move_right(amount_extra)
+                    self._update_y(-amount_extra)
+                case 'left':
+                    self.drone.move_left(amount_extra)
+                    self._update_y(+amount_extra)
+            self._wait(amount_extra)
+            
+        # if the desired amount is >= 520
+        elif amount >= self._max_movement + 20:
+            amount_times = amount // self._max_movement
+            amount_extra = amount % self._max_movement
+
+            # move forward 500 cm at a time
+            for _ in range(amount_times):
+                print(f'can only move 500 at a time, moving {self._max_movement}')
+                match direction:
+                    case 'forward':
+                        self.drone.move_forward(self._max_movement)
+                        self._update_x(self._max_movement)
+                    case 'backward':
+                        self.drone.move_back(self._max_movement)
+                        self._update_x(-self._max_movement)
+                    case 'right':
+                        self.drone.move_right(self._max_movement)
+                        self._update_y(-self._max_movement)
+                    case 'left':
+                        self.drone.move_left(self._max_movement)
+                        self._update_y(+self._max_movement)
+                self._wait(self._max_movement)
+
+            # move the remaining distance
+            print(f'moving remaining distance: {amount_extra}')
+            match direction:
+                case 'forward':
+                    self.drone.move_forward(amount_extra)
+                    self._update_x(amount_extra)
+                case 'backward':
+                    self.drone.move_back(amount_extra)
+                    self._update_x(-amount_extra)
+                case 'right':
+                    self.drone.move_right(amount_extra)
+                    self._update_y(-amount_extra)
+                case 'left':
+                    self.drone.move_left(amount_extra)
+                    self._update_y(+amount_extra)
+            self._wait(amount_extra)
+        
+        # if desired amount <= 500
+        else:
+            print(f'moving {amount}')
+            match direction:
+                case 'forward':
+                    self.drone.move_forward(amount)
+                    self._update_x(amount)
+                case 'backward':
+                    self.drone.move_back(amount)
+                    self._update_x(-amount)
+                case 'right':
+                    self.drone.move_right(amount)
+                    self._update_y(-amount)
+                case 'left':
+                    self.drone.move_left(amount)
+                    self._update_y(+amount)
+            self._wait(amount)
+
     def fly_to_mission_floor(self):
         """ move drone to mission floor """
         floor = self.drone.mission_parameters['floor']
@@ -240,7 +404,6 @@ class Dragon():
                 time.sleep(int(abs(distance) // 10))
 
         print(f"drone is at floor: {floor} with actual height at {self.get_height()}")
-        return
     
     def fly_to_mission_ceiling(self):
         """ 
@@ -267,10 +430,18 @@ class Dragon():
             time.sleep(int(distance // 10))
 
         print(f"drone is at ceiling: {ceiling} with actual height at {self.get_height()}")
-        return
+    
+    def _update_x(self, distance: int):
+        self.x = self.x + distance
+    
+    def _update_y(self, distance: int):
+        self.y = self.y + distance
     
     def _wait(self, distance: int):
-        time.sleep(int(distance // 10))
-        return
+        t = int(math.log(abs(distance), 10))
+        print(f'sleeping:{t}')
+        if t < 1:
+            t = 1
+        time.sleep(t)
 
 #------------------------- END OF HeadsUpTello CLASS ---------------------------
