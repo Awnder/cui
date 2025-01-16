@@ -1,10 +1,19 @@
 #!/usr/bin/env python3
 
 import dji_matrix as djim
-import logging
+import logging, logging.config
+from datetime import datetime
 import time
 import math
 
+# LOGGING CONFIGURATION
+# from Professor Tallman
+# Create one log file for each hour of the day to balances the number of files
+#   with the size of each file. If we run the drone multiple times within the
+#   same hour, each run will be logged in the same file.
+logfile = f"dragon.{datetime.now().strftime("%Y%m%d.%H")}.log"
+
+logging.basicConfig(filename=logfile, level=logging.DEBUG, format="%(asctime)s %(message)s")
 
 #------------------------- BEGIN HeadsUpTello CLASS ----------------------------
 
@@ -37,6 +46,8 @@ class Dragon():
         # drone and a simulator. If we had used inheritance, we would be forced
         # to choose one or the other.
         self.drone = drone_object
+        self.drone_name = mission_parameters['drone_name']
+        self.mission_name = mission_parameters['mission_name']
         self.ceiling = mission_parameters['ceiling']
         self.floor = mission_parameters['floor']
         self.drone.LOGGER.setLevel(debug_level)
@@ -49,12 +60,12 @@ class Dragon():
             self.drone.connect()
             self.connected = True
         except Exception as excp:
-            print(f"ERROR: could not connect to Trello Drone: {excp}")
-            print(f" => Did you pass in a valid drone base object?")
-            print(f" => Verify that your firewall allows UDP ports 8889 and 8890.")
-            print(f"    The Chromebook's firewall reverts to default settings every")
-            print(f"    time that you restart the virtual Linux environment.")
-            print(f" => You may need to connect to the drone with the Trello App.")
+            logging.fatal(f"ERROR: could not connect to Trello Drone: {excp}")
+            logging.debug(f" => Did you pass in a valid drone base object?")
+            logging.debug(f" => Verify that your firewall allows UDP ports 8889 and 8890.")
+            logging.debug(f"    The Chromebook's firewall reverts to default settings every")
+            logging.debug(f"    time that you restart the virtual Linux environment.")
+            logging.debug(f" => You may need to connect to the drone with the Trello App.")
             self.connected = False
             self.disconnect()
             raise
@@ -72,7 +83,7 @@ class Dragon():
         """ Gracefully close the connection with the drone. """
         self.drone.end()
         self.connected = False
-        print(f"Drone connection closed gracefully")
+        logging.info(f"Drone connection closed gracefully")
         return
 
 
@@ -151,13 +162,13 @@ class Dragon():
     
     def takeoff(self):
         """ Takeoff the drone to around 70 cm """
-        print('drone taking off')
-        print(f'battery: {self.get_battery()}')
+        logging.info('drone taking off')
+        logging.info(f'battery: {self.get_battery()}')
         return self.drone.takeoff()
 
     def land(self):
         """ Land drone from any height """
-        print('drone landing')
+        logging.info('drone landing')
         return self.drone.land()
     
     def fly_up(self, up: int):
@@ -167,20 +178,20 @@ class Dragon():
         if the drone has less than 20 cm to fly, then it will ignore the command
         '''
         desired_height = self.get_height() + up
-        print(f'drone is at {self.get_height()}, desired height is at {desired_height}, ceiling is at {self.ceiling}')
+        logging.debug(f'drone is at {self.get_height()}, desired height is at {desired_height}, ceiling is at {self.ceiling}')
         
         if desired_height > self.ceiling:
-            print('desired height is above ceiling')
+            logging.warning('desired height is above ceiling')
             adjusted_height = self.ceiling - self.get_height()
-            print(f'adjusted height is {adjusted_height}')
+            logging.debug(f'adjusted height is {adjusted_height}')
             if adjusted_height >= self._min_movement:
-                print(f'drone flying to {self.get_height() + adjusted_height}')
+                logging.debug(f'drone flying to {self.get_height() + adjusted_height}')
                 self.drone.move_up(adjusted_height)
                 self._wait(adjusted_height)
             else:
-                print(f'adjusted height is less than 20, drone ignoring command')
+                logging.warning(f'adjusted height is less than 20, drone ignoring command')
         else:
-            print(f'drone flying to {desired_height}')
+            logging.debug(f'drone flying to {desired_height}')
             self.drone.move_up(up)
             self._wait(up)
 
@@ -191,42 +202,42 @@ class Dragon():
         if the drone has less than 20 cm to fly, then it will ignore the command
         '''
         desired_height = self.get_height() - down
-        print(f'drone is at {self.get_height()}, desired height is at {desired_height}, floor is at {self.floor}')
+        logging.debug(f'drone is at {self.get_height()}, desired height is at {desired_height}, floor is at {self.floor}')
         
         if desired_height < self.floor:
-            print('desired height is below floor')
+            logging.warning('desired height is below floor')
             adjusted_height = self.get_height() - self.floor
-            print(f'adjusted height is {adjusted_height}')
+            logging.debug(f'adjusted height is {adjusted_height}')
             if adjusted_height >= self._min_movement:
-                print(f'drone flying to {self.get_height() - adjusted_height}')
+                logging.debug(f'drone flying to {self.get_height() - adjusted_height}')
                 self.drone.move_down(adjusted_height)
                 self._wait(adjusted_height)
             else:
-                print(f'adjusted height is less than 20, drone ignoring command')
+                logging.warning(f'adjusted height is less than 20, drone ignoring command')
         else:
-            print(f'drone flying to {desired_height}')
+            logging.debug(f'drone flying to {desired_height}')
             self.drone.move_down(down)
             self._wait(down)
 
     def fly_forward(self, amount):
         """ move drone forward - considered +x direction """
         # drone can't move below 20 cm, chose 480 b/c next number divisible by 20 from 500
-        print(f'drone moving from {self.x} to {self.x+amount}')
+        logging.debug(f'drone moving from {self.x} to {self.x+amount}')
         self._fly_xy('forward', amount)
     
     def fly_backward(self, amount):
         """ move drone backward - considered -x direction """
-        print(f'drone moving from {self.x} to {self.x-amount}')
+        logging.debug(f'drone moving from {self.x} to {self.x-amount}')
         self._fly_xy('backward', amount)
 
     def fly_right(self, amount):
         """ move drone right - considered -y direction """
-        print(f'drone moving from {self.y} to {self.y-amount}')
+        logging.debug(f'drone moving from {self.y} to {self.y-amount}')
         self._fly_xy('right', amount)
 
     def fly_left(self, amount):
         """ move drone left - considered +y direction """
-        print(f'drone moving from {self.y} to {self.y-amount}')
+        logging.debug(f'drone moving from {self.y} to {self.y-amount}')
         self._fly_xy('left', amount)
 
     def fly_home(self, prioritize_x: bool = True):
@@ -234,8 +245,8 @@ class Dragon():
         move drone home from any coordinates in two lines instead of diagonal
         prioritize_x (bool): if True, drone will move in x direction first, else y direction
         """
-        print(f'drone moving from {self.x}/{self.y} to 0/0')
-        print(f'prioritizing x: {prioritize_x}')
+        logging.debug(f'drone moving from {self.x}/{self.y} to 0/0')
+        logging.debug(f'prioritizing x: {prioritize_x}')
 
         absolute_x = abs(self.x)
         absolute_y = abs(self.y)
@@ -289,16 +300,16 @@ class Dragon():
 
             # move forward 500 cm at a time
             for _ in range(amount_times):
-                print(f'can only move 500 at a time, moving {self._max_movement}')
+                logging.debug(f'can only move 500 at a time, moving {self._max_movement}')
                 self._fly_xy_direction(direction, self._max_movement)
             
             # move the remaining distance
-            print(f'moving remaining distance: {amount_extra}')
+            logging.debug(f'moving remaining distance: {amount_extra}')
             self._fly_xy_direction(direction, amount_extra)
         
         # if desired amount <= 500
         else:
-            print(f'moving {amount}')
+            logging.debug(f'moving {amount}')
             self._fly_xy_direction(direction, amount)
             self._wait(amount)
 
@@ -332,38 +343,38 @@ class Dragon():
         distance = self.get_height() - self.floor
         magnitude = abs(distance)
 
-        print(f'drone is at {self.get_height()} and floor is at {self.floor}')
-        print(f'drone is {distance} away from floor')
+        logging.debug(f'drone is at {self.get_height()} and floor is at {self.floor}')
+        logging.debug(f'drone is {distance} away from floor')
 
         # can only move at distances of 20cm, so need to correct if necessary
         if magnitude < 20:
             # drone is above mission floor
             if distance > 0:
-                print(f'drone overcorrecting and flying to {self.get_height() + 30}')
+                logging.debug(f'drone overcorrecting and flying to {self.get_height() + 30}')
                 self.drone.move_up(30) # move up to overcorrect with some room for error
                 self._wait(30)
-                print(f'drone flying to {self.floor}')
+                logging.debug(f'drone flying to {self.floor}')
                 self.drone.move_down(self.get_height() - self.floor) # move back down to mission floor
                 self._wait(self.get_height()-self.floor)
             else:
             # drone is below mission floor
-                print(f'drone overcorrecting and flying to {magnitude + 30}')
+                logging.debug(f'drone overcorrecting and flying to {magnitude + 30}')
                 self.drone.move_up(magnitude + 30) # move up to overcorrect
                 self._wait(magnitude + 30)
-                print(f'drone flying to {self.floor}')
+                logging.debug(f'drone flying to {self.floor}')
                 self.drone.move_down(abs(self.get_height() - self.floor))
                 self._wait(abs(self.get_height() - self.floor))
         else:
             if distance > 0:
-                print(f'drone flying to {self.floor}')
+                logging.debug(f'drone flying to {self.floor}')
                 self.drone.move_down(distance)
                 self._wait(distance)
             else:
-                print(f'drone flying to {self.floor}')
+                logging.debug(f'drone flying to {self.floor}')
                 self.drone.move_up(magnitude)
                 self._wait(magnitude)
 
-        print(f"drone is at floor: {self.floor} with actual height at {self.get_height()}")
+        logging.debug(f"drone is at floor: {self.floor} with actual height at {self.get_height()}")
     
     def fly_to_mission_ceiling(self):
         """ 
@@ -373,23 +384,23 @@ class Dragon():
         distance = self.ceiling - self.get_height()
         magnitude = abs(distance)
 
-        print(f'drone is at {self.get_height()} and ceiling is at {self.ceiling}')
-        print(f'drone is {distance} away from ceiling')
+        logging.debug(f'drone is at {self.get_height()} and ceiling is at {self.ceiling}')
+        logging.debug(f'drone is {distance} away from ceiling')
 
         # can only move at distances of 20cm, so need to correct if necessary
         if magnitude < 20:
-            print(f'drone overcorrecting and flying to {self.get_height() - 30}')
+            logging.debug(f'drone overcorrecting and flying to {self.get_height() - 30}')
             self.drone.move_down(30) # move down to overcorrect with some room for error
             self._wait(30)
-            print(f'drone flying to {self.ceiling - self.get_height()}')
+            logging.debug(f'drone flying to {self.ceiling - self.get_height()}')
             self.drone.move_up(self.ceiling - self.get_height()) # move back up to self.ceiling
             self._wait(self.ceiling - self.get_height())
         else:
-            print(f'drone flying to {self.ceiling}')
+            logging.debug(f'drone flying to {self.ceiling}')
             self.drone.move_up(distance)
             self._wait(distance)
 
-        print(f"drone is at ceiling: {self.ceiling} with actual height at {self.get_height()}")
+        logging.debug(f"drone is at ceiling: {self.ceiling} with actual height at {self.get_height()}")
     
     def _update_x(self, distance: int):
         self.x = self.x + distance
@@ -399,7 +410,7 @@ class Dragon():
     
     def _wait(self, distance: int):
         t = int(math.log(abs(distance), 10))
-        print(f'sleeping in seconds: {t}')
+        logging.debug(f'sleeping in seconds: {t}')
         if t < 1:
             t = 1
         time.sleep(t)
