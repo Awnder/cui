@@ -24,7 +24,7 @@ class Dragon():
     Drone. Uses djitellopy.Tello class as the base object.
     """
 
-    def __init__(self, drone_object: object, mission_parameters: dict, debug_level=logging.INFO):
+    def __init__(self, drone_object: object, mission_parameters: dict, debug_level=logging.info):
         """
         Constructor that establishes a connection with the drone. Pass in a
         djitellopy Tello object to give your HeadsUpTello object its wings.
@@ -37,7 +37,7 @@ class Dragon():
                     'floor': 0,
                 }
             debug_level:  Set the desired logging level.
-                          logging.INFO shows every command and response 
+                          logging.info shows every command and response 
                           logging.WARN will only show problems
                           There are other possibilities, see logging module
         """
@@ -154,6 +154,7 @@ class Dragon():
         """ Takeoff the drone to around 40-60 cm """
         logging.info('drone taking off')
         logging.info(f'battery: {self.get_battery()}')
+        self._wait(1)
         return self.drone.takeoff()
 
     def land(self):
