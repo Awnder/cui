@@ -27,6 +27,7 @@ import argparse
 import numpy as np
 from typing import Tuple
 from sklearn.cluster import KMeans
+# from KMeans import KMeans
 from matplotlib.image import imread
 import matplotlib.pyplot as plt
 
@@ -54,14 +55,15 @@ def convert_to_kmc16(image:np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
     print(' --- convert to kmc16 ---')
 
     height, width, depth = image.shape
-    X = image.reshape(width * height, depth)
+    X = image.reshape(height * width, depth)
 
-    km = KMeans(n_clusters=16, n_init='auto')
+    km = KMeans(n_clusters=16)
     km.fit(X)
     pixels = km.labels_.astype(np.uint8)
     print('pixels', pixels)
     print('pixel shape',pixels.shape)
     print('pixelset', set(pixels))
+    pixels = pixels.reshape(height, width)
     palette = np.round(km.cluster_centers_, 0).astype(np.uint8)
     return (palette, pixels)
 
@@ -169,7 +171,7 @@ def load_kmc_image(filename:str) -> Tuple[np.ndarray, np.ndarray]:
         
         pixels = np.array(pixels, dtype=np.uint8)
         print('pixels before reshape',pixels.shape)
-        pixels = pixels.reshape(width, height)
+        pixels = pixels.reshape(height, width)
         print('pixels after reshape',pixels.shape)
 
     print('width,height', width, height)
@@ -184,25 +186,6 @@ def load_kmc_image(filename:str) -> Tuple[np.ndarray, np.ndarray]:
 ################################################################################
 
 if __name__ == '__main__':
-
-    # colors, pixels = load_kmc_image('hershey.bmp.kmc')
-    # raw_image = convert_from_kmc16(colors, pixels)
-    # palette_shape = (4, 4)
-    # color_count = len(colors)
-    # src_filename = 'hershey.bmp.kmc'
-    # dst_filename = src_filename[:-4]
-
-    # # Demo Purposes: only one image to display, the KMC image
-    # plt.figure()
-    # plt.title('KMC Compressed Image')
-    # plt.imshow(raw_image)
-    # plt.axis('off')
-    # plt.tight_layout()
-    # plt.plot()
-
-    # convert_to_kmc16(imread('hershey.bmp'))
-    # exit()
-    
     parser = argparse.ArgumentParser(description='Compress images with the KMeans Clustering format')
     parser.add_argument("action", choices=["load", "save"], help="Action to perform: 'load' or 'save'.")
     parser.add_argument("filename", help="The name of the file to load or save.")
@@ -212,66 +195,66 @@ if __name__ == '__main__':
         print(f"Error: '{args.filename}' is not a valid file")
         exit()
 
-    try:
-        if args.action == 'save':
-            src_filename = args.filename
-            dst_filename = f'{src_filename}.kmc'
-            color_count = 16
-            palette_shape = (4, 4)
-            raw_image = imread(src_filename)
-            colors, pixels = convert_to_kmc16(raw_image)
-            save_kmc_image(colors, pixels, dst_filename)
-            kmc_image = convert_from_kmc16(colors, pixels)
+    # try:
+    if args.action == 'save':
+        src_filename = args.filename
+        dst_filename = f'{src_filename}.kmc'
+        color_count = 16
+        palette_shape = (4, 4)
+        raw_image = imread(src_filename)
+        colors, pixels = convert_to_kmc16(raw_image)
+        save_kmc_image(colors, pixels, dst_filename)
+        kmc_image = convert_from_kmc16(colors, pixels)
 
-            # Demo Purposes: two images to display, the before & after images
-            fig, ax = plt.subplots(1, 2)
-            ax[0].set_title('Original Image')
-            ax[0].imshow(raw_image)
-            ax[0].axis('off')
-            ax[1].set_title('KMC Compressed Image')
-            ax[1].imshow(kmc_image)
-            ax[1].axis('off')
-            plt.tight_layout()
+        # Demo Purposes: two images to display, the before & after images
+        fig, ax = plt.subplots(1, 2)
+        ax[0].set_title('Original Image')
+        ax[0].imshow(raw_image)
+        ax[0].axis('off')
+        ax[1].set_title('KMC Compressed Image')
+        ax[1].imshow(kmc_image)
+        ax[1].axis('off')
+        plt.tight_layout()
 
-        elif args.action == 'load':
-            colors, pixels = load_kmc_image(args.filename)
-            raw_image = convert_from_kmc16(colors, pixels)
-            palette_shape = (4, 4)
-            color_count = len(colors)
-            src_filename = args.filename
-            dst_filename = src_filename[:-4]
+    elif args.action == 'load':
+        colors, pixels = load_kmc_image(args.filename)
+        raw_image = convert_from_kmc16(colors, pixels)
+        palette_shape = (4, 4)
+        color_count = len(colors)
+        src_filename = args.filename
+        dst_filename = src_filename[:-4]
 
-            # Demo Purposes: only one image to display, the KMC image
-            plt.figure()
-            plt.title('KMC Compressed Image')
-            plt.imshow(raw_image)
-            plt.axis('off')
-            plt.tight_layout()
+        # Demo Purposes: only one image to display, the KMC image
+        plt.figure()
+        plt.title('KMC Compressed Image')
+        plt.imshow(raw_image)
+        plt.axis('off')
+        plt.tight_layout()
 
-        else:
-            print(f"Error: action {args.action} must be 'load' or 'save'")
-            exit()
+    else:
+        print(f"Error: action {args.action} must be 'load' or 'save'")
+        exit()
 
-        # Demo Purposes: show the color palette
-        color_blocks = [np.full([100, 100, 3], color) for color in colors]
-        rows, cols = palette_shape
-        fig, ax = plt.subplots(rows, cols, figsize=(cols, rows))
-        for i in range(rows):
-            for j in range(cols):
-                ax[i][j].axis('off')
-                color_index = i*cols + j
-                ax[i][j].imshow(color_blocks[color_index])
+    # Demo Purposes: show the color palette
+    color_blocks = [np.full([100, 100, 3], color) for color in colors]
+    rows, cols = palette_shape
+    fig, ax = plt.subplots(rows, cols, figsize=(cols, rows))
+    for i in range(rows):
+        for j in range(cols):
+            ax[i][j].axis('off')
+            color_index = i*cols + j
+            ax[i][j].imshow(color_blocks[color_index])
 
-        # Output the compression results
-        original_size = os.path.getsize(src_filename)
-        compressed_size = os.path.getsize(dst_filename)
-        print(f"  Original Size: {original_size:>11,} bytes")
-        print(f"Compressed Size: {compressed_size:>11,} bytes")
+    # Output the compression results
+    original_size = os.path.getsize(src_filename)
+    compressed_size = os.path.getsize(dst_filename)
+    print(f"  Original Size: {original_size:>11,} bytes")
+    print(f"Compressed Size: {compressed_size:>11,} bytes")
 
-        plt.show()
+    plt.show()
 
-    except Exception as e:
-        print(f"Error: {e}")
+    # except Exception as e:
+    #     print(f"Error: {e}")
 
 
 ################################################################################

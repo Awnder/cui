@@ -30,10 +30,13 @@ class KMeans:
 		self.cluster_centers_ = self._generate_centroids(X)
 		
 		for i in range(self.max_iter):
+			new_labels = self._label_points(X)
 			new_inertia = self._calculate_inertia(X)
 
-			# if newly calculated inertia is less than previous iteration 
-			if self.inertia_ is None or self.inertia_ > new_inertia:
+			# if newly calculated inertia is less than previous iteration and the labels are different
+			# remember smaller inertia is better. if the labels are the same but we've found better inertia, we might be a loop, so break
+			if self.inertia_ is None or (self.inertia_ > new_inertia and not np.array_equal(self.labels_, new_labels)):
+				self.labels_ = new_labels
 				self.inertia_ = new_inertia
 				self.n_iter_ = i
 			else:
@@ -61,20 +64,7 @@ class KMeans:
 		Returns:
 			self.labels_: np.ndarray, of shape (n_samples)
 		'''
-		self.cluster_centers_ = self._generate_centroids(X)
-		
-		for i in range(self.max_iter):
-			new_labels = self._label_points(X)
-			new_inertia = self._calculate_inertia(X)
-
-			# if newly calculated inertia is less than previous iteration and the labels are different
-			# remember smaller inertia is better. if the labels are the same but we've found better inertia, we might be a loop, so break
-			if self.inertia_ is None or (self.inertia_ > new_inertia and not np.array_equal(self.labels_, new_labels)):
-				self.labels_ = new_labels
-				self.inertia_ = new_inertia
-				self.n_iter_ = i
-			else:
-				break
+		self.fit(X)
 
 		return self.labels_
 	
@@ -149,7 +139,7 @@ class KMeans:
 		return np.sum(inertia)
 	
 
-kmeans = KMeans(n_clusters=2)
-data = np.array([[1,2], [3,4], [5,6], [7,8], [9,10]])
-kmeans.fit(data)
-print(kmeans.cluster_centers_)
+# kmeans = KMeans(n_clusters=2)
+# data = np.array([[1,2], [3,4], [5,6], [7,8], [9,10]])
+# kmeans.fit(data)
+# print(kmeans.cluster_centers_)
