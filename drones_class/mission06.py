@@ -7,7 +7,7 @@ from dragonflight import Dragon
 
 def mission06():
     mytello = Tello()
-    drone = Dragon(mytello, {'ceiling':150, 'floor': 50}, logging.WARNING)
+    drone = Dragon(mytello, {'drone_name':'dragon', 'mission_name':'mission06', 'ceiling':150, 'floor': 50}, logging.WARNING)
     
     # drone.takeoff()
 

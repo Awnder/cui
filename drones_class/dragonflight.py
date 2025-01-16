@@ -11,7 +11,8 @@ import math
 # Create one log file for each hour of the day to balances the number of files
 #   with the size of each file. If we run the drone multiple times within the
 #   same hour, each run will be logged in the same file.
-logfile = f"dragon.{datetime.now().strftime("%Y%m%d.%H")}.log"
+now = datetime.now().strftime('%Y%m%d%H')
+logfile = f"dragon.{now}.log"
 
 logging.basicConfig(filename=logfile, level=logging.DEBUG, format="%(asctime)s %(message)s")
 
