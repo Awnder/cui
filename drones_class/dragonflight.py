@@ -37,7 +37,8 @@ class Dragon():
         # drone and a simulator. If we had used inheritance, we would be forced
         # to choose one or the other.
         self.drone = drone_object
-        self.drone.mission_parameters = mission_parameters
+        self.ceiling = mission_parameters['ceiling']
+        self.floor = mission_parameters['floor']
         self.drone.LOGGER.setLevel(debug_level)
         self.x = 0
         self.y = 0
@@ -165,24 +166,23 @@ class Dragon():
         if the desired height is above the ceiling, the drone will fly to ceiling 
         if the drone has less than 20 cm to fly, then it will ignore the command
         '''
-        ceiling = self.drone.mission_parameters['ceiling']
         desired_height = self.get_height() + up
-        print(f'drone is at {self.get_height()}, desired height is at {desired_height}, ceiling is at {ceiling}')
+        print(f'drone is at {self.get_height()}, desired height is at {desired_height}, ceiling is at {self.ceiling}')
         
-        if desired_height > ceiling:
+        if desired_height > self.ceiling:
             print('desired height is above ceiling')
-            adjusted_height = ceiling - self.get_height()
+            adjusted_height = self.ceiling - self.get_height()
             print(f'adjusted height is {adjusted_height}')
-            if adjusted_height >= 20:
+            if adjusted_height >= self._min_movement:
                 print(f'drone flying to {self.get_height() + adjusted_height}')
                 self.drone.move_up(adjusted_height)
-                time.sleep(int(adjusted_height // 10))
+                self._wait(adjusted_height)
             else:
                 print(f'adjusted height is less than 20, drone ignoring command')
         else:
             print(f'drone flying to {desired_height}')
             self.drone.move_up(up)
-            time.sleep(int(up // 10))
+            self._wait(up)
 
     def fly_down(self, down: int):
         ''' 
@@ -190,24 +190,23 @@ class Dragon():
         if the desired height is below the floor, the drone will fly to the floor 
         if the drone has less than 20 cm to fly, then it will ignore the command
         '''
-        floor = self.drone.mission_parameters['floor']
         desired_height = self.get_height() - down
-        print(f'drone is at {self.get_height()}, desired height is at {desired_height}, floor is at {floor}')
+        print(f'drone is at {self.get_height()}, desired height is at {desired_height}, floor is at {self.floor}')
         
-        if desired_height < floor:
+        if desired_height < self.floor:
             print('desired height is below floor')
-            adjusted_height = self.get_height() - floor
+            adjusted_height = self.get_height() - self.floor
             print(f'adjusted height is {adjusted_height}')
-            if adjusted_height >= 20:
+            if adjusted_height >= self._min_movement:
                 print(f'drone flying to {self.get_height() - adjusted_height}')
                 self.drone.move_down(adjusted_height)
-                time.sleep(int(adjusted_height // 10))
+                self._wait(adjusted_height)
             else:
                 print(f'adjusted height is less than 20, drone ignoring command')
         else:
             print(f'drone flying to {desired_height}')
             self.drone.move_down(down)
-            time.sleep(int(down // 10))
+            self._wait(down)
 
     def fly_forward(self, amount):
         """ move drone forward - considered +x direction """
@@ -262,7 +261,7 @@ class Dragon():
 
     def _fly_xy(self, direction: str, amount: int):
         ''' 
-        internal method to move drone 
+        internal method to move drone, handles amount
         direction (str):
             forward: +x
             backward: -x 
@@ -278,36 +277,10 @@ class Dragon():
 
             # move 480 cm at a time
             for _ in range(amount_times):
-                match direction:
-                    case 'forward':
-                        self.drone.move_forward(_max_movement_adjusted)
-                        self._update_x(_max_movement_adjusted)
-                    case 'backward':
-                        self.drone.move_back(_max_movement_adjusted)
-                        self._update_x(-_max_movement_adjusted)
-                    case 'right':
-                        self.drone.move_right(_max_movement_adjusted)
-                        self._update_y(-_max_movement_adjusted)
-                    case 'left':
-                        self.drone.move_left(_max_movement_adjusted)
-                        self._update_y(+_max_movement_adjusted)
-                self._wait(_max_movement_adjusted)
+                self._fly_xy_direction(direction, _max_movement_adjusted)
 
             # move the remaining distance
-            match direction:
-                case 'forward':
-                    self.drone.move_forward(amount_extra)
-                    self._update_x(amount_extra)
-                case 'backward':
-                    self.drone.move_back(amount_extra)
-                    self._update_x(-amount_extra)
-                case 'right':
-                    self.drone.move_right(amount_extra)
-                    self._update_y(-amount_extra)
-                case 'left':
-                    self.drone.move_left(amount_extra)
-                    self._update_y(+amount_extra)
-            self._wait(amount_extra)
+            self._fly_xy_direction(direction, amount_extra)
             
         # if the desired amount is >= 520
         elif amount >= self._max_movement + 20:
@@ -317,119 +290,106 @@ class Dragon():
             # move forward 500 cm at a time
             for _ in range(amount_times):
                 print(f'can only move 500 at a time, moving {self._max_movement}')
-                match direction:
-                    case 'forward':
-                        self.drone.move_forward(self._max_movement)
-                        self._update_x(self._max_movement)
-                    case 'backward':
-                        self.drone.move_back(self._max_movement)
-                        self._update_x(-self._max_movement)
-                    case 'right':
-                        self.drone.move_right(self._max_movement)
-                        self._update_y(-self._max_movement)
-                    case 'left':
-                        self.drone.move_left(self._max_movement)
-                        self._update_y(+self._max_movement)
-                self._wait(self._max_movement)
-
+                self._fly_xy_direction(direction, self._max_movement)
+            
             # move the remaining distance
             print(f'moving remaining distance: {amount_extra}')
-            match direction:
-                case 'forward':
-                    self.drone.move_forward(amount_extra)
-                    self._update_x(amount_extra)
-                case 'backward':
-                    self.drone.move_back(amount_extra)
-                    self._update_x(-amount_extra)
-                case 'right':
-                    self.drone.move_right(amount_extra)
-                    self._update_y(-amount_extra)
-                case 'left':
-                    self.drone.move_left(amount_extra)
-                    self._update_y(+amount_extra)
-            self._wait(amount_extra)
+            self._fly_xy_direction(direction, amount_extra)
         
         # if desired amount <= 500
         else:
             print(f'moving {amount}')
-            match direction:
-                case 'forward':
-                    self.drone.move_forward(amount)
-                    self._update_x(amount)
-                case 'backward':
-                    self.drone.move_back(amount)
-                    self._update_x(-amount)
-                case 'right':
-                    self.drone.move_right(amount)
-                    self._update_y(-amount)
-                case 'left':
-                    self.drone.move_left(amount)
-                    self._update_y(+amount)
+            self._fly_xy_direction(direction, amount)
             self._wait(amount)
+
+    def _fly_xy_direction(self, direction: str, amount: int):
+        ''' 
+        internal method to move drone, handles direction choice
+        direction (str):
+            forward: +x
+            backward: -x 
+            right: -y
+            left: +y
+        amount (int): cm
+        '''
+        match direction:
+            case 'forward':
+                self.drone.move_forward(amount)
+                self._update_x(amount)
+            case 'backward':
+                self.drone.move_back(amount)
+                self._update_x(-amount)
+            case 'right':
+                self.drone.move_right(amount)
+                self._update_y(-amount)
+            case 'left':
+                self.drone.move_left(amount)
+                self._update_y(+amount)
+        self._wait(amount)
 
     def fly_to_mission_floor(self):
         """ move drone to mission floor """
-        floor = self.drone.mission_parameters['floor']
-        distance = self.get_height() - floor
+        distance = self.get_height() - self.floor
+        magnitude = abs(distance)
 
-        print(f'drone is at {self.get_height()} and floor is at {floor}')
+        print(f'drone is at {self.get_height()} and floor is at {self.floor}')
         print(f'drone is {distance} away from floor')
 
         # can only move at distances of 20cm, so need to correct if necessary
-        if abs(distance) < 20:
+        if magnitude < 20:
             # drone is above mission floor
             if distance > 0:
                 print(f'drone overcorrecting and flying to {self.get_height() + 30}')
                 self.drone.move_up(30) # move up to overcorrect with some room for error
-                time.sleep(3)
-                print(f'drone flying to {floor}')
-                self.drone.move_down(self.get_height() - floor) # move back down to mission floor
-                time.sleep(int(distance // 10))
+                self._wait(30)
+                print(f'drone flying to {self.floor}')
+                self.drone.move_down(self.get_height() - self.floor) # move back down to mission floor
+                self._wait(self.get_height()-self.floor)
             else:
             # drone is below mission floor
-                print(f'drone overcorrecting and flying to {abs(distance) + 30}')
-                self.drone.move_up(abs(distance) + 30) # move up to overcorrect
-                time.sleep(int(abs(distance) // 10))
-                print(f'drone flying to {floor}')
-                self.drone.move_down(abs(self.get_height() - floor))
-                time.sleep(int(self.get_height() // 10))
+                print(f'drone overcorrecting and flying to {magnitude + 30}')
+                self.drone.move_up(magnitude + 30) # move up to overcorrect
+                self._wait(magnitude + 30)
+                print(f'drone flying to {self.floor}')
+                self.drone.move_down(abs(self.get_height() - self.floor))
+                self._wait(abs(self.get_height() - self.floor))
         else:
             if distance > 0:
-                print(f'drone flying to {floor}')
+                print(f'drone flying to {self.floor}')
                 self.drone.move_down(distance)
-                time.sleep(int(distance // 10))
+                self._wait(distance)
             else:
-                print(f'drone flying to {floor}')
-                self.drone.move_up(abs(distance))
-                time.sleep(int(abs(distance) // 10))
+                print(f'drone flying to {self.floor}')
+                self.drone.move_up(magnitude)
+                self._wait(magnitude)
 
-        print(f"drone is at floor: {floor} with actual height at {self.get_height()}")
+        print(f"drone is at floor: {self.floor} with actual height at {self.get_height()}")
     
     def fly_to_mission_ceiling(self):
         """ 
         move drone to mission ceiling 
         if drone is < 20cm from ceiling, will overcorrect by 30cm and fly back
         """
-        ceiling = self.drone.mission_parameters['ceiling']
-        distance = ceiling - self.get_height()
+        distance = self.ceiling - self.get_height()
+        magnitude = abs(distance)
 
-        print(f'drone is at {self.get_height()} and ceiling is at {ceiling}')
+        print(f'drone is at {self.get_height()} and ceiling is at {self.ceiling}')
         print(f'drone is {distance} away from ceiling')
 
         # can only move at distances of 20cm, so need to correct if necessary
-        if abs(distance) < 20:
+        if magnitude < 20:
             print(f'drone overcorrecting and flying to {self.get_height() - 30}')
             self.drone.move_down(30) # move down to overcorrect with some room for error
-            time.sleep(3)
-            print(f'drone flying to {ceiling - self.get_height()}')
-            self.drone.move_up(ceiling - self.get_height()) # move back up to ceiling
-            time.sleep(int(distance // 10))
+            self._wait(30)
+            print(f'drone flying to {self.ceiling - self.get_height()}')
+            self.drone.move_up(self.ceiling - self.get_height()) # move back up to self.ceiling
+            self._wait(self.ceiling - self.get_height())
         else:
-            print(f'drone flying to {ceiling}')
+            print(f'drone flying to {self.ceiling}')
             self.drone.move_up(distance)
-            time.sleep(int(distance // 10))
+            self._wait(distance)
 
-        print(f"drone is at ceiling: {ceiling} with actual height at {self.get_height()}")
+        print(f"drone is at ceiling: {self.ceiling} with actual height at {self.get_height()}")
     
     def _update_x(self, distance: int):
         self.x = self.x + distance
@@ -439,7 +399,7 @@ class Dragon():
     
     def _wait(self, distance: int):
         t = int(math.log(abs(distance), 10))
-        print(f'sleeping:{t}')
+        print(f'sleeping in seconds: {t}')
         if t < 1:
             t = 1
         time.sleep(t)
