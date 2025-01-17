@@ -5,12 +5,21 @@ from dragonflight import Dragon
 
 def mission04():
     mytello = Tello()
-    drone = Dragon(mytello, {'drone_name':'dragon', 'mission_name':'mission04', 'ceiling':150, 'floor': 50}, logging.WARNING)
+    mission_params = {
+        'drone_name': 'dragon',
+        'mission_name': 'mission06',
+        'ceiling': 150,
+        'floor': 50,
+        'min_takeoff_power': 25,
+        'min_operating_power': 10,
+    }
+    drone = Dragon(mytello, mission_params, logging.WARNING)
     
     drone.takeoff()
 
-    drone.fly_up(60)
-    drone.fly_down(20)
+    drone.fly_up(80)
+    drone.fly_down(40)
+    drone.fly_up(40)
 
     drone.land()
 
