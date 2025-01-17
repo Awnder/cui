@@ -57,7 +57,7 @@ class Dragon():
         self.drone.LOGGER.setLevel(debug_level)
         self.x = 0
         self.y = 0
-        self.orientation = 0
+        self.current_heading = 0
         self._max_movement = 500
         self._min_movement = 20
 
@@ -254,23 +254,29 @@ class Dragon():
 
         distance_to_home = math.sqrt(self.x**2 + self.y**2)
         logging.debug(f'distance to home: {distance_to_home}')
-        cw_deg_to_home = math.degrees(math.atan2(self.y, self.x))
-        # ccw_deg_to_home = 
+        
+        # help from chatgpt
+        heading_to_origin = math.atan2(self.y, self.x) # in radians
+        rotation_to_origin = math.atan2(math.sin(heading_to_origin - self.current_heading), math.cos(heading_to_origin - self.current_heading)) # in radians
+        rotation_to_origin_deg = math.degrees(rotation_to_origin) # in degrees
 
-
-
-        absolute_x = abs(self.x)
-        absolute_y = abs(self.y)
-
-        if self.x > 0:
-            self.fly_backward(absolute_x)
+        if direct_flight:
+            if rotation_to_origin_deg > 0:
+                self.rotate_ccw(rotation_to_origin_deg)
+            else:
+                self.rotate_cw(-rotation_to_origin_deg)
         else:
-            self.fly_forward(absolute_x)
-        if self.y > 0:
-            self.fly_right(absolute_y)
-        else:
-            self.fly_left(absolute_y)
+            absolute_x = abs(self.x)
+            absolute_y = abs(self.y)
 
+            if self.x > 0:
+                self.fly_backward(absolute_x)
+            else:
+                self.fly_forward(absolute_x)
+            if self.y > 0:
+                self.fly_right(absolute_y)
+            else:
+                self.fly_left(absolute_y)
         
     def fly_to_mission_floor(self):
         """ 
