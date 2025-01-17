@@ -34,7 +34,8 @@ class Dragon():
             mission_parameters: dictionary of mission parameters, includes floor and ceiling in cm
                 mission_parameters = {
                     'ceiling': 200,
-                    'floor': 0,
+                    'floor': 0, 
+                    ...
                 }
             debug_level:  Set the desired logging level.
                           logging.info shows every command and response 
@@ -51,9 +52,12 @@ class Dragon():
         self.mission_name = mission_parameters['mission_name']
         self.ceiling = mission_parameters['ceiling']
         self.floor = mission_parameters['floor']
+        self.min_takeoff_power = mission_parameters['min_takeoff_power']
+        self.min_operating_power = mission_parameters['min_operating_power']
         self.drone.LOGGER.setLevel(debug_level)
         self.x = 0
         self.y = 0
+        self.orientation = 0
         self._max_movement = 500
         self._min_movement = 20
 
@@ -95,6 +99,7 @@ class Dragon():
             green: 0-255
             blue:  0-255
         """
+        self._check_operating_power()
 
         r = djim.capped_color(red)
         g = djim.capped_color(green)
@@ -121,6 +126,7 @@ class Dragon():
             flattened_pattern: see examples in dji_matrix.py
             color:             'r', 'b', or 'p'
         """
+        self._check_operating_power()
 
         if color.lower() not in "rpb":
             color = 'b'
@@ -153,6 +159,7 @@ class Dragon():
     def takeoff(self):
         """ Takeoff the drone to around 40-60 cm """
         logging.info('drone taking off')
+        self._check_takeoff_power()
         logging.info(f'battery: {self.get_battery()}')
         self._wait(1)
         return self.drone.takeoff()
@@ -168,6 +175,8 @@ class Dragon():
         if the desired height is above the ceiling, the drone will fly to ceiling 
         if the drone has less than 20 cm to fly, then it will ignore the command
         """
+        self._check_operating_power()
+
         desired_height = self.get_height() + up
         logging.debug(f'drone is at {self.get_height()}, desired height is at {desired_height}, ceiling is at {self.ceiling}')
         
@@ -192,6 +201,8 @@ class Dragon():
         if the desired height is below the floor, the drone will fly to the floor 
         if the drone has less than 20 cm to fly, then it will ignore the command
         """
+        self._check_operating_power()
+        
         desired_height = self.get_height() - down
         logging.debug(f'drone is at {self.get_height()}, desired height is at {desired_height}, floor is at {self.floor}')
         
@@ -231,35 +242,125 @@ class Dragon():
         logging.debug(f'drone moving from {self.y} to {self.y-amount}')
         self._fly_xy_amount('left', amount)
 
-    def fly_home(self, prioritize_x: bool = True):
+    def fly_home(self, direct_flight: bool=True):
         """
-        move drone home from any coordinates in two lines instead of diagonal
-        prioritize_x (bool): if True, drone will move in x direction first, else y direction
+        move drone home from any coordinates
+        Arguments:
+            direct_flight (bool): if True, drone will orient to origin and fly directly, else drone will rotate to 0 deg and fly in two lines
         """
+        self._check_operating_power()
+        
         logging.debug(f'drone moving from {self.x}/{self.y} to 0/0')
-        logging.debug(f'prioritizing x: {prioritize_x}')
+
+        distance_to_home = math.sqrt(self.x**2 + self.y**2)
+        logging.debug(f'distance to home: {distance_to_home}')
+        cw_deg_to_home = math.degrees(math.atan2(self.y, self.x))
+        # ccw_deg_to_home = 
+
+
 
         absolute_x = abs(self.x)
         absolute_y = abs(self.y)
 
-        if prioritize_x:
-            if self.x > 0:
-                self.fly_backward(absolute_x)
-            else:
-                self.fly_forward(absolute_x)
-            if self.y > 0:
-                self.fly_right(absolute_y)
-            else:
-                self.fly_left(absolute_y)
+        if self.x > 0:
+            self.fly_backward(absolute_x)
         else:
-            if self.y > 0:
-                self.fly_right(absolute_y)
+            self.fly_forward(absolute_x)
+        if self.y > 0:
+            self.fly_right(absolute_y)
+        else:
+            self.fly_left(absolute_y)
+
+        
+    def fly_to_mission_floor(self):
+        """ 
+        move drone to mission floor 
+        if drone is above mission floor and < 20cm, will overcorrect by flying up 30cm and fly back down
+        if drone is below mission floor and < 20cm, will overcorrect by flying up 30cm + that extra amount and fly back down
+        """
+        self._check_operating_power()
+        
+        distance = self.get_height() - self.floor
+        magnitude = abs(distance)
+        overcorrect = 30
+
+        logging.debug(f'drone is at {self.get_height()} and floor is at {self.floor}')
+        logging.debug(f'drone is {distance} away from floor')
+
+        # can only move at distances of 20cm, so need to correct if necessary
+        if magnitude < self._min_movement:
+            # drone is above mission floor
+            if distance > 0:
+                logging.debug(f'drone overcorrecting and flying to {self.get_height() + overcorrect}')
+                self.drone.move_up(overcorrect) # move up to overcorrect with some room for error
+                self._wait(overcorrect)
+                logging.debug(f'drone flying to {self.floor}')
+                self.drone.move_down(self.get_height() - self.floor) # move back down to mission floor
+                self._wait(self.get_height()-self.floor)
             else:
-                self.fly_left(absolute_y)
-            if self.x > 0:
-                self.fly_backward(absolute_x)
+            # drone is below mission floor
+                logging.debug(f'drone overcorrecting and flying to {magnitude + 30}')
+                self.drone.move_up(magnitude + overcorrect) # move up to overcorrect
+                self._wait(magnitude + overcorrect)
+                logging.debug(f'drone flying to {self.floor}')
+                self.drone.move_down(abs(self.get_height() - self.floor))
+                self._wait(abs(self.get_height() - self.floor))
+        else:
+            if distance > 0:
+                logging.debug(f'drone flying to {self.floor}')
+                self.drone.move_down(distance)
+                self._wait(distance)
             else:
-                self.fly_forward(absolute_x)
+                logging.debug(f'drone flying to {self.floor}')
+                self.drone.move_up(magnitude)
+                self._wait(magnitude)
+
+        logging.debug(f"drone is at floor: {self.floor} with actual height at {self.get_height()}")
+    
+    def fly_to_mission_ceiling(self):
+        """ 
+        move drone to mission ceiling 
+        if drone is < 20cm from ceiling, will overcorrect by flying down 30cm and fly back
+        """
+        self._check_operating_power()
+        
+        distance = self.ceiling - self.get_height()
+        magnitude = abs(distance)
+        overcorrect = 30
+
+        logging.debug(f'drone is at {self.get_height()} and ceiling is at {self.ceiling}')
+        logging.debug(f'drone is {distance} away from ceiling')
+
+        # can only move at distances of 20cm, so need to correct if necessary
+        if magnitude < self._min_movement:
+            logging.debug(f'drone overcorrecting and flying to {self.get_height() - overcorrect}')
+            self.drone.move_down(overcorrect) # move down to overcorrect with some room for error
+            self._wait(overcorrect)
+            logging.debug(f'drone flying to {self.ceiling - self.get_height()}')
+            self.drone.move_up(self.ceiling - self.get_height()) # move back up to self.ceiling
+            self._wait(self.ceiling - self.get_height())
+        else:
+            logging.debug(f'drone flying to {self.ceiling}')
+            self.drone.move_up(distance)
+            self._wait(distance)
+
+        logging.debug(f"drone is at ceiling: {self.ceiling} with actual height at {self.get_height()}")
+ 
+    def rotate_cw(self, degrees: int):
+        """ rotate drone clockwise """
+        self._check_operating_power()
+        
+        logging.debug(f'drone rotating {degrees} degrees')
+        self.drone.rotate_clockwise(degrees)
+        self._wait(degrees)
+
+    def rotate_ccw(self, degrees: int):
+        """ rotate drone counter clockwise """
+        self._check_operating_power()
+        
+        logging.debug(f'drone rotating {degrees} degrees')
+        self.drone.rotate_counter_clockwise(degrees)
+        self._wait(degrees)
 
     def _fly_xy_amount(self, direction: str, amount: int):
         """ 
@@ -271,6 +372,7 @@ class Dragon():
             left: +y
         amount (int): cm
         """
+        self._check_operating_power()
         # if 500 < amount < 520
         if amount > self._max_movement and amount < self._max_movement+20:
             _max_movement_adjusted = 480
@@ -328,77 +430,7 @@ class Dragon():
                 self.drone.move_left(amount)
                 self._update_y(+amount)
         self._wait(amount)
-
-    def fly_to_mission_floor(self):
-        """ 
-        move drone to mission floor 
-        if drone is above mission floor and < 20cm, will overcorrect by flying up 30cm and fly back down
-        if drone is below mission floor and < 20cm, will overcorrect by flying up 30cm + that extra amount and fly back down
-        """
-        distance = self.get_height() - self.floor
-        magnitude = abs(distance)
-        overcorrect = 30
-
-        logging.debug(f'drone is at {self.get_height()} and floor is at {self.floor}')
-        logging.debug(f'drone is {distance} away from floor')
-
-        # can only move at distances of 20cm, so need to correct if necessary
-        if magnitude < self._min_movement:
-            # drone is above mission floor
-            if distance > 0:
-                logging.debug(f'drone overcorrecting and flying to {self.get_height() + overcorrect}')
-                self.drone.move_up(overcorrect) # move up to overcorrect with some room for error
-                self._wait(overcorrect)
-                logging.debug(f'drone flying to {self.floor}')
-                self.drone.move_down(self.get_height() - self.floor) # move back down to mission floor
-                self._wait(self.get_height()-self.floor)
-            else:
-            # drone is below mission floor
-                logging.debug(f'drone overcorrecting and flying to {magnitude + 30}')
-                self.drone.move_up(magnitude + overcorrect) # move up to overcorrect
-                self._wait(magnitude + overcorrect)
-                logging.debug(f'drone flying to {self.floor}')
-                self.drone.move_down(abs(self.get_height() - self.floor))
-                self._wait(abs(self.get_height() - self.floor))
-        else:
-            if distance > 0:
-                logging.debug(f'drone flying to {self.floor}')
-                self.drone.move_down(distance)
-                self._wait(distance)
-            else:
-                logging.debug(f'drone flying to {self.floor}')
-                self.drone.move_up(magnitude)
-                self._wait(magnitude)
-
-        logging.debug(f"drone is at floor: {self.floor} with actual height at {self.get_height()}")
-    
-    def fly_to_mission_ceiling(self):
-        """ 
-        move drone to mission ceiling 
-        if drone is < 20cm from ceiling, will overcorrect by flying down 30cm and fly back
-        """
-        distance = self.ceiling - self.get_height()
-        magnitude = abs(distance)
-        overcorrect = 30
-
-        logging.debug(f'drone is at {self.get_height()} and ceiling is at {self.ceiling}')
-        logging.debug(f'drone is {distance} away from ceiling')
-
-        # can only move at distances of 20cm, so need to correct if necessary
-        if magnitude < self._min_movement:
-            logging.debug(f'drone overcorrecting and flying to {self.get_height() - overcorrect}')
-            self.drone.move_down(overcorrect) # move down to overcorrect with some room for error
-            self._wait(overcorrect)
-            logging.debug(f'drone flying to {self.ceiling - self.get_height()}')
-            self.drone.move_up(self.ceiling - self.get_height()) # move back up to self.ceiling
-            self._wait(self.ceiling - self.get_height())
-        else:
-            logging.debug(f'drone flying to {self.ceiling}')
-            self.drone.move_up(distance)
-            self._wait(distance)
-
-        logging.debug(f"drone is at ceiling: {self.ceiling} with actual height at {self.get_height()}")
-    
+   
     def _update_x(self, distance: int):
         """ update x coordinate """
         self.x = self.x + distance
@@ -406,7 +438,23 @@ class Dragon():
     def _update_y(self, distance: int):
         """ update y coordinate """
         self.y = self.y + distance
+
+    def _update_orientation(self, degrees: int):
+        """ update orientation """
+        self.orientation = self.orientation + degrees
     
+    def _check_takeoff_power(self):
+        """ check if the drone battery is over the low power takeoff threshold """
+        if self.get_battery() < self.min_takeoff_power:
+            logging.critical(f'battery is too low to fly: {self.get_battery()}')
+            return self.land()
+    
+    def _check_operating_power(self):
+        """ check if the drone battery is over the low power operating threshold"""
+        if self.get_battery() < self.min_operating_power:
+            logging.critical(f'battery is too low to fly: {self.get_battery()}')
+            return self.land()
+
     def _wait(self, distance: int):
         """ call time.sleep() using logarithmic scale since linear scales too fast """
         t = int(math.log(abs(distance), 10))
