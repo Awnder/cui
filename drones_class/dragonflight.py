@@ -251,20 +251,25 @@ class Dragon():
         self._check_operating_power()
         
         logging.debug(f'drone moving from {self.x}/{self.y} to 0/0')
-
-        distance_to_home = math.sqrt(self.x**2 + self.y**2)
+        distance_to_home = int(math.sqrt(self.x**2 + self.y**2))
         logging.debug(f'distance to home: {distance_to_home}')
         
-        # help from chatgpt
-        heading_to_origin = math.atan2(self.y, self.x) # in radians
-        rotation_to_origin = math.atan2(math.sin(heading_to_origin - self.current_heading), math.cos(heading_to_origin - self.current_heading)) # in radians
-        rotation_to_origin_deg = math.degrees(rotation_to_origin) # in degrees
+        angle_to_origin = math.atan2(self.y, self.x) # in radians
+        angle_to_origin_deg = math.degrees(angle_to_origin)
+        turn_angle = angle_to_origin_deg - self.current_heading
 
+        # help from chatgpt to determine which direction to turn - it still doesn't really work
+        # it only turns ccw to the origin right now
         if direct_flight:
-            if rotation_to_origin_deg > 0:
-                self.rotate_ccw(rotation_to_origin_deg)
-            else:
-                self.rotate_cw(-rotation_to_origin_deg)
+            if turn_angle > 0:
+                logging.debug(f'turn angle ccw {int(turn_angle + 180)}')
+                self.rotate_ccw(int(turn_angle) + 180)
+            elif turn_angle < 0:
+                logging.debug(f'turn angle cw {int(abs(turn_angle) - 180)}')
+                self.rotate_cw(int(abs(turn_angle - 180)))
+            logging.debug(f'drone flying {distance_to_home} home')
+            self.fly_forward(distance_to_home)
+            self._wait(distance_to_home)
         else:
             absolute_x = abs(self.x)
             absolute_y = abs(self.y)
@@ -273,10 +278,12 @@ class Dragon():
                 self.fly_backward(absolute_x)
             else:
                 self.fly_forward(absolute_x)
+            self._wait(absolute_x)
             if self.y > 0:
                 self.fly_right(absolute_y)
             else:
                 self.fly_left(absolute_y)
+            self._wait(absolute_y)
         
     def fly_to_mission_floor(self):
         """ 
@@ -358,6 +365,7 @@ class Dragon():
         
         logging.debug(f'drone rotating {degrees} degrees')
         self.drone.rotate_clockwise(degrees)
+        self.current_heading += -degrees
         self._wait(degrees)
 
     def rotate_ccw(self, degrees: int):
@@ -366,6 +374,7 @@ class Dragon():
         
         logging.debug(f'drone rotating {degrees} degrees')
         self.drone.rotate_counter_clockwise(degrees)
+        self.current_heading += degrees
         self._wait(degrees)
 
     def _fly_xy_amount(self, direction: str, amount: int):
