@@ -250,7 +250,7 @@ class Dragon():
         """
         self._check_operating_power()
         
-        logging.debug(f'drone moving from {self.x}/{self.y} to 0/0')
+        logging.debug(f'drone moving from ({self.x},{self.y}) to (0,0)')
         distance_to_home = int(math.sqrt(self.x**2 + self.y**2))
         logging.debug(f'distance to home: {distance_to_home}')
         
@@ -359,6 +359,21 @@ class Dragon():
 
         logging.debug(f"drone is at ceiling: {self.ceiling} with actual height at {self.get_height()}")
  
+    def rotate_to_bearing(self, degrees: int):
+        """ rotate drone to absolute bearing taking into account current heading """
+        self._check_operating_power()
+
+        logging.debug(f'drone rotating from {self.current_heading} to {degrees} degrees')
+
+        degrees = degrees % 360
+
+        # determine if desired bearing is between the current heading and the direct opposite heading (like 45 and 225)
+        if self.current_heading < degrees and degrees < 180 + degrees:
+            self.rotate_ccw(abs(degrees - self.current_heading))
+        else:
+            degrees = degrees % 180 # ensure degrees is between 0 and 180``
+            self.rotate_cw(abs(degrees - self.current_heading))
+
     def rotate_cw(self, degrees: int):
         """ rotate drone clockwise """
         self._check_operating_power()
