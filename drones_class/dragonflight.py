@@ -363,6 +363,10 @@ class Dragon():
         """ rotate drone to absolute bearing taking into account current heading """
         self._check_operating_power()
 
+        if self.current_heading == degrees:
+            logging.debug(f'drone is already facing {degrees} degrees')
+            return
+
         logging.debug(f'drone rotating from {self.current_heading} to {degrees} degrees')
 
         degrees = degrees % 360
@@ -377,10 +381,18 @@ class Dragon():
 
     def fly_to_coordinates(self, desired_x: int, desired_y: int, direct: bool=False):
         """ fly drone to absolute coordinates from any position, direct (bool): determines if drone rotates and flies straight to destination """
+        self._check_operating_power()
+
+        if self.x == desired_x and self.y == desired_y:
+            logging.debug(f'drone is already at ({desired_x},{desired_y})')
+            return
+        
+        logging.debug(f'drone moving from ({self.x},{self.y}) to ({desired_x},{desired_y})')
+        
         if direct:
             pass
         else:
-            # self.rotate_to_bearing(0) # face drone to origin to make flight 'square' easier
+            self.rotate_to_bearing(0) # face drone to origin to make flight 'square' easier
             y_distance = self.y - desired_y
             x_distance = self.x - desired_x
             y_mag = abs(y_distance)
@@ -389,15 +401,15 @@ class Dragon():
             print(y_mag)
             print(x_mag)
 
-            # if x_distance > 0:
-            #     self.fly_forward(x_mag)
-            # elif x_distance < 0:
-            #     self.fly_backward(x_mag)
+            if x_distance > 0:
+                self.fly_forward(x_mag)
+            elif x_distance < 0:
+                self.fly_backward(x_mag)
 
-            # if y_distance > 0:
-            #     self.fly_left(y_mag)
-            # elif y_distance < 0:
-            #     self.fly_right(y_mag)
+            if y_distance > 0:
+                self.fly_left(y_mag)
+            elif y_distance < 0:
+                self.fly_right(y_mag)
             
     def rotate_cw(self, degrees: int):
         """ rotate drone clockwise """
