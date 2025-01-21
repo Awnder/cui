@@ -1,0 +1,90 @@
+2025-01-21 13:42:48,147 Tello instance was initialized. Host: '192.168.10.1'. Port: '8889'.
+2025-01-21 13:42:48,301 drone taking off
+2025-01-21 13:42:48,302 battery: 91
+2025-01-21 13:42:48,302 sleeping in seconds: 0
+2025-01-21 13:42:53,051 drone moving from 0 to -70
+2025-01-21 13:42:53,051 moving 70
+2025-01-21 13:42:55,778 sleeping in seconds: 1
+2025-01-21 13:42:56,780 sleeping in seconds: 1
+2025-01-21 13:42:57,781 drone moving from 0 to 60
+2025-01-21 13:42:57,783 moving 60
+2025-01-21 13:42:59,700 sleeping in seconds: 1
+2025-01-21 13:43:00,701 sleeping in seconds: 1
+2025-01-21 13:43:01,713 drone rotating 70 degrees
+2025-01-21 13:43:03,632 sleeping in seconds: 1
+2025-01-21 13:43:04,633 drone rotating from -70 to 0 degrees
+2025-01-21 13:43:04,633 drone rotating 70 degrees
+2025-01-21 13:43:06,349 sleeping in seconds: 1
+2025-01-21 13:43:07,350 drone moving from (60,-70) to (0,0)
+2025-01-21 13:43:07,351 distance to home: 92
+2025-01-21 13:43:07,352 turn angle cw -130
+2025-01-21 13:43:07,353 drone rotating 229 degrees
+2025-01-21 13:43:12,218 sleeping in seconds: 2
+2025-01-21 13:43:14,219 drone flying 92 home
+2025-01-21 13:43:14,220 drone moving from 60 to 152
+2025-01-21 13:43:14,220 moving 92
+2025-01-21 13:43:17,246 sleeping in seconds: 1
+2025-01-21 13:43:18,248 sleeping in seconds: 1
+2025-01-21 13:43:19,249 sleeping in seconds: 1
+2025-01-21 13:43:20,256 drone landing
+2025-01-21 13:43:22,712 Drone connection closed gracefully
+2025-01-21 13:43:32,821 Tello instance was initialized. Host: '192.168.10.1'. Port: '8889'.
+2025-01-21 13:43:32,926 drone taking off
+2025-01-21 13:43:32,927 battery: 77
+2025-01-21 13:43:32,927 sleeping in seconds: 0
+2025-01-21 13:43:39,178 drone moving from 0 to -70
+2025-01-21 13:43:39,178 moving 70
+2025-01-21 13:43:41,712 sleeping in seconds: 1
+2025-01-21 13:43:42,713 sleeping in seconds: 1
+2025-01-21 13:43:43,717 drone moving from 0 to 60
+2025-01-21 13:43:43,718 moving 60
+2025-01-21 13:43:45,837 sleeping in seconds: 1
+2025-01-21 13:43:46,838 sleeping in seconds: 1
+2025-01-21 13:43:47,840 drone rotating 70 degrees
+2025-01-21 13:43:49,452 sleeping in seconds: 1
+2025-01-21 13:43:50,453 drone rotating from -70 to 120 degrees
+2025-01-21 13:43:50,455 drone rotating 190 degrees
+2025-01-21 13:43:54,288 sleeping in seconds: 2
+2025-01-21 13:43:56,290 drone moving from (60,-70) to (0,0)
+2025-01-21 13:43:56,291 distance to home: 92
+2025-01-21 13:43:56,293 turn angle cw -10
+2025-01-21 13:43:56,294 drone rotating 349 degrees
+2025-01-21 13:44:02,661 sleeping in seconds: 2
+2025-01-21 13:44:04,663 drone flying 92 home
+2025-01-21 13:44:04,663 drone moving from 60 to 152
+2025-01-21 13:44:04,663 moving 92
+2025-01-21 13:44:07,386 sleeping in seconds: 1
+2025-01-21 13:44:08,387 sleeping in seconds: 1
+2025-01-21 13:44:09,389 sleeping in seconds: 1
+2025-01-21 13:44:10,390 drone landing
+2025-01-21 13:44:13,940 Drone connection closed gracefully
+2025-01-21 13:44:43,224 Tello instance was initialized. Host: '192.168.10.1'. Port: '8889'.
+2025-01-21 13:44:43,328 drone taking off
+2025-01-21 13:44:43,328 battery: 74
+2025-01-21 13:44:43,329 sleeping in seconds: 0
+2025-01-21 13:44:50,087 drone moving from 0 to -70
+2025-01-21 13:44:50,088 moving 70
+2025-01-21 13:44:52,714 sleeping in seconds: 1
+2025-01-21 13:44:53,715 sleeping in seconds: 1
+2025-01-21 13:44:54,717 drone moving from 0 to 60
+2025-01-21 13:44:54,717 moving 60
+2025-01-21 13:44:56,736 sleeping in seconds: 1
+2025-01-21 13:44:57,737 sleeping in seconds: 1
+2025-01-21 13:44:58,739 drone rotating 30 degrees
+2025-01-21 13:45:00,253 sleeping in seconds: 1
+2025-01-21 13:45:01,255 drone rotating from 30 to 90 degrees
+2025-01-21 13:45:01,255 drone rotating 60 degrees
+2025-01-21 13:45:02,768 sleeping in seconds: 1
+2025-01-21 13:45:03,769 drone moving from (60,-70) to (0,0)
+2025-01-21 13:45:03,770 distance to home: 92
+2025-01-21 13:45:03,770 turn angle cw -40
+2025-01-21 13:45:03,770 drone rotating 319 degrees
+2025-01-21 13:45:09,623 sleeping in seconds: 2
+2025-01-21 13:45:11,625 drone flying 92 home
+2025-01-21 13:45:11,625 drone moving from 60 to 152
+2025-01-21 13:45:11,625 moving 92
+2025-01-21 13:45:14,250 sleeping in seconds: 1
+2025-01-21 13:45:15,251 sleeping in seconds: 1
+2025-01-21 13:45:16,253 sleeping in seconds: 1
+2025-01-21 13:45:17,254 drone landing
+2025-01-21 13:45:20,887 Drone connection closed gracefully

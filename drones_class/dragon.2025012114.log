@@ -1,0 +1,70 @@
+2025-01-21 14:08:34,532 Tello instance was initialized. Host: '192.168.10.1'. Port: '8889'.
+2025-01-21 14:08:34,739 drone taking off
+2025-01-21 14:08:34,740 battery: 78
+2025-01-21 14:08:34,742 sleeping in seconds: 0
+2025-01-21 14:08:41,098 drone rotating from 0 to 0 degrees
+2025-01-21 14:08:41,099 drone rotating 0 degrees
+2025-01-21 14:08:48,371 Aborting command 'land'. Did not receive a response after 7 seconds
+2025-01-21 14:08:55,471 Aborting command 'land'. Did not receive a response after 7 seconds
+2025-01-21 14:09:02,544 Aborting command 'land'. Did not receive a response after 7 seconds
+2025-01-21 14:09:02,546 Drone connection closed gracefully
+2025-01-21 14:09:24,416 Tello instance was initialized. Host: '192.168.10.1'. Port: '8889'.
+2025-01-21 14:09:24,520 drone taking off
+2025-01-21 14:09:24,520 battery: 71
+2025-01-21 14:09:24,520 sleeping in seconds: 0
+2025-01-21 14:09:34,226 drone rotating from 0 to 0 degrees
+2025-01-21 14:09:34,226 drone rotating 0 degrees
+2025-01-21 14:09:41,451 Aborting command 'land'. Did not receive a response after 7 seconds
+2025-01-21 14:09:48,525 Aborting command 'land'. Did not receive a response after 7 seconds
+2025-01-21 14:11:08,896 Tello instance was initialized. Host: '192.168.10.1'. Port: '8889'.
+2025-01-21 14:11:09,011 'utf-8' codec can't decode byte 0xcc in position 0: invalid continuation byte
+2025-01-21 14:11:09,065 drone taking off
+2025-01-21 14:11:09,067 battery: 74
+2025-01-21 14:11:09,067 sleeping in seconds: 0
+2025-01-21 14:11:10,070 drone rotating from 0 to 0 degrees
+2025-01-21 14:11:10,070 drone rotating 0 degrees
+2025-01-21 14:11:17,441 Aborting command 'land'. Did not receive a response after 7 seconds
+2025-01-21 14:11:24,529 Aborting command 'land'. Did not receive a response after 7 seconds
+2025-01-21 14:11:31,562 Aborting command 'land'. Did not receive a response after 7 seconds
+2025-01-21 14:11:31,563 Drone connection closed gracefully
+2025-01-21 14:12:04,970 Tello instance was initialized. Host: '192.168.10.1'. Port: '8889'.
+2025-01-21 14:12:05,072 drone taking off
+2025-01-21 14:12:05,072 battery: 68
+2025-01-21 14:12:05,072 sleeping in seconds: 0
+2025-01-21 14:12:07,099 drone moving from (0,0) to (0,0)
+2025-01-21 14:12:07,101 distance to home: 0
+2025-01-21 14:12:07,101 drone flying 0 home
+2025-01-21 14:12:07,101 drone moving from 0 to 0
+2025-01-21 14:12:07,102 moving 0
+2025-01-21 14:12:14,549 Aborting command 'land'. Did not receive a response after 7 seconds
+2025-01-21 14:12:21,626 Aborting command 'land'. Did not receive a response after 7 seconds
+2025-01-21 14:12:28,718 Aborting command 'land'. Did not receive a response after 7 seconds
+2025-01-21 14:12:28,720 Drone connection closed gracefully
+2025-01-21 14:12:39,003 Tello instance was initialized. Host: '192.168.10.1'. Port: '8889'.
+2025-01-21 14:12:39,115 drone taking off
+2025-01-21 14:12:39,116 battery: 66
+2025-01-21 14:12:39,117 sleeping in seconds: 0
+2025-01-21 14:12:44,556 drone moving from (0,0) to (0,0)
+2025-01-21 14:12:44,556 distance to home: 0
+2025-01-21 14:12:44,557 drone flying 0 home
+2025-01-21 14:12:44,557 drone moving from 0 to 0
+2025-01-21 14:12:44,557 moving 0
+2025-01-21 14:12:52,062 Aborting command 'land'. Did not receive a response after 7 seconds
+2025-01-21 14:13:11,354 Tello instance was initialized. Host: '192.168.10.1'. Port: '8889'.
+2025-01-21 14:13:11,469 drone taking off
+2025-01-21 14:13:11,469 battery: 66
+2025-01-21 14:13:11,470 sleeping in seconds: 0
+2025-01-21 14:13:18,419 drone moving from 0 to 20
+2025-01-21 14:13:18,419 moving 20
+2025-01-21 14:13:19,632 sleeping in seconds: 1
+2025-01-21 14:13:20,633 sleeping in seconds: 1
+2025-01-21 14:13:21,636 drone moving from (20,0) to (0,0)
+2025-01-21 14:13:21,636 distance to home: 20
+2025-01-21 14:13:21,637 drone flying 20 home
+2025-01-21 14:13:21,637 drone moving from 20 to 40
+2025-01-21 14:13:21,637 moving 20
+2025-01-21 14:13:22,746 sleeping in seconds: 1
+2025-01-21 14:13:23,748 sleeping in seconds: 1
+2025-01-21 14:13:24,749 sleeping in seconds: 1
+2025-01-21 14:13:25,751 drone landing
+2025-01-21 14:13:29,484 Drone connection closed gracefully
