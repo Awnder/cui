@@ -366,14 +366,39 @@ class Dragon():
         logging.debug(f'drone rotating from {self.current_heading} to {degrees} degrees')
 
         degrees = degrees % 360
+        magnitude = abs(degrees - self.current_heading)
 
         # determine if desired bearing is between the current heading and the direct opposite heading (like 45 and 225)
         if self.current_heading < degrees and degrees < 180 + degrees:
-            self.rotate_ccw(abs(degrees - self.current_heading))
+            self.rotate_ccw(magnitude)
         else:
             degrees = degrees % 180 # ensure degrees is between 0 and 180``
-            self.rotate_cw(abs(degrees - self.current_heading))
+            self.rotate_cw(magnitude)
 
+    def fly_to_coordinates(self, desired_x: int, desired_y: int, direct: bool=False):
+        """ fly drone to absolute coordinates from any position, direct (bool): determines if drone rotates and flies straight to destination """
+        if direct:
+            pass
+        else:
+            # self.rotate_to_bearing(0) # face drone to origin to make flight 'square' easier
+            y_distance = self.y - desired_y
+            x_distance = self.x - desired_x
+            y_mag = abs(y_distance)
+            x_mag = abs(x_distance)
+
+            print(y_mag)
+            print(x_mag)
+
+            # if x_distance > 0:
+            #     self.fly_forward(x_mag)
+            # elif x_distance < 0:
+            #     self.fly_backward(x_mag)
+
+            # if y_distance > 0:
+            #     self.fly_left(y_mag)
+            # elif y_distance < 0:
+            #     self.fly_right(y_mag)
+            
     def rotate_cw(self, degrees: int):
         """ rotate drone clockwise """
         self._check_operating_power()
