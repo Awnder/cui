@@ -226,67 +226,77 @@ class Dragon():
         # drone can't move below 20 cm, chose 480 b/c next number divisible by 20 from 500
         logging.debug(f'drone moving from {self.x} to {self.x+amount}')
         self._fly_xy_amount('forward', amount)
-    
+        self._update_absolute_coordinates(self._calculate_vector_from_magnitude('forward', amount))
+
     def fly_backward(self, amount):
         """ move drone backward - considered -x direction """
         logging.debug(f'drone moving from {self.x} to {self.x-amount}')
         self._fly_xy_amount('backward', amount)
+        self._update_absolute_coordinates(self._calculate_vector_from_magnitude('backward', amount))
 
     def fly_right(self, amount):
         """ move drone right - considered -y direction """
         logging.debug(f'drone moving from {self.y} to {self.y-amount}')
         self._fly_xy_amount('right', amount)
+        self._update_absolute_coordinates(self._calculate_vector_from_magnitude('right', amount))
 
     def fly_left(self, amount):
         """ move drone left - considered +y direction """
         logging.debug(f'drone moving from {self.y} to {self.y-amount}')
         self._fly_xy_amount('left', amount)
+        self._update_absolute_coordinates(self._calculate_vector_from_magnitude('left', amount))
 
-    def fly_to_coordinates(self, desired_x: int, desired_y: int, direct: bool=False):
-        """ fly drone to absolute coordinates from any position, direct (bool): determines if drone rotates and flies straight to destination """
-        self._check_operating_power()
+    def _calculate_vector_from_magnitude(self, direction: str, magnitude: int) -> list:
+        """ given the magnitude, calculate the vector to the new position """
+        angle = self.current_heading
 
-        if self.x == desired_x and self.y == desired_y:
-            logging.debug(f'drone is already at ({desired_x},{desired_y})')
-            return
-        
-        logging.debug(f'drone moving from ({self.x},{self.y}) to ({desired_x},{desired_y})')
-        
+        if direction == 'left':
+            angle += 90
+        elif direction == 'backward':
+            angle += 180
+        elif direction == 'right':
+            angle += 270
+
+        angle = angle % 360
+
+        x_component = int(magnitude * math.cos(math.radians(angle)))
+        y_component = int(magnitude * math.sin(math.radians(angle)))
+
+        return [x_component, y_component, magnitude]
+
+    def _update_absolute_coordinates(self, new_position_vector: list):
+        """ 
+        calculate new absolute coordinates from origin after drone flies to new position 
+        Parameters:
+            new_position_vector (list): [x_component, y_component, magnitude]
+        """
+        logging.debug(f'drone moving from ({self.x},{self.y}) to ({self.x + new_position_vector[0]},{self.y + new_position_vector[1]})')
+        self.x += new_position_vector[0]
+        self.y += new_position_vector[1]
+
+    def fly_to_coordinates_2(self, desired_x: int, desired_y: int, direct: bool=False):
+        """ 
+        given coordinates, calculate vector to the new position
+        Parameters:
+            desired_x (int): x coordinate
+            desired_y (int): y coordinate
+            direct (bool): determines if drone rotates and flies straight to destination
+        """
         if direct:
-            angle = int(math.degrees(math.atan2(desired_y, desired_x)))
-            distance = int(math.sqrt((self.x - desired_x)**2 + (self.y - desired_y)**2))
+            distance_x = desired_x - self.x
+            distance_y = desired_y - self.y
 
-            print('rotating to angle', angle)
-            print('current heading', self.current_heading)
-            print('angle after heading', angle)
-            angle = angle - self.current_heading
+            angle = int(math.degrees(math.atan2(distance_y, distance_x)))
+            magnitude = int(math.sqrt((distance_x)**2 + distance_y**2))
 
-            print('distance', distance)
-            logging.debug(f'drone rotating to {angle} degrees')
-            logging.debug(f'distance: {distance}')
-
+            if angle < 0: # normalize a negative angle
+                angle += 360
+            
             self.rotate_to_bearing(angle)
-            self.fly_forward(distance)
+            self.fly_forward(magnitude)
         else:
-            x_distance = self.x - desired_x
-            y_distance = self.y - desired_y
-            x_mag = abs(x_distance)
-            y_mag = abs(y_distance)
-
-            logging.debug(f'drone rotating to 0 degrees')
-            logging.debug(f'drone moving {x_distance} in x direction and {y_distance} in y direction')
-
-            self.rotate_to_bearing(0) # face drone to origin to make flight 'square' easier
-
-            if x_distance > 0:
-                self.fly_backward(x_mag)
-            elif x_distance < 0:
-                self.fly_forward(x_mag)
-
-            if y_distance < 0:
-                self.fly_right(y_mag)
-            elif y_distance > 0:
-                self.fly_left(y_mag)
+            # need to figure out given coordinates but not direct
+            pass
 
     def fly_home(self, direct_flight: bool=True):
         """
@@ -416,22 +426,24 @@ class Dragon():
         logging.debug(f'drone rotating from {self.current_heading} to {degrees} degrees')
 
         degrees = degrees % 360
-        magnitude = abs(degrees - self.current_heading)
 
-        # determine if desired bearing is between the current heading and the direct opposite heading (like 45 and 225)
-        if self.current_heading < degrees and degrees < 180 + degrees:
-            self.rotate_ccw(magnitude)
+        ccw_degrees = degrees - self.current_heading
+        cw_degrees = 360 - ccw_degrees
+
+        if ccw_degrees <= cw_degrees:
+            self.rotate_ccw(ccw_degrees)
+            logging.debug(f'drone rotating counter-clockwise {ccw_degrees}')
         else:
-            degrees = degrees % 180 # ensure degrees is between 0 and 180``
-            self.rotate_cw(magnitude)
-            
+            self.rotate_cw(cw_degrees)
+            logging.debug(f'drone rotating clockwise {ccw_degrees}')
+
     def rotate_cw(self, degrees: int):
         """ rotate drone clockwise """
         self._check_operating_power()
         
         logging.debug(f'drone rotating {degrees} degrees')
         self.drone.rotate_clockwise(degrees)
-        self._update_heading(-degrees)
+        self._update_heading(degrees)
         self._wait(degrees)
 
     def rotate_ccw(self, degrees: int):
@@ -500,16 +512,16 @@ class Dragon():
         match direction:
             case 'forward':
                 self.drone.move_forward(amount)
-                self._update_x(amount)
+                # self._update_x(amount)
             case 'backward':
                 self.drone.move_back(amount)
-                self._update_x(-amount)
+                # self._update_x(-amount)
             case 'right':
                 self.drone.move_right(amount)
-                self._update_y(-amount)
+                # self._update_y(-amount)
             case 'left':
                 self.drone.move_left(amount)
-                self._update_y(+amount)
+                # self._update_y(+amount)
         self._wait(amount)
    
     def _update_x(self, distance: int):
@@ -545,10 +557,14 @@ class Dragon():
 
     def _wait(self, distance: int):
         """ call time.sleep() using logarithmic scale since linear scales too fast """
-        t = int(math.log(abs(distance), 10))
-        logging.debug(f'sleeping in seconds: {t}')
-        if t < 1:
+        try:
+            t = int(math.log(abs(distance), 10))
+        except:
             t = 1
-        time.sleep(t)
+        finally:
+            if t < 1:
+                t = 1
+            time.sleep(t)
+            logging.debug(f'sleeping in seconds: {t}')
 
 #------------------------- END OF HeadsUpTello CLASS ---------------------------
