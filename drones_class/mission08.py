@@ -19,12 +19,13 @@ def mission08():
     drone = Dragon(mytello, mission_params, logging.WARNING)
     
     drone.takeoff()
-    # drone.fly_right(70)
+    # drone.fly_right(30)
     # drone.rotate_cw(30)
     # drone.rotate_to_bearing(90)
-    drone.rotate_ccw(50)
-    drone.fly_to_coordinates(30, 30, True)
-    drone.fly_home()
+    # drone.rotate_ccw(50)
+    drone.fly_to_coordinates(50, 50, True)
+    drone.fly_to_coordinates(0, 0, True)
+    # drone.fly_home()
 
     drone.land()
 
