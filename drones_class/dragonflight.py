@@ -390,26 +390,34 @@ class Dragon():
         logging.debug(f'drone moving from ({self.x},{self.y}) to ({desired_x},{desired_y})')
         
         if direct:
-            pass
-        else:
-            self.rotate_to_bearing(0) # face drone to origin to make flight 'square' easier
-            y_distance = self.y - desired_y
-            x_distance = self.x - desired_x
-            y_mag = abs(y_distance)
-            x_mag = abs(x_distance)
+            angle = math.degrees(math.atan2(desired_y, desired_x))
+            distance = int(math.sqrt((self.x - desired_x)**2 + (self.y - desired_y)**2))
 
-            print(y_mag)
-            print(x_mag)
+            logging.debug(f'drone rotating to {angle} degrees')
+            logging.debug(f'distance: {distance}')
+
+            self.rotate_to_bearing(angle)
+            self.fly_forward(distance)
+        else:
+            x_distance = self.x - desired_x
+            y_distance = self.y - desired_y
+            x_mag = abs(x_distance)
+            y_mag = abs(y_distance)
+
+            logging.debug(f'drone rotating to 0 degrees')
+            logging.debug(f'drone moving {x_distance} in x direction and {y_distance} in y direction')
+
+            self.rotate_to_bearing(0) # face drone to origin to make flight 'square' easier
 
             if x_distance > 0:
-                self.fly_forward(x_mag)
-            elif x_distance < 0:
                 self.fly_backward(x_mag)
+            elif x_distance < 0:
+                self.fly_forward(x_mag)
 
-            if y_distance > 0:
-                self.fly_left(y_mag)
-            elif y_distance < 0:
+            if y_distance < 0:
                 self.fly_right(y_mag)
+            elif y_distance > 0:
+                self.fly_left(y_mag)
             
     def rotate_cw(self, degrees: int):
         """ rotate drone clockwise """
