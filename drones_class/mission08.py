@@ -20,11 +20,10 @@ def mission08():
     
     drone.takeoff()
     # drone.fly_right(70)
-    drone.fly_forward(20)
     # drone.rotate_cw(30)
     # drone.rotate_to_bearing(90)
-
-    drone.fly_to_coordinates(100, 100)
+    drone.rotate_ccw(50)
+    drone.fly_to_coordinates(30, 30, True)
     drone.fly_home()
 
     drone.land()
