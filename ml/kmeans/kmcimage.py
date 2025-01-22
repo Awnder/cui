@@ -103,8 +103,8 @@ def save_kmc_image(colors:np.ndarray, pixels:np.ndarray, filename:str) -> None:
     with open(filename, 'wb') as file:
         file.write('KMC:'.encode()) # file type header
         
-        file.write(pixels.shape[0].to_bytes(2)) # width
-        file.write(pixels.shape[1].to_bytes(2)) # height
+        file.write(pixels.shape[0].to_bytes(2)) # height
+        file.write(pixels.shape[1].to_bytes(2)) # width
 
         file.write(colors.tobytes())
         file.write(pixels.tobytes())
@@ -129,8 +129,8 @@ def load_kmc_image(filename:str) -> Tuple[np.ndarray, np.ndarray]:
         if header != b'KMC:':
             raise ValueError(f"Invalid file header: {header}")
 
-        width = int.from_bytes(file.read(2))
         height = int.from_bytes(file.read(2))
+        width = int.from_bytes(file.read(2))
 
         colors = np.zeros((16, 3), dtype=np.uint8)
         
