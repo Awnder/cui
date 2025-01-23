@@ -274,7 +274,7 @@ class Dragon():
         self.x += new_position_vector[0]
         self.y += new_position_vector[1]
 
-    def fly_to_coordinates_2(self, desired_x: int, desired_y: int, direct: bool=False):
+    def fly_to_coordinates(self, desired_x: int, desired_y: int, direct: bool=False):
         """ 
         given coordinates, calculate vector to the new position
         Parameters:
@@ -296,7 +296,21 @@ class Dragon():
             self.fly_forward(magnitude)
         else:
             # need to figure out given coordinates but not direct
-            pass
+            diff_x = desired_x - self.x
+            diff_y = desired_y - self.y
+
+            delta_x = int(diff_x * math.cos(math.radians(self.current_heading)) + diff_y * math.sin(math.radians(self.current_heading)))
+            delta_y = int(-diff_x * math.sin(math.radians(self.current_heading)) + diff_y * math.cos(math.radians(self.current_heading)))
+
+            if delta_x > 0:
+                self.fly_forward(delta_x)
+            else:
+                self.fly_backward(delta_x)
+
+            if delta_y > 0:
+                self.fly_left(delta_y)
+            else:
+                self.fly_right(delta_y)
 
     def fly_home(self, direct_flight: bool=True):
         """

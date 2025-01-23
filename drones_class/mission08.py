@@ -21,7 +21,7 @@ def mission08():
     drone.takeoff()
     # drone.rotate_ccw(30)
     # drone.rotate_to_bearing(30 + (180 * 3))
-    drone.fly_to_coordinates_2(-50, 50, True)
+    drone.fly_to_coordinates(50, 50, False)
     # drone.fly_to_coordinates(0, 0, True)
     # drone.fly_home()
 
