@@ -224,25 +224,21 @@ class Dragon():
     def fly_forward(self, amount):
         """ move drone forward - considered +x direction """
         # drone can't move below 20 cm, chose 480 b/c next number divisible by 20 from 500
-        logging.debug(f'drone moving from {self.x} to {self.x+amount}')
         self._fly_xy_amount('forward', amount)
         self._update_absolute_coordinates(self._calculate_vector_from_magnitude('forward', amount))
 
     def fly_backward(self, amount):
         """ move drone backward - considered -x direction """
-        logging.debug(f'drone moving from {self.x} to {self.x-amount}')
         self._fly_xy_amount('backward', amount)
         self._update_absolute_coordinates(self._calculate_vector_from_magnitude('backward', amount))
 
     def fly_right(self, amount):
         """ move drone right - considered -y direction """
-        logging.debug(f'drone moving from {self.y} to {self.y-amount}')
         self._fly_xy_amount('right', amount)
         self._update_absolute_coordinates(self._calculate_vector_from_magnitude('right', amount))
 
     def fly_left(self, amount):
         """ move drone left - considered +y direction """
-        logging.debug(f'drone moving from {self.y} to {self.y-amount}')
         self._fly_xy_amount('left', amount)
         self._update_absolute_coordinates(self._calculate_vector_from_magnitude('left', amount))
 
@@ -256,12 +252,16 @@ class Dragon():
         """
         self._check_operating_power()
 
+        logging.debug(f'drone given coordinates to fly to ({desired_x},{desired_y})')
+
         if direct:
             distance_x = desired_x - self.x
             distance_y = desired_y - self.y
 
-            angle = int(math.degrees(math.atan2(distance_y, distance_x)))
-            magnitude = int(math.sqrt((distance_x)**2 + distance_y**2))
+            angle = int(round(math.degrees(math.atan2(distance_y, distance_x)),0))
+            magnitude = int(round(math.sqrt((distance_x)**2 + distance_y**2),0))
+
+            logging.debug(f'drone flying direct: calculated direct angle {angle}, magnitude {magnitude}')
 
             if angle < 0: # normalize a negative angle
                 angle += 360
@@ -273,8 +273,10 @@ class Dragon():
             diff_x = desired_x - self.x
             diff_y = desired_y - self.y
 
-            delta_x = int(diff_x * math.cos(math.radians(self.current_heading)) + diff_y * math.sin(math.radians(self.current_heading)))
-            delta_y = int(-diff_x * math.sin(math.radians(self.current_heading)) + diff_y * math.cos(math.radians(self.current_heading)))
+            delta_x = int(round(diff_x * math.cos(math.radians(self.current_heading)) + diff_y * math.sin(math.radians(self.current_heading)),0))
+            delta_y = int(round(-diff_x * math.sin(math.radians(self.current_heading)) + diff_y * math.cos(math.radians(self.current_heading)),0))
+
+            logging.debug(f'drone flying in rectangle: calculated delta x: {delta_x}, delta y: {delta_y}')
 
             if delta_x > 0:
                 self.fly_forward(delta_x)
@@ -295,23 +297,20 @@ class Dragon():
         self._check_operating_power()
         
         logging.debug(f'drone moving from ({self.x},{self.y}) to (0,0)')
-        distance_to_home = int(math.sqrt(self.x**2 + self.y**2))
+        distance_to_home = int(round(math.sqrt(self.x**2 + self.y**2)),0)
         logging.debug(f'distance to home: {distance_to_home}')
         
         angle_to_origin = math.atan2(self.y, self.x) # in radians
         angle_to_origin_deg = math.degrees(angle_to_origin)
-        turn_angle = angle_to_origin_deg - self.current_heading
+        turn_angle = int(round(angle_to_origin_deg - self.current_heading),0)
 
         # help from chatgpt to determine which direction to turn - it still doesn't really work
         # it only turns ccw to the origin right now
         if direct_flight:
             if turn_angle > 0:
-                logging.debug(f'turn angle ccw {int(turn_angle + 180)}')
-                self.rotate_ccw(int(turn_angle) + 180)
+                self.rotate_ccw(turn_angle + 180)
             elif turn_angle < 0:
-                logging.debug(f'turn angle cw {int(abs(turn_angle) - 180)}')
-                self.rotate_cw(int(abs(turn_angle - 180)))
-            logging.debug(f'drone flying {distance_to_home} home')
+                self.rotate_cw(abs(turn_angle - 180))
             self.fly_forward(distance_to_home)
             self._wait(distance_to_home)
         else:
@@ -411,7 +410,7 @@ class Dragon():
             logging.debug(f'drone is already facing {degrees} degrees')
             return
 
-        logging.debug(f'drone rotating from {self.current_heading} to {degrees} degrees')
+        logging.debug(f'drone rotating to bearing from {self.current_heading} to {degrees} degrees')
 
         degrees = degrees % 360
 
@@ -420,16 +419,14 @@ class Dragon():
 
         if ccw_degrees <= cw_degrees:
             self.rotate_ccw(ccw_degrees)
-            logging.debug(f'drone rotating counter-clockwise {ccw_degrees}')
         else:
             self.rotate_cw(cw_degrees)
-            logging.debug(f'drone rotating clockwise {ccw_degrees}')
 
     def rotate_cw(self, degrees: int):
         """ rotate drone clockwise """
         self._check_operating_power()
         
-        logging.debug(f'drone rotating {degrees} degrees')
+        logging.debug(f'drone rotating cw {degrees} degrees')
         self.drone.rotate_clockwise(degrees)
         self._update_heading(degrees)
         self._wait(degrees)
@@ -438,7 +435,7 @@ class Dragon():
         """ rotate drone counter clockwise """
         self._check_operating_power()
         
-        logging.debug(f'drone rotating {degrees} degrees')
+        logging.debug(f'drone rotating ccw {degrees} degrees')
         self.drone.rotate_counter_clockwise(degrees)
         self._update_heading(degrees)
         self._wait(degrees)
@@ -454,6 +451,10 @@ class Dragon():
         amount (int): cm
         """
         self._check_operating_power()
+        if amount < 20:
+            logging.warning('drone ignoring command, amount is less than 20')
+            return
+
         # if 500 < amount < 520
         if amount > self._max_movement and amount < self._max_movement+20:
             _max_movement_adjusted = 480
@@ -521,8 +522,8 @@ class Dragon():
 
         angle = angle % 360
 
-        x_component = int(magnitude * math.cos(math.radians(angle)))
-        y_component = int(magnitude * math.sin(math.radians(angle)))
+        x_component = int(round(magnitude * math.cos(math.radians(angle)),0))
+        y_component = int(round(magnitude * math.sin(math.radians(angle)),0))
 
         return [x_component, y_component, magnitude]
 
@@ -562,7 +563,7 @@ class Dragon():
     def _wait(self, distance: int):
         """ call time.sleep() using logarithmic scale since linear scales too fast """
         try:
-            t = int(math.log(abs(distance), 10))
+            t = int(round(math.log(abs(distance),10),0))
         except:
             t = 1
         finally:

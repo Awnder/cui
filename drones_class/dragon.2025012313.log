@@ -1,0 +1,160 @@
+2025-01-23 13:06:48,088 Tello instance was initialized. Host: '192.168.10.1'. Port: '8889'.
+2025-01-23 13:06:48,243 drone taking off
+2025-01-23 13:06:48,243 battery: 35
+2025-01-23 13:06:49,244 sleeping in seconds: 1
+2025-01-23 13:06:55,016 drone moving from 0 to 50
+2025-01-23 13:06:55,017 moving 50
+2025-01-23 13:06:58,146 sleeping in seconds: 1
+2025-01-23 13:06:59,149 sleeping in seconds: 1
+2025-01-23 13:06:59,149 drone moving from (0,0) to (50,0)
+2025-01-23 13:06:59,149 drone moving from 0 to -50
+2025-01-23 13:06:59,150 moving 50
+2025-01-23 13:07:02,373 sleeping in seconds: 1
+2025-01-23 13:07:03,374 sleeping in seconds: 1
+2025-01-23 13:07:03,374 drone moving from (50,0) to (50,50)
+2025-01-23 13:07:03,374 drone landing
+2025-01-23 13:07:07,122 Drone connection closed gracefully
+2025-01-23 13:07:13,982 Tello instance was initialized. Host: '192.168.10.1'. Port: '8889'.
+2025-01-23 13:07:14,093 drone taking off
+2025-01-23 13:07:14,094 battery is too low to fly: 23
+2025-01-23 13:07:14,094 drone landing
+2025-01-23 13:07:14,422 Drone connection closed gracefully
+2025-01-23 13:07:18,297 Tello instance was initialized. Host: '192.168.10.1'. Port: '8889'.
+2025-01-23 13:07:18,411 drone taking off
+2025-01-23 13:07:18,412 battery is too low to fly: 21
+2025-01-23 13:07:18,413 drone landing
+2025-01-23 13:07:18,772 Drone connection closed gracefully
+2025-01-23 13:07:21,783 Tello instance was initialized. Host: '192.168.10.1'. Port: '8889'.
+2025-01-23 13:07:21,894 drone taking off
+2025-01-23 13:07:21,894 battery is too low to fly: 19
+2025-01-23 13:07:21,895 drone landing
+2025-01-23 13:07:22,251 Drone connection closed gracefully
+2025-01-23 13:07:32,158 Tello instance was initialized. Host: '192.168.10.1'. Port: '8889'.
+2025-01-23 13:07:32,260 drone taking off
+2025-01-23 13:07:32,260 battery is too low to fly: 14
+2025-01-23 13:07:32,260 drone landing
+2025-01-23 13:07:32,620 Drone connection closed gracefully
+2025-01-23 13:08:09,762 Tello instance was initialized. Host: '192.168.10.1'. Port: '8889'.
+2025-01-23 13:08:09,873 'utf-8' codec can't decode byte 0xcc in position 0: invalid continuation byte
+2025-01-23 13:08:09,944 drone taking off
+2025-01-23 13:08:09,945 battery is too low to fly: 27
+2025-01-23 13:08:09,945 drone landing
+2025-01-23 13:08:10,006 battery: 27
+2025-01-23 13:08:11,007 sleeping in seconds: 1
+2025-01-23 13:08:11,008 drone rotating 45 degrees
+2025-01-23 13:08:19,476 Aborting command 'land'. Did not receive a response after 7 seconds
+2025-01-23 13:09:09,269 Tello instance was initialized. Host: '192.168.10.1'. Port: '8889'.
+2025-01-23 13:09:09,375 'utf-8' codec can't decode byte 0xcc in position 0: invalid continuation byte
+2025-01-23 13:09:09,428 drone taking off
+2025-01-23 13:09:09,428 battery: 84
+2025-01-23 13:09:10,429 sleeping in seconds: 1
+2025-01-23 13:09:10,430 drone rotating 45 degrees
+2025-01-23 13:09:18,873 Aborting command 'land'. Did not receive a response after 7 seconds
+2025-01-23 13:09:27,145 Tello instance was initialized. Host: '192.168.10.1'. Port: '8889'.
+2025-01-23 13:09:27,258 drone taking off
+2025-01-23 13:09:27,259 battery: 78
+2025-01-23 13:09:28,260 sleeping in seconds: 1
+2025-01-23 13:09:35,524 drone rotating 45 degrees
+2025-01-23 13:09:37,838 sleeping in seconds: 1
+2025-01-23 13:09:37,839 drone moving from 0 to 70
+2025-01-23 13:09:37,839 moving 70
+2025-01-23 13:09:41,263 sleeping in seconds: 1
+2025-01-23 13:09:42,266 sleeping in seconds: 1
+2025-01-23 13:09:42,266 drone moving from (0,0) to (49,49)
+2025-01-23 13:09:42,266 drone moving from 49 to 49
+2025-01-23 13:09:42,267 moving 0
+2025-01-23 13:09:49,757 Aborting command 'land'. Did not receive a response after 7 seconds
+2025-01-23 13:09:56,831 Aborting command 'land'. Did not receive a response after 7 seconds
+2025-01-23 13:09:59,605 Tello instance was initialized. Host: '192.168.10.1'. Port: '8889'.
+2025-01-23 13:09:59,722 drone taking off
+2025-01-23 13:09:59,722 battery: 67
+2025-01-23 13:10:00,724 sleeping in seconds: 1
+2025-01-23 13:10:05,769 drone rotating 45 degrees
+2025-01-23 13:10:08,096 sleeping in seconds: 1
+2025-01-23 13:10:08,097 drone moving from 0 to 70
+2025-01-23 13:10:08,099 moving 70
+2025-01-23 13:10:11,923 sleeping in seconds: 1
+2025-01-23 13:10:12,924 sleeping in seconds: 1
+2025-01-23 13:10:12,924 drone moving from (0,0) to (49,49)
+2025-01-23 13:10:12,924 drone moving from 49 to 49
+2025-01-23 13:10:12,925 moving 0
+2025-01-23 13:10:20,405 Aborting command 'land'. Did not receive a response after 7 seconds
+2025-01-23 13:10:27,491 Aborting command 'land'. Did not receive a response after 7 seconds
+2025-01-23 13:10:34,561 Aborting command 'land'. Did not receive a response after 7 seconds
+2025-01-23 13:10:34,562 Drone connection closed gracefully
+2025-01-23 13:19:34,552 Tello instance was initialized. Host: '192.168.10.1'. Port: '8889'.
+2025-01-23 13:19:34,707 drone taking off
+2025-01-23 13:19:34,707 battery: 82
+2025-01-23 13:19:35,709 sleeping in seconds: 1
+2025-01-23 13:19:40,966 drone rotating 30 degrees
+2025-01-23 13:19:43,185 sleeping in seconds: 1
+2025-01-23 13:19:43,186 drone flying in rectangle: calculated delta x: 109, delta y: 29
+2025-01-23 13:19:43,186 drone moving from 0 to 109
+2025-01-23 13:19:43,187 moving 109
+2025-01-23 13:19:47,509 sleeping in seconds: 2
+2025-01-23 13:19:49,510 sleeping in seconds: 2
+2025-01-23 13:19:49,511 drone moving from (0,0) to (94,54)
+2025-01-23 13:19:49,512 drone moving from 54 to 25
+2025-01-23 13:19:49,513 moving 29
+2025-01-23 13:19:52,227 sleeping in seconds: 1
+2025-01-23 13:19:53,229 sleeping in seconds: 1
+2025-01-23 13:19:53,229 drone moving from (94,54) to (80,79)
+2025-01-23 13:19:53,230 drone landing
+2025-01-23 13:19:56,858 Drone connection closed gracefully
+2025-01-23 13:25:55,595 Tello instance was initialized. Host: '192.168.10.1'. Port: '8889'.
+2025-01-23 13:25:55,750 drone taking off
+2025-01-23 13:25:55,750 battery: 78
+2025-01-23 13:25:56,758 sleeping in seconds: 1
+2025-01-23 13:26:02,823 drone rotating cw 40 degrees
+2025-01-23 13:26:06,036 sleeping in seconds: 2
+2025-01-23 13:26:06,036 drone given coordinates to fly to (100,80)
+2025-01-23 13:26:06,037 drone flying in rectangle: calculated delta x: 128, delta y: -3
+2025-01-23 13:26:06,037 moving 128
+2025-01-23 13:26:10,562 sleeping in seconds: 2
+2025-01-23 13:26:12,563 sleeping in seconds: 2
+2025-01-23 13:26:12,564 drone moving from (0,0) to (98,82)
+2025-01-23 13:26:12,564 drone ignoring command, amount is less than 20
+2025-01-23 13:26:12,565 drone moving from (98,82) to (96,84)
+2025-01-23 13:26:12,565 drone landing
+2025-01-23 13:26:15,896 Drone connection closed gracefully
+2025-01-23 13:28:42,166 Tello instance was initialized. Host: '192.168.10.1'. Port: '8889'.
+2025-01-23 13:28:42,273 'utf-8' codec can't decode byte 0xcc in position 0: invalid continuation byte
+2025-01-23 13:28:42,327 drone taking off
+2025-01-23 13:28:42,329 battery: 77
+2025-01-23 13:28:43,330 sleeping in seconds: 1
+2025-01-23 13:28:43,331 drone rotating ccw 34 degrees
+2025-01-23 13:28:51,789 Aborting command 'land'. Did not receive a response after 7 seconds
+2025-01-23 13:28:58,650 Tello instance was initialized. Host: '192.168.10.1'. Port: '8889'.
+2025-01-23 13:28:58,753 drone taking off
+2025-01-23 13:28:58,753 battery: 71
+2025-01-23 13:28:59,754 sleeping in seconds: 1
+2025-01-23 13:29:04,914 drone rotating ccw 34 degrees
+2025-01-23 13:29:08,348 sleeping in seconds: 2
+2025-01-23 13:29:08,349 drone given coordinates to fly to (-149,263)
+2025-01-23 13:29:08,349 drone flying in rectangle: calculated delta x: 24, delta y: 301
+2025-01-23 13:29:08,349 moving 24
+2025-01-23 13:29:10,767 sleeping in seconds: 1
+2025-01-23 13:29:11,770 sleeping in seconds: 1
+2025-01-23 13:29:11,770 drone moving from (0,0) to (20,13)
+2025-01-23 13:29:11,770 moving 301
+2025-01-23 13:29:19,333 Aborting command 'land'. Did not receive a response after 7 seconds
+2025-01-23 13:29:26,417 Aborting command 'land'. Did not receive a response after 7 seconds
+2025-01-23 13:29:33,490 Aborting command 'land'. Did not receive a response after 7 seconds
+2025-01-23 13:29:33,491 Drone connection closed gracefully
+2025-01-23 13:36:16,267 drone taking off
+2025-01-23 13:36:16,268 battery: 65
+2025-01-23 13:36:17,269 sleeping in seconds: 1
+2025-01-23 13:36:18,016 drone rotating ccw 34 degrees
+2025-01-23 13:36:20,375 sleeping in seconds: 2
+2025-01-23 13:36:20,375 drone given coordinates to fly to (-149,263)
+2025-01-23 13:36:20,376 drone flying in rectangle: calculated delta x: 24, delta y: 301
+2025-01-23 13:36:20,376 moving 24
+2025-01-23 13:36:23,222 sleeping in seconds: 1
+2025-01-23 13:36:24,224 sleeping in seconds: 1
+2025-01-23 13:36:24,224 drone moving from (0,0) to (20,13)
+2025-01-23 13:36:24,224 moving 301
+2025-01-23 13:36:29,705 sleeping in seconds: 2
+2025-01-23 13:36:31,706 sleeping in seconds: 2
+2025-01-23 13:36:31,706 drone moving from (20,13) to (-148,263)
+2025-01-23 13:36:31,706 drone landing
+2025-01-23 13:36:32,398 Drone connection closed gracefully
