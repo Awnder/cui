@@ -246,34 +246,6 @@ class Dragon():
         self._fly_xy_amount('left', amount)
         self._update_absolute_coordinates(self._calculate_vector_from_magnitude('left', amount))
 
-    def _calculate_vector_from_magnitude(self, direction: str, magnitude: int) -> list:
-        """ given the magnitude, calculate the vector to the new position """
-        angle = self.current_heading
-
-        if direction == 'left':
-            angle += 90
-        elif direction == 'backward':
-            angle += 180
-        elif direction == 'right':
-            angle += 270
-
-        angle = angle % 360
-
-        x_component = int(magnitude * math.cos(math.radians(angle)))
-        y_component = int(magnitude * math.sin(math.radians(angle)))
-
-        return [x_component, y_component, magnitude]
-
-    def _update_absolute_coordinates(self, new_position_vector: list):
-        """ 
-        calculate new absolute coordinates from origin after drone flies to new position 
-        Parameters:
-            new_position_vector (list): [x_component, y_component, magnitude]
-        """
-        logging.debug(f'drone moving from ({self.x},{self.y}) to ({self.x + new_position_vector[0]},{self.y + new_position_vector[1]})')
-        self.x += new_position_vector[0]
-        self.y += new_position_vector[1]
-
     def fly_to_coordinates(self, desired_x: int, desired_y: int, direct: bool=False):
         """ 
         given coordinates, calculate vector to the new position
@@ -282,6 +254,8 @@ class Dragon():
             desired_y (int): y coordinate
             direct (bool): determines if drone rotates and flies straight to destination
         """
+        self._check_operating_power()
+
         if direct:
             distance_x = desired_x - self.x
             distance_y = desired_y - self.y
@@ -526,25 +500,41 @@ class Dragon():
         match direction:
             case 'forward':
                 self.drone.move_forward(amount)
-                # self._update_x(amount)
             case 'backward':
                 self.drone.move_back(amount)
-                # self._update_x(-amount)
             case 'right':
                 self.drone.move_right(amount)
-                # self._update_y(-amount)
             case 'left':
                 self.drone.move_left(amount)
-                # self._update_y(+amount)
         self._wait(amount)
    
-    def _update_x(self, distance: int):
-        """ update x coordinate """
-        self.x = self.x + distance
-    
-    def _update_y(self, distance: int):
-        """ update y coordinate """
-        self.y = self.y + distance
+    def _calculate_vector_from_magnitude(self, direction: str, magnitude: int) -> list:
+        """ given the magnitude, calculate the vector to the new position """
+        angle = self.current_heading
+
+        if direction == 'left':
+            angle += 90
+        elif direction == 'backward':
+            angle += 180
+        elif direction == 'right':
+            angle += 270
+
+        angle = angle % 360
+
+        x_component = int(magnitude * math.cos(math.radians(angle)))
+        y_component = int(magnitude * math.sin(math.radians(angle)))
+
+        return [x_component, y_component, magnitude]
+
+    def _update_absolute_coordinates(self, new_position_vector: list):
+        """ 
+        calculate new absolute coordinates from origin after drone flies to new position 
+        Parameters:
+            new_position_vector (list): [x_component, y_component, magnitude]
+        """
+        logging.debug(f'drone moving from ({self.x},{self.y}) to ({self.x + new_position_vector[0]},{self.y + new_position_vector[1]})')
+        self.x += new_position_vector[0]
+        self.y += new_position_vector[1]
 
     def _update_heading(self, degrees: int):
         """ update current heading """
