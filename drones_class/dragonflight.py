@@ -87,6 +87,7 @@ class Dragon():
         self.drone.end()
         self.connected = False
         logging.info(f"Drone connection closed gracefully")
+        logging.info('------------------------------------')
         return
 
     def top_led_color(self, red:int, green:int, blue:int):
@@ -279,14 +280,14 @@ class Dragon():
             logging.debug(f'drone flying in rectangle: calculated delta x: {delta_x}, delta y: {delta_y}')
 
             if delta_x > 0:
-                self.fly_forward(delta_x)
-            else:
                 self.fly_backward(delta_x)
+            else:
+                self.fly_forward(abs(delta_x))
 
             if delta_y > 0:
-                self.fly_left(delta_y)
-            else:
                 self.fly_right(delta_y)
+            else:
+                self.fly_left(abs(delta_y))
 
     def fly_home(self, direct_flight: bool=True):
         """
@@ -479,12 +480,10 @@ class Dragon():
                 self._fly_xy_direction(direction, self._max_movement)
             
             # move the remaining distance
-            logging.debug(f'moving remaining distance: {amount_extra}')
             self._fly_xy_direction(direction, amount_extra)
         
         # if desired amount <= 500
         else:
-            logging.debug(f'moving {amount}')
             self._fly_xy_direction(direction, amount)
             self._wait(amount)
 
@@ -500,12 +499,16 @@ class Dragon():
         """
         match direction:
             case 'forward':
+                logging.debug(f'moving forward {amount}')
                 self.drone.move_forward(amount)
             case 'backward':
+                logging.debug(f'moving back {amount}')
                 self.drone.move_back(amount)
             case 'right':
+                logging.debug(f'moving right {amount}')
                 self.drone.move_right(amount)
             case 'left':
+                logging.debug(f'moving left {amount}')
                 self.drone.move_left(amount)
         self._wait(amount)
    
@@ -569,7 +572,7 @@ class Dragon():
         finally:
             if t < 1:
                 t = 1
-            time.sleep(t)
-            logging.debug(f'sleeping in seconds: {t}')
+            # time.sleep(t)
+            # logging.debug(f'sleeping in seconds: {t}')
 
 #------------------------- END OF HeadsUpTello CLASS ---------------------------

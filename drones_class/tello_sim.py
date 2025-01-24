@@ -16,7 +16,7 @@ class DroneSim:
         self._connected = False
         self._start_time = 0
         self._stop_time = 0
-        self._battery_level = 65
+        self._battery_level = 90
 
         # Set up logger, straight from DJI
         HANDLER = logging.StreamHandler()
@@ -58,7 +58,7 @@ class DroneSim:
 
         # Simulate time delay
         delay = 2 * random.random()
-        time.sleep(delay)
+        # time.sleep(delay)
 
         # Perform requested operation
         self._height = _approximate(60)
@@ -78,7 +78,7 @@ class DroneSim:
 
         # Simulate time delay
         delay = 2 * random.random()
-        time.sleep(delay)
+        # time.sleep(delay)
 
         # Perform requested operation
         self._stop_time = int(time.time())
@@ -110,7 +110,7 @@ class DroneSim:
 
         # Simulate time delay
         delay = (value_cm // 100) + 2 * random.random()
-        time.sleep(delay)
+        # time.sleep(delay)
 
         # Perform requested operation
         self._height += _approximate(value_cm)
@@ -130,7 +130,7 @@ class DroneSim:
 
         # Simulate time delay
         delay = (value_cm // 100) + 2 * random.random()
-        time.sleep(delay)
+        # time.sleep(delay)
 
         # Perform requested operation
         self._height -= _approximate(value_cm)
@@ -167,7 +167,7 @@ class DroneSim:
 
         # Simulate time delay
         delay = (value_cm // 100) + 2 * random.random()
-        time.sleep(delay)
+        # time.sleep(delay)
         self._battery_level -= 1
 
         # Log message
@@ -184,7 +184,7 @@ class DroneSim:
 
         # Simulate time delay
         delay = (value_cm // 100) + 2 * random.random()
-        time.sleep(delay)
+        # time.sleep(delay)
         self._battery_level -= 1
 
         # Log message
@@ -201,7 +201,7 @@ class DroneSim:
 
         # Simulate time delay
         delay = (value_cm // 100) + 2 * random.random()
-        time.sleep(delay)
+        # time.sleep(delay)
         self._battery_level -= 1
 
         # Log message
@@ -218,7 +218,7 @@ class DroneSim:
 
         # Simulate time delay
         delay = 1.5 * random.random()
-        time.sleep(delay)
+        # time.sleep(delay)
         self._battery_level -= 1
 
         # Log message
@@ -235,7 +235,7 @@ class DroneSim:
 
         # Simulate time delay
         delay = 1.5 + 2 * random.random()
-        time.sleep(delay)
+        # time.sleep(delay)
         self._battery_level -= 1
 
         # Log message

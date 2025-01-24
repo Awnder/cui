@@ -158,3 +158,37 @@
 2025-01-23 13:36:31,706 drone moving from (20,13) to (-148,263)
 2025-01-23 13:36:31,706 drone landing
 2025-01-23 13:36:32,398 Drone connection closed gracefully
+2025-01-23 13:57:42,294 drone taking off
+2025-01-23 13:57:42,294 battery: 65
+2025-01-23 13:57:43,295 sleeping in seconds: 1
+2025-01-23 13:57:45,291 drone rotating ccw 34 degrees
+2025-01-23 13:57:48,397 sleeping in seconds: 2
+2025-01-23 13:57:48,397 drone given coordinates to fly to (-149,263)
+2025-01-23 13:57:48,397 drone flying in rectangle: calculated delta x: 24, delta y: 301
+2025-01-23 13:57:48,397 moving 24
+2025-01-23 13:57:50,940 sleeping in seconds: 1
+2025-01-23 13:57:51,941 sleeping in seconds: 1
+2025-01-23 13:57:51,941 drone moving from (0,0) to (20,13)
+2025-01-23 13:57:51,941 moving 301
+2025-01-23 13:57:58,565 sleeping in seconds: 2
+2025-01-23 13:58:00,566 sleeping in seconds: 2
+2025-01-23 13:58:00,566 drone moving from (20,13) to (-148,263)
+2025-01-23 13:58:00,566 drone landing
+2025-01-23 13:58:01,372 Drone connection closed gracefully
+2025-01-23 13:59:26,461 drone taking off
+2025-01-23 13:59:26,461 battery: 65
+2025-01-23 13:59:27,461 sleeping in seconds: 1
+2025-01-23 13:59:27,461 drone rotating ccw 34 degrees
+2025-01-23 13:59:29,462 sleeping in seconds: 2
+2025-01-23 13:59:29,462 drone given coordinates to fly to (-149,263)
+2025-01-23 13:59:29,462 drone flying in rectangle: calculated delta x: 24, delta y: 301
+2025-01-23 13:59:29,462 moving 24
+2025-01-23 13:59:32,105 sleeping in seconds: 1
+2025-01-23 13:59:33,105 sleeping in seconds: 1
+2025-01-23 13:59:33,105 drone moving from (0,0) to (20,13)
+2025-01-23 13:59:33,105 moving 301
+2025-01-23 13:59:35,106 sleeping in seconds: 2
+2025-01-23 13:59:37,107 sleeping in seconds: 2
+2025-01-23 13:59:37,107 drone moving from (20,13) to (-148,263)
+2025-01-23 13:59:37,107 drone landing
+2025-01-23 13:59:37,107 Drone connection closed gracefully
