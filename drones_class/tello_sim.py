@@ -100,6 +100,8 @@ class DroneSim:
         # Perform requested operation
         return int(time.time()) - self._start_time
 
+    def send_rc_control(self, left_right_velocity: int, forward_backward_velocity: int, up_down_velocity: int, yaw_velocity: int):
+        print(f"left_right_velocity: {left_right_velocity}, forward_backward_velocity: {forward_backward_velocity}, up_down_velocity: {up_down_velocity}, yaw_velocity: {yaw_velocity}")
 
     def move_up(self, value_cm):
         # Verify drone state

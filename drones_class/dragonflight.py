@@ -60,6 +60,7 @@ class Dragon():
         self.current_heading = 0
         self._max_movement = 500
         self._min_movement = 20
+        self._grounded = True
 
         try:
             self.drone.connect()
@@ -163,13 +164,45 @@ class Dragon():
         self._check_takeoff_power()
         logging.info(f'battery: {self.get_battery()}')
         self._wait(1)
+        self._grounded = False
         return self.drone.takeoff()
 
     def land(self):
         """ Land drone from any height """
         logging.info('drone landing')
+        self._grounded = True
         return self.drone.land()
+
+    def streamon(self):
+        """ turns on video streaming, use get_frame_read after """
+        self.drone.streamon()
+
+    def streamoff(self):
+        """ turns off video streaming """
+        self.drone.streamoff()
     
+    def set_video_direction(self, direction: int=0):
+        """ select drone camera type. direction 0 is forward camera, 1 is downward"""
+        self.drone.set_video_direction(direction)
+
+    def get_frame_read(self):
+        """ returns a videoframe from camera """
+        return self.drone.get_frame_read()
+
+    def send_rc_control(self, left_right_velocity: int, forward_backward_velocity: int, up_down_velocity: int, yaw_velocity: int):
+        """
+        Send RC control commands to the drone.
+
+        Arguments:
+            left_right_velocity: Velocity in the left/right direction (-100 to 100)
+            forward_backward_velocity: Velocity in the forward/backward direction (-100 to 100)
+            up_down_velocity: Velocity in the up/down direction (-100 to 100)
+            yaw_velocity: Yaw velocity (-100 to 100)
+        """
+        self._check_operating_power()
+        logging.debug(f'Sending RC control: lr={left_right_velocity}, fb={forward_backward_velocity}, ud={up_down_velocity}, yaw={yaw_velocity}')
+        self.drone.send_rc_control(left_right_velocity, forward_backward_velocity, up_down_velocity, yaw_velocity)
+        
     def fly_up(self, up: int):
         """ 
         fly up to a certain height. 
@@ -403,6 +436,22 @@ class Dragon():
 
         logging.debug(f"drone is at ceiling: {self.ceiling} with actual height at {self.get_height()}")
  
+    def flip_forward(self):
+        """ do a flip forward """
+        self.drone.flip_forward()
+
+    def flip_backward(self):
+        """ do a flip backward """
+        self.drone.flip_back()
+
+    def flip_right(self):
+        """ do a flip right """
+        self.drone.flip_right()
+
+    def flip_left(self):
+        """ do a flip left """
+        self.drone.flip_left()
+
     def rotate_to_bearing(self, degrees: int):
         """ rotate drone to absolute bearing taking into account current heading """
         self._check_operating_power()
