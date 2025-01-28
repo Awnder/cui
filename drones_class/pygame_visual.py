@@ -205,7 +205,7 @@ while running:
             cv2_frame = tello_frame.frame
 
             # Convert the frame from BGR (OpenCV format) to RGB (Pygame format)
-            cv2_frame = cv2.cvtColor(cv2_frame, cv2.COLOR_BGR2RGB)
+            # cv2_frame = cv2.cvtColor(cv2_frame, cv2.COLOR_BGR2RGB)
 
             # Create a surface from the current picture and rotate it to match display
             webcam_surface = pygame.surfarray.make_surface(cv2_frame)
