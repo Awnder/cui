@@ -10,7 +10,7 @@ with open(file, 'r') as f:
 
     # Find all the names in the text
     names = re.findall(r'[A-Z][a-z]+:', text)
-    
-    names = [n.replace(':','') for n in names]
 
-    print(set(names))
+    names = [n.replace(":", "") for n in set(names)]
+    
+    print(names)
