@@ -9,16 +9,16 @@ import cv2
 
 ### WEBCAM SETUP ###
 
-print("\nInitializing webcam (this may take a few seconds)")
+# print("\nInitializing webcam (this may take a few seconds)")
 
-webcam = cv2.VideoCapture(0)
-if not webcam.isOpened():
-    print("Error: Could not open webcam.")
-    exit()
-width = int(webcam.get(cv2.CAP_PROP_FRAME_WIDTH))
-height = int(webcam.get(cv2.CAP_PROP_FRAME_HEIGHT))
-FPS = int(webcam.get(cv2.CAP_PROP_FPS))
-print(f"Webcam is {width}x{height} at {FPS} FPS")
+# webcam = cv2.VideoCapture(0)
+# if not webcam.isOpened():
+#     print("Error: Could not open webcam.")
+#     exit()
+# width = int(webcam.get(cv2.CAP_PROP_FRAME_WIDTH))
+# height = int(webcam.get(cv2.CAP_PROP_FRAME_HEIGHT))
+# FPS = int(webcam.get(cv2.CAP_PROP_FPS))
+# print(f"Webcam is {width}x{height} at {FPS} FPS")
 
 clock = pygame.time.Clock()
 
@@ -198,19 +198,21 @@ while running:
         screen.blit(logo_surface, logo_rect)
     else:
         # Read a frame from the webcam
-        ret, frame = webcam.read()
-        if not ret:
-            print("Error reading camera frame")
+        drone.set_video_direction() # forward camera
+        tello_frame = drone.get_frame_read()
 
-        # Convert the frame from BGR (OpenCV format) to RGB (Pygame format)
-        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        if tello_frame is not None:
+            cv2_frame = tello_frame.frame
 
-        # Create a surface from the current picture and rotate it to match display
-        webcam_surface = pygame.surfarray.make_surface(frame)
-        webcam_surface = pygame.transform.rotate(webcam_surface, -90)
-        webcam_rect = webcam_surface.get_rect()
-        webcam_rect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
-        screen.blit(webcam_surface, webcam_rect)
+            # Convert the frame from BGR (OpenCV format) to RGB (Pygame format)
+            cv2_frame = cv2.cvtColor(cv2_frame, cv2.COLOR_BGR2RGB)
+
+            # Create a surface from the current picture and rotate it to match display
+            webcam_surface = pygame.surfarray.make_surface(cv2_frame)
+            webcam_surface = pygame.transform.rotate(webcam_surface, -90)
+            webcam_rect = webcam_surface.get_rect()
+            webcam_rect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
+            screen.blit(webcam_surface, webcam_rect)
 
 
     screen.blit(battery_surface, battery_rect)
