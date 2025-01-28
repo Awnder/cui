@@ -6,6 +6,7 @@ import tello_sim
 import dragonflight
 import logging
 import cv2
+# import asyncio
 
 ### WEBCAM SETUP ###
 
@@ -21,7 +22,8 @@ import cv2
 # print(f"Webcam is {width}x{height} at {FPS} FPS")
 
 clock = pygame.time.Clock()
-
+show_logo = True
+fps = '30' # set drone camera fps - 5, 15, or 30
 
 ### PYGAME SETUP ###
 SCREEN_WIDTH = 960
@@ -67,7 +69,6 @@ mission_params = {
 # mytello = tello_sim.DroneSim()
 mytello = Tello()
 drone = dragonflight.Dragon(mytello, mission_params, logging.WARNING)
-
 
 ### GAME LOOP ###
 running = True
@@ -152,11 +153,12 @@ while running:
 
     if keys[pygame.K_c]:
         if show_logo:
-            show_logo = not show_logo
             drone.streamon()
-        else:
+            # drone.set_video_fps(fps)
             show_logo = not show_logo
+        else:
             drone.streamoff()
+            show_logo = not show_logo
 
     # Send command to drone
     drone.send_rc_control(velocity_y, velocity_x, velocity_z, rotation)
@@ -193,21 +195,19 @@ while running:
     # Internally this will use depth calculations to create the final image
     screen.blit(background, (0, 0))
 
-    # if show_logo:
     if show_logo:
         screen.blit(logo_surface, logo_rect)
     else:
         # Read a frame from the webcam
-        drone.set_video_direction() # forward camera
-        tello_frame = drone.get_frame_read()
+        cv2_frame = drone.get_frame_read().frame
 
-        if tello_frame is not None:
-            cv2_frame = tello_frame.frame
+        if cv2_frame is not None:
 
             # Convert the frame from BGR (OpenCV format) to RGB (Pygame format)
             # cv2_frame = cv2.cvtColor(cv2_frame, cv2.COLOR_BGR2RGB)
 
             # Create a surface from the current picture and rotate it to match display
+            cv2_frame = cv2.flip(cv2_frame, 1)
             webcam_surface = pygame.surfarray.make_surface(cv2_frame)
             webcam_surface = pygame.transform.rotate(webcam_surface, -90)
             webcam_rect = webcam_surface.get_rect()
@@ -237,11 +237,10 @@ while running:
     pygame.display.update()
     
     # ensure refresh speed matches camera
-    clock.tick(FPS)
+    clock.tick(int(fps))
 
 
 # Close down everything
-webcam.release()
-#drone.land()
-drone.end()
+drone.streamoff()
+cv2.destroyAllWindows()
 pygame.quit()

@@ -181,9 +181,9 @@ class Dragon():
         """ turns off video streaming """
         self.drone.streamoff()
     
-    def set_video_direction(self, direction: int=0):
-        """ select drone camera type. direction 0 is forward camera, 1 is downward"""
-        self.drone.set_video_direction(direction)
+    def set_video_fps(self, fps: str='30'):
+        """ set video fps either 5, 15, or 30"""
+        self.drone.set_video_fps(fps)
 
     def get_frame_read(self):
         """ returns a videoframe from camera """
