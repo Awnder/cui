@@ -72,13 +72,4 @@ if __name__ == '__main__':
 	# headers = configure_headers()
 	# content = run_agent(url, headers)	
 	# parse_bs4_content(content)
-
-	# data = rest_request() # NOTE THIS WILL COST
-	# print(data)
-	# save_json_data('nfl_data_v1.json', data)
-	
-	data = load_json_data('nfl_data_v1.json')
-	jdata = json.loads(data)
-	keys = [key for key in jdata[0]['team']]
-	for key in keys:
-		print(key, ':', jdata[0]['team'][key])
+	pass
