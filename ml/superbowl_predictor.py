@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import MinMaxScaler
+import http.client
 
 
 def run_agent(url: str, headers: dict):
@@ -14,7 +15,7 @@ def run_agent(url: str, headers: dict):
 
 	return content
 
-def parse_content(content: str):
+def parse_bs4_content(content: str):
 	""" Parse the content of the webpage """
 	soup = BeautifulSoup(content, "html.parser")
 	html = soup.html
@@ -34,8 +35,30 @@ def configure_headers():
 		'User-Agent': custom_user_agent
 	}
 
+def rest_request():
+	conn = http.client.HTTPSConnection("nfl-api-data.p.rapidapi.com")
+
+	headers = {
+		'x-rapidapi-key': "a93f2a8bd6msh65caa1f3339f4e9p15cfc9jsn7822264ae910",
+		'x-rapidapi-host': "nfl-api-data.p.rapidapi.com"
+	}
+
+	conn.request("GET", "/nfl-team-listing/v1/data", headers=headers)
+
+	res = conn.getresponse()
+	data = res.read()
+
+	return data.decode('utf-8')
+
+def parse_rest_request(data: str):
+	pass	
+
 if __name__ == '__main__':
-	url = 'https://www.espn.com/nfl/stats'
-	headers = configure_headers()
-	content = run_agent(url, headers)	
-	parse_content(content)
+	# url = 'https://www.espn.com/nfl/stats'
+	# headers = configure_headers()
+	# content = run_agent(url, headers)	
+	# parse_bs4_content(content)
+
+	data = rest_request()
+	print(data)
+	

@@ -1,4 +1,4 @@
-#https://raspi.tv/2015/how-to-drive-a-7-segment-display-directly-on-raspberry-pi-in-python
+#https://raspi.tv/2015/how-to-drive-ta-7-segment-display-directly-on-raspberry-pi-in-python
 
 # code modified, tweaked and tailored from code by bertwert 
 # on RPi forum thread topic 91796
