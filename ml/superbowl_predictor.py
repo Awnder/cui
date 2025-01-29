@@ -5,7 +5,9 @@ import numpy as np
 from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import MinMaxScaler
 import http.client
-
+from dotenv import load_dotenv
+import os
+import json
 
 def run_agent(url: str, headers: dict):
 	""" Run the agent to scrape the given URL """
@@ -38,9 +40,11 @@ def configure_headers():
 def rest_request():
 	conn = http.client.HTTPSConnection("nfl-api-data.p.rapidapi.com")
 
+	load_dotenv()
+	
 	headers = {
-		'x-rapidapi-key': "a93f2a8bd6msh65caa1f3339f4e9p15cfc9jsn7822264ae910",
-		'x-rapidapi-host': "nfl-api-data.p.rapidapi.com"
+		'x-rapidapi-key': os.getenv("RAPID_NFL_API_KEY"),
+		'x-rapidapi-host': os.getenv("RAPID_NFL_API_HOST")
 	}
 
 	conn.request("GET", "/nfl-team-listing/v1/data", headers=headers)
@@ -53,12 +57,28 @@ def rest_request():
 def parse_rest_request(data: str):
 	pass	
 
+def save_json_data(filename, data):
+    with open(filename, 'w') as fout:
+        json_string_data = json.dumps(data)
+        fout.write(json_string_data)
+        
+def load_json_data(filename):
+    with open(filename) as fin:
+        json_data = json.load(fin)
+        return json_data
+
 if __name__ == '__main__':
 	# url = 'https://www.espn.com/nfl/stats'
 	# headers = configure_headers()
 	# content = run_agent(url, headers)	
 	# parse_bs4_content(content)
 
-	data = rest_request()
-	print(data)
+	# data = rest_request() # NOTE THIS WILL COST
+	# print(data)
+	# save_json_data('nfl_data_v1.json', data)
 	
+	data = load_json_data('nfl_data_v1.json')
+	jdata = json.loads(data)
+	keys = [key for key in jdata[0]['team']]
+	for key in keys:
+		print(key, ':', jdata[0]['team'][key])
