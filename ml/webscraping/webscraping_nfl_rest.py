@@ -3,22 +3,50 @@ import os
 from dotenv import load_dotenv
 import json
 
-def rest_request():
-	conn = http.client.HTTPSConnection("nfl-api-data.p.rapidapi.com")
+url = "/nfl-team-statistics?year=2023&id=22"
+restapi = "nfl-api-data.p.rapidapi.com"
+keys = [os.getenv("RAPID_NFL_API_KEY"), os.getenv("RAPID_NFL_API_HOST")]
+
+def retrieve_api_data(url: str, restapi: str, keys: list, enable_search=False):
+    """
+    Wrapper function to retrieve data from a REST API. Will load data if url matches filename in current directory. Otherwise, will make a request to the REST API and save data as json file.
+    Parameters:
+        url (str): URL to make a request to
+        restapi (str): REST API URL
+        keys (list): keys to access REST API like [API_KEY, API_HOST]
+        enable_search (bool): disables REST request as precaution to avoid unnecessary costs
+    Returns:
+        dict: json data from REST API or file. Returns dict with 'content' key if file doesn't exist or incorrect api url request
+    """
+    data = rest_request(url, restapi, keys)
+
+    current_dir_files = os.listdir(os.getcwd())
+
+    for file in current_dir_files:
+        if file == f'{url}.json':
+            return load_json_data(f'{url}.json')
+
+    if enable_search:
+        save_json_data(f'{url}.json', data)
+        return {'content': 'Data saved to json file'}
+
+def rest_request(url: str, restapi: str, keys: list):
+	conn = http.client.HTTPSConnection(restapi)
 
 	load_dotenv()
 	
 	headers = {
-		'x-rapidapi-key': os.getenv("RAPID_NFL_API_KEY"),
-		'x-rapidapi-host': os.getenv("RAPID_NFL_API_HOST")
+		'x-rapidapi-key': keys[0],
+		'x-rapidapi-host': keys[1]
 	}
 
-	conn.request("GET", "/nfl-team-statistics?year=2023&id=22", headers=headers)
+	conn.request("GET", url, headers=headers)
 
 	res = conn.getresponse()
 	data = res.read()
 
 	return data.decode('utf-8')
+
 def save_json_data(filename, data):
     with open(filename, 'w') as fout:
         json_string_data = json.dumps(data)
@@ -32,27 +60,49 @@ def load_json_data(filename):
     json_data = json.loads(json_data)
     return json_data
 
-# data = rest_request() # NOTE THIS WILL COST
-# save_json_data('nfl_team_stats.json', data)
 
-jdata = load_json_data('nfl_team_stats.json')
-categories = jdata['statistics']['splits']['categories'] # a list of categories for each team
-catkeys = categories[0].keys() # dictionary of valid keys
-catkeys = ['displayName', 'stats']
+def test():
+    # data = rest_request() # NOTE THIS WILL COST
+    # save_json_data('nfl_team_stats.json', data)
 
-print(categories[1]['stats'])
+    jdata = load_json_data('nfl_team_stats.json')
 
-# for i in range(len(categories)):
-#     print(categories[i]['stats'])
+    ### PARSING JSON DATA AND FINDING NECESSARY KEYS
 
-for i in range(len(categories[0]['stats'])):
-    print(f'category: {categories[0]["stats"][i]}')
+    # CATEGORIES
+    categories = jdata['statistics']['splits']['categories'] # a list of categories for each team
+    catkeys = categories[0].keys() # dictionary of valid keys
+    catkeys = ['stats'] # WANTED KEYS
 
-# with open('nfl_team_stats_parsed.csv', 'w') as fout:
-#     fout.write(','.join(catkeys) + '\n')
-#     for i in range(len(categories)):
-#         stats = categories[i]['stats']
-#         values = []
-#         for j in range(len(stats)):
-#             values.append(str(stats[j]))
-#         fout.write(categories[i]['displayName'] + ',' + ','.join(values) + '\n')
+    # STATS FOR EACH CATEGORY
+    # for i in range(len(categories[0]['stats'])):
+    #     print(f'category: {categories[0]["stats"][i]}')
+    #     print('------------------------------')
+
+    catstatskeys = ['displayName', 'displayValue', 'perGameDisplayValue', 'rankDisplayValue', 'description'] # WANTED KEYS
+
+    # TESTING STAT SEARCH USING ONLY ONE CATEGORY
+    # for i in range(len(categories[0]['stats'])):
+    #     for catstatkey in catstatskeys:
+    #         if catstatkey in categories[0]['stats'][i]:
+    #             print(f'{catstatkey}: {categories[0]["stats"][i][catstatkey]}')
+    #             print('------------------------------')
+
+    # WRITE TO CSV
+    with open('nfl_team_stats_parsed.csv', 'w') as fout:
+        fout.write(','.join(catstatskeys) + '\n')
+        for team in range(len(categories)):
+            for stat in range(len(categories[team]['stats'])):
+                for catstatkey in catstatskeys:
+                    if catstatkey in categories[team]['stats'][stat]:
+                        fout.write(f'{categories[team]["stats"][stat][catstatkey]},')
+                fout.write('\n')
+
+
+    # USE THIS TO SEE PRINT OUT
+    # for team in range(len(categories)): # 10 teams
+    #     for stat in range(len(categories[team]['stats'])):
+    #         for catstatkey in catstatskeys:
+    #             if catstatkey in categories[team]['stats'][stat]:
+    #                 print(f'{catstatkey}: {categories[team]["stats"][stat][catstatkey]}')
+    #                 print('------------------------------')
