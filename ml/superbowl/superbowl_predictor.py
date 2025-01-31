@@ -9,6 +9,30 @@ from dotenv import load_dotenv
 import os
 import json
 
+# predict score for eagles and chiefs - 2 predictions
+# 2 models - one for each team or 1 model run twice
+# 1) collect data
+# 2) clean & normalize
+# --- API Data missing 2020 carolina panthers - can drop, choose mean
+# --- sigmoid standardization
+# --- 2014 jets vs bills game postponed - some fields dne or 0
+# 3) choose features
+# --- training features must be all available for predictions
+# --- ex: can't do passing yards for QB current game bc you only know that after the game is done
+# --- instead, use passing yards for season(s) average
+# 4) train / chose model
+# --- always set y values are the score (bc thats what youre trying to predict)
+# 5) predict
+
+# some approaches
+# 1) historical results (might have less data available)
+# --- T1: y=score offRank(T1) defRank(T2) avgPointsPerGame(T1) 
+# --- T2: y=score offRank(T2) defRank(T1) avgPointsPerGame(T2) -- remember to ensure for/against values are correct
+# 2) seasonal results for eagles and chiefs
+# --- T1: y=score totalPassYards(T1) totalRushYards(T1) takeaways(T1) avgPointsPerGame(T1)
+# --- T2: y=score totalPassYards(T2) totalRushYards(T2) takeaways(T2) avgPointsPerGame(T2)
+# 3) hybrid
+
 def run_agent(url: str, headers: dict):
 	""" Run the agent to scrape the given URL """
 	request = urllib.request.Request(url, headers=headers)
