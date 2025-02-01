@@ -11,20 +11,25 @@ import threading
 
 
 ### GLOBAL VARIABLES FOR VIDEO FEED ###
-webcam_surface = None
-webcam_rect = None
+webcam_data = {'surface': None, 'rect': None}
 
 def video_feed(drone, stop_thread_event, display_video_live=False, SCREEN_WIDTH=960, SCREEN_HEIGHT=720):
     drone.streamon()
 
-    while not stop_thread_event.isSet():
+    while not stop_thread_event.is_set():
         frame = drone.get_frame_read().frame
         if display_video_live and frame is not None:
             cv2_frame = cv2.flip(frame, 1)
+            print('getting frame')
             webcam_surface = pygame.surfarray.make_surface(cv2_frame)
             webcam_surface = pygame.transform.rotate(webcam_surface, -90)
             webcam_rect = webcam_surface.get_rect()
             webcam_rect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
+
+            print('updating global variables')
+            # updating global variables outside of thread
+            webcam_data['surface'] = webcam_surface
+            webcam_data['rect'] = webcam_rect
 
 def main():
     ### PYGAME SETUP ###
@@ -225,7 +230,10 @@ def main():
         if display_logo:
             screen.blit(logo_surface, logo_rect)
         else:
-            screen.blit(webcam_surface, webcam_rect)
+            if webcam_data['surface'] is None and webcam_data['rect'] is None:
+                screen.blit(logo_surface, logo_rect)
+            else:
+                screen.blit(webcam_data['surface'], webcam_data['rect'])
 
         # if display_logo:
         #     screen.blit(logo_surface, logo_rect)
