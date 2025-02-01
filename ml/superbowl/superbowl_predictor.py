@@ -8,6 +8,9 @@ import http.client
 from dotenv import load_dotenv
 import os
 import json
+import jc_nfl_team_stats
+import jc_nfl_team_listing_v1_data
+import jc_nfl_season_year_x
 
 # predict score for eagles and chiefs - 2 predictions
 # 2 models - one for each team or 1 model run twice
@@ -48,7 +51,7 @@ def parse_bs4_content(content: str):
 	body = html.body
 	print(body)
 
-def configure_headers():
+def _configure_headers():
 	""" Configure the headers for the request """
 	mozilla = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'
 	applewebkit = 'AppleWebKit/537.36 (KHTML, like Gecko)'
@@ -61,39 +64,97 @@ def configure_headers():
 		'User-Agent': custom_user_agent
 	}
 
-def rest_request():
-	conn = http.client.HTTPSConnection("nfl-api-data.p.rapidapi.com")
+def retrieve_api_data(url: str, restapi: str, data_directory: str=None, enable_rest_request=False) -> dict:
+    """
+    Wrapper function to retrieve data from a REST API. Will load data if url matches filename in current directory. Otherwise, will make a request to the REST API and save data as json file.
+    Parameters:
+        url (str): URL to make a request to
+        restapi (str): REST API URL
+        data_directory (str): directory to save data. leave blank to use current directory
+        enable_rest_request (bool): disables REST request as precaution to avoid unnecessary costs
+    Returns:
+        dict: json data from REST API or file. Returns None if file doesn't exist or incorrect api url request
+    """
+    url_cleaned = url
+    if url_cleaned[0] == '/':
+        url_cleaned = url_cleaned[1:] # requests have a '/' at the beginning, need to remove bc files don't start with /
+    url_cleaned = url_cleaned.replace('/', '_') # replace '/' with '_' to match file format (otherwise will create folders)
+    url_cleaned = url_cleaned.replace('?', '_') # replace '?' with '_' to match file format 
+    url_cleaned = url_cleaned.replace('=', '_') # replace '=' with '_' to match file format
 
-	load_dotenv()
-	
-	headers = {
-		'x-rapidapi-key': os.getenv("RAPID_NFL_API_KEY"),
-		'x-rapidapi-host': os.getenv("RAPID_NFL_API_HOST")
-	}
+    if enable_rest_request:
+        data = _rest_request(url, restapi)
 
-	conn.request("GET", "/nfl-team-listing/v1/data", headers=headers)
+        save_json_data(f'{url_cleaned}.json', data)
+        return load_json_data(f'{url_cleaned}.json')
+    else:
+        if data_directory is None:
+            current_dir_files = os.listdir(os.getcwd())
+        else:
+            current_dir_files = os.listdir(data_directory) 
 
-	res = conn.getresponse()
-	data = res.read()
+        for file in current_dir_files:
+            if file == f'{url_cleaned}.json':
+                return load_json_data(f'{url_cleaned}.json')
 
-	return data.decode('utf-8')
 
-def parse_rest_request(data: str):
-	pass	
+def _rest_request(url: str, restapi: str) -> str:
+    """ Makes a request to the REST API """
+    conn = http.client.HTTPSConnection(restapi)
 
-def save_json_data(filename, data):
+    load_dotenv()
+    
+    headers = {
+        'x-rapidapi-key': os.getenv('RAPID_NFL_API_KEY'),
+        'x-rapidapi-host': os.getenv('RAPID_NFL_API_HOST')
+    }
+
+    conn.request("GET", url, headers=headers)
+
+    res = conn.getresponse()
+    data = res.read()
+
+    return data.decode('utf-8')
+
+def save_json_data(filename: str, data: str) -> None:
+    """ Takes a desired filename and json string data and dumps into file """
     with open(filename, 'w') as fout:
         json_string_data = json.dumps(data)
         fout.write(json_string_data)
         
-def load_json_data(filename):
+def load_json_data(filename: str) -> dict:
+    """ Takes a filename and loads json data from file """
+    json_data = None
     with open(filename) as fin:
         json_data = json.load(fin)
-        return json_data
+
+    json_data = json.loads(json_data)
+    return json_data
+
+def parse_json_data(json_filename: str, csv_filename: str, function_name: str) -> dict:
+    """ Parse existing json file and create a csv """
+    if function_name == 'nfl_team_stats':
+        jc_nfl_team_stats.parse_json_data(json_filename, csv_filename)
+    elif function_name == 'nfl-team-listing_v1_data':
+        jc_nfl_team_listing_v1_data.parse_json_data(json_filename, csv_filename)
+    elif function_name == 'nfl-season_year_x':
+         jc_nfl_season_year_x.parse_json_data(json_filename, csv_filename)
+
 
 if __name__ == '__main__':
-	# url = 'https://www.espn.com/nfl/stats'
-	# headers = configure_headers()
-	# content = run_agent(url, headers)	
-	# parse_bs4_content(content)
-	pass
+    get_route = '/nfl-season?year=2020'
+    restapi = 'api-nfl-v1.p.rapidapi.com'
+    # headers = _configure_headers()
+    # content = run_agent(url, headers)	
+    # parse_bs4_content(content)
+    # retrieve_api_data(get_route, restapi, enable_rest_request=True)
+
+    
+    # PARSING JSON DATA
+    # parse_json_data('api_data/nfl_team_stats.json', 'api_data/nfl_team_stats_parsed.csv', 'nfl_team_stats')
+    # parse_json_data('api_data/nfl-team-listing_v1_data.json', 'api_data/nfl_team_listing_v1_parsed.csv', 'nfl-team-listing_v1_data')
+    parse_json_data('api_data/nfl-season_year_2020.json', 'api_data/nfl_season_year_2020_parsed.csv', 'nfl-season_year_x')
+
+# INSTRUCTIONS:
+# 1) Identify important nfl information in this sample of json data.
+# 2) Create a python function named parse_json_data to that takes a file name that contains this specific json data, extracts important features and values, and saves extracted features and values to a csv file. Pay special attention to how the json data is stored. Ensure that any code takes into account any string, list, or dictionary wrapping around the data and processes it properly.

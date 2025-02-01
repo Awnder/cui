@@ -1,0 +1,33 @@
+Team ID,Team Name,Abbreviation,Location,Color,Alternate Color,Is Active,Default Logo URL,Clubhouse URL
+22,Arizona Cardinals,ARI,Arizona,a40227,ffffff,True,https://a.espncdn.com/i/teamlogos/nfl/500/ari.png,https://www.espn.com/nfl/team/_/name/ari/arizona-cardinals
+1,Atlanta Falcons,ATL,Atlanta,a71930,000000,True,https://a.espncdn.com/i/teamlogos/nfl/500/atl.png,https://www.espn.com/nfl/team/_/name/atl/atlanta-falcons
+33,Baltimore Ravens,BAL,Baltimore,29126f,000000,True,https://a.espncdn.com/i/teamlogos/nfl/500/bal.png,https://www.espn.com/nfl/team/_/name/bal/baltimore-ravens
+2,Buffalo Bills,BUF,Buffalo,00338d,d50a0a,True,https://a.espncdn.com/i/teamlogos/nfl/500/buf.png,https://www.espn.com/nfl/team/_/name/buf/buffalo-bills
+29,Carolina Panthers,CAR,Carolina,0085ca,000000,True,https://a.espncdn.com/i/teamlogos/nfl/500/car.png,https://www.espn.com/nfl/team/_/name/car/carolina-panthers
+3,Chicago Bears,CHI,Chicago,0b1c3a,e64100,True,https://a.espncdn.com/i/teamlogos/nfl/500/chi.png,https://www.espn.com/nfl/team/_/name/chi/chicago-bears
+4,Cincinnati Bengals,CIN,Cincinnati,fb4f14,000000,True,https://a.espncdn.com/i/teamlogos/nfl/500/cin.png,https://www.espn.com/nfl/team/_/name/cin/cincinnati-bengals
+5,Cleveland Browns,CLE,Cleveland,472a08,ff3c00,True,https://a.espncdn.com/i/teamlogos/nfl/500/cle.png,https://www.espn.com/nfl/team/_/name/cle/cleveland-browns
+6,Dallas Cowboys,DAL,Dallas,002a5c,b0b7bc,True,https://a.espncdn.com/i/teamlogos/nfl/500/dal.png,https://www.espn.com/nfl/team/_/name/dal/dallas-cowboys
+7,Denver Broncos,DEN,Denver,0a2343,fc4c02,True,https://a.espncdn.com/i/teamlogos/nfl/500/den.png,https://www.espn.com/nfl/team/_/name/den/denver-broncos
+8,Detroit Lions,DET,Detroit,0076b6,bbbbbb,True,https://a.espncdn.com/i/teamlogos/nfl/500/det.png,https://www.espn.com/nfl/team/_/name/det/detroit-lions
+9,Green Bay Packers,GB,Green Bay,204e32,ffb612,True,https://a.espncdn.com/i/teamlogos/nfl/500/gb.png,https://www.espn.com/nfl/team/_/name/gb/green-bay-packers
+34,Houston Texans,HOU,Houston,00143f,c41230,True,https://a.espncdn.com/i/teamlogos/nfl/500/hou.png,https://www.espn.com/nfl/team/_/name/hou/houston-texans
+11,Indianapolis Colts,IND,Indianapolis,003b75,ffffff,True,https://a.espncdn.com/i/teamlogos/nfl/500/ind.png,https://www.espn.com/nfl/team/_/name/ind/indianapolis-colts
+30,Jacksonville Jaguars,JAX,Jacksonville,007487,d7a22a,True,https://a.espncdn.com/i/teamlogos/nfl/500/jax.png,https://www.espn.com/nfl/team/_/name/jax/jacksonville-jaguars
+12,Kansas City Chiefs,KC,Kansas City,e31837,ffb612,True,https://a.espncdn.com/i/teamlogos/nfl/500/kc.png,https://www.espn.com/nfl/team/_/name/kc/kansas-city-chiefs
+13,Las Vegas Raiders,LV,Las Vegas,000000,a5acaf,True,https://a.espncdn.com/i/teamlogos/nfl/500/lv.png,https://www.espn.com/nfl/team/_/name/lv/las-vegas-raiders
+24,Los Angeles Chargers,LAC,Los Angeles,0080c6,ffc20e,True,https://a.espncdn.com/i/teamlogos/nfl/500/lac.png,https://www.espn.com/nfl/team/_/name/lac/los-angeles-chargers
+14,Los Angeles Rams,LAR,Los Angeles,003594,ffd100,True,https://a.espncdn.com/i/teamlogos/nfl/500/lar.png,https://www.espn.com/nfl/team/_/name/lar/los-angeles-rams
+15,Miami Dolphins,MIA,Miami,008e97,fc4c02,True,https://a.espncdn.com/i/teamlogos/nfl/500/mia.png,https://www.espn.com/nfl/team/_/name/mia/miami-dolphins
+16,Minnesota Vikings,MIN,Minnesota,4f2683,ffc62f,True,https://a.espncdn.com/i/teamlogos/nfl/500/min.png,https://www.espn.com/nfl/team/_/name/min/minnesota-vikings
+17,New England Patriots,NE,New England,002a5c,c60c30,True,https://a.espncdn.com/i/teamlogos/nfl/500/ne.png,https://www.espn.com/nfl/team/_/name/ne/new-england-patriots
+18,New Orleans Saints,NO,New Orleans,d3bc8d,000000,True,https://a.espncdn.com/i/teamlogos/nfl/500/no.png,https://www.espn.com/nfl/team/_/name/no/new-orleans-saints
+19,New York Giants,NYG,New York,003c7f,c9243f,True,https://a.espncdn.com/i/teamlogos/nfl/500/nyg.png,https://www.espn.com/nfl/team/_/name/nyg/new-york-giants
+20,New York Jets,NYJ,New York,115740,ffffff,True,https://a.espncdn.com/i/teamlogos/nfl/500/nyj.png,https://www.espn.com/nfl/team/_/name/nyj/new-york-jets
+21,Philadelphia Eagles,PHI,Philadelphia,06424d,000000,True,https://a.espncdn.com/i/teamlogos/nfl/500/phi.png,https://www.espn.com/nfl/team/_/name/phi/philadelphia-eagles
+23,Pittsburgh Steelers,PIT,Pittsburgh,000000,ffb612,True,https://a.espncdn.com/i/teamlogos/nfl/500/pit.png,https://www.espn.com/nfl/team/_/name/pit/pittsburgh-steelers
+25,San Francisco 49ers,SF,San Francisco,aa0000,b3995d,True,https://a.espncdn.com/i/teamlogos/nfl/500/sf.png,https://www.espn.com/nfl/team/_/name/sf/san-francisco-49ers
+26,Seattle Seahawks,SEA,Seattle,002a5c,69be28,True,https://a.espncdn.com/i/teamlogos/nfl/500/sea.png,https://www.espn.com/nfl/team/_/name/sea/seattle-seahawks
+27,Tampa Bay Buccaneers,TB,Tampa Bay,bd1c36,3e3a35,True,https://a.espncdn.com/i/teamlogos/nfl/500/tb.png,https://www.espn.com/nfl/team/_/name/tb/tampa-bay-buccaneers
+10,Tennessee Titans,TEN,Tennessee,4b92db,002a5c,True,https://a.espncdn.com/i/teamlogos/nfl/500/ten.png,https://www.espn.com/nfl/team/_/name/ten/tennessee-titans
+28,Washington Commanders,WSH,Washington,5a1414,ffb612,True,https://a.espncdn.com/i/teamlogos/nfl/500/wsh.png,https://www.espn.com/nfl/team/_/name/wsh/washington-commanders

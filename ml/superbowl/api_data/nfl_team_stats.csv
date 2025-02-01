@@ -1,0 +1,277 @@
+split_id,split_name,split_abbreviation,category_name,category_displayName,stat_name,stat_displayName,stat_abbreviation,stat_value,stat_displayValue,stat_perGameValue,stat_perGameDisplayValue,stat_rank,stat_rankDisplayValue
+0,All Splits,Any,general,General,fumbles,Fumbles,FUM,21,21,1,1,14,Tied-14th
+0,All Splits,Any,general,General,fumblesLost,Fumbles Lost,LST,6,6,,,25,Tied-25th
+0,All Splits,Any,general,General,fumblesForced,Forced Fumbles,FF,8,8,,,20,20th
+0,All Splits,Any,general,General,fumblesRecovered,Fumbles Recovered,FR,6,6,1,1,27,Tied-27th
+0,All Splits,Any,general,General,fumblesTouchdowns,Fumbles Touchdowns,FTD,1,1,,,4,Tied-4th
+0,All Splits,Any,general,General,gamesPlayed,Games Played,GP,17,17,,,1,Tied-1st
+0,All Splits,Any,general,General,offensiveTwoPtReturns,Two Point Returns,2PTR,0,0,,,1,Tied-1st
+0,All Splits,Any,general,General,offensiveFumblesTouchdowns,Fumbles Touchdowns,OFTD,0,0,,,2,Tied-2nd
+0,All Splits,Any,general,General,defensiveFumblesTouchdowns,Fumbles Touchdowns,DFTD,1,1,,,4,Tied-4th
+0,All Splits,Any,passing,Passing,avgGain,Average Gain,AG,536.94,536.9,,,18,18th
+0,All Splits,Any,passing,Passing,completionPct,Completion Percentage,CMP%,63.964,64.0,64.28500366210938,64.285,20,20th
+0,All Splits,Any,passing,Passing,completions,Completions,CMP,355,355,20,20,19,Tied-19th
+0,All Splits,Any,passing,Passing,ESPNQBRating,ESPN Quarterback Rating,EQBR,4330,4330.0,,,25,25th
+0,All Splits,Any,passing,Passing,interceptionPct,Interception Percentage,INT%,2.162,2.16,2.2890000343322754,2.289,14,14th
+0,All Splits,Any,passing,Passing,interceptions,Interceptions,INT,12,12,,,13,Tied-13th
+0,All Splits,Any,passing,Passing,longPassing,Longest Pass,LNG,69,69,33,33,20,20th
+0,All Splits,Any,passing,Passing,miscYards,Miscellaneous Yards,MISC,0,0,,,1,Tied-1st
+0,All Splits,Any,passing,Passing,netPassingYards,Net Passing Yards,NYDS,3144,"3,144",184,184,26,26th
+0,All Splits,Any,passing,Passing,netPassingYardsPerGame,Net Passing Yards Per Game,NYDS/G,184.94118,184.9,,,26,26th
+0,All Splits,Any,passing,Passing,netTotalYards,Net Total Yards,NTYDS,5509,"5,509",323,323,19,19th
+0,All Splits,Any,passing,Passing,netYardsPerGame,Net Yards Per Game,NTYDS/G,324.05884,324.1,,,19,19th
+0,All Splits,Any,passing,Passing,passingAttempts,Passing Attempts,ATT,555,555,32,32,24,24th
+0,All Splits,Any,passing,Passing,passingBigPlays,Passing Big Plays,BIGP,38,38,,,28,28th
+0,All Splits,Any,passing,Passing,passingFirstDowns,Passing 1st downs,FIRST,173,173,10,10,23,Tied-23rd
+0,All Splits,Any,passing,Passing,passingFumbles,Passing Fumbles,FUM,10,10,,,12,Tied-12th
+0,All Splits,Any,passing,Passing,passingFumblesLost,Passing Fumbles Lost,FL,4,4,,,19,Tied-19th
+0,All Splits,Any,passing,Passing,passingTouchdownPct,Passing Touchdown %,TD%,3.243,3.24,3.125,3.125,24,24th
+0,All Splits,Any,passing,Passing,passingTouchdowns,Passing Touchdowns,TD,18,18,1,1,24,Tied-24th
+0,All Splits,Any,passing,Passing,passingYards,Passing Yards,YDS,3430,"3,430",201,201,26,26th
+0,All Splits,Any,passing,Passing,passingYardsAfterCatch,Passing Yards After Catch,PYAC,1678,"1,678",,,28,28th
+0,All Splits,Any,passing,Passing,passingYardsAtCatch,Passing Yards At Catch,PY@C,1752,"1,752",201,201,25,25th
+0,All Splits,Any,passing,Passing,passingYardsPerGame,Passing Yards Per Game,YDS/G,201.765,201.8,,,26,26th
+0,All Splits,Any,passing,Passing,QBRating,Passer Rating,RTG,82.938,82.9,90.75520324707031,90.755,24,24th
+0,All Splits,Any,passing,Passing,sacks,Total Sacks,SACK,42,42,2,2,14,14th
+0,All Splits,Any,passing,Passing,sackYardsLost,Sack Yards Lost,SYL,286,286,16,16,18,Tied-18th
+0,All Splits,Any,passing,Passing,netPassingAttempts,Net Passing Attempts,NATT,597,597,34,34,38,38th
+0,All Splits,Any,passing,Passing,teamGamesPlayed,Team Games Played,TGP,17,17,,,1,Tied-1st
+0,All Splits,Any,passing,Passing,totalOffensivePlays,Total Offensive Plays,TOP,1068,1068,61,61,51,51st
+0,All Splits,Any,passing,Passing,totalPoints,Total Points,PTS,330,330,18,18,24,24th
+0,All Splits,Any,passing,Passing,totalPointsPerGame,Total Points Per Game,TP,19.412,19.4,,,24,24th
+0,All Splits,Any,passing,Passing,totalTouchdowns,Total Touchdowns,TD,36,36,2,2,23,Tied-23rd
+0,All Splits,Any,passing,Passing,totalYards,Total Yards,TYDS,5795,"5,795",324,324,20,20th
+0,All Splits,Any,passing,Passing,totalYardsFromScrimmage,Total Yards From Scrimmage,CMP,5795,5795,340,340,1,Tied-1st
+0,All Splits,Any,passing,Passing,twoPointPassConvs,Two Point Pass Conversions,2PTPC,2,2,,,11,Tied-11th
+0,All Splits,Any,passing,Passing,twoPtPass,Two Point Pass,2PTP,1,1,,,12,Tied-12th
+0,All Splits,Any,passing,Passing,twoPtPassAttempts,Two Point Pass Attempts,2PTPA,7,7,1,1,1,1st
+0,All Splits,Any,passing,Passing,yardsFromScrimmagePerGame,Yards From Scrimmage Per Game,SCRIM/G,340.88235,341,,,20,20th
+0,All Splits,Any,passing,Passing,yardsPerCompletion,Yards Per Completion,CMP,9.662,9.7,8.76099967956543,8.761,30,30th
+0,All Splits,Any,passing,Passing,yardsPerGame,Yards Per Game,YDS/G,340.882,340.9,,,20,20th
+0,All Splits,Any,passing,Passing,yardsPerPassAttempt,Yards Per Pass Attempt,AVG,6.18,6.2,6.215000152587891,6.215,29,29th
+0,All Splits,Any,passing,Passing,netYardsPerPassAttempt,Net Yards Per Pass Attempt,NYDS/PA,5.266331658291457,5.3,5.411764705882353,5.412,,
+0,All Splits,Any,passing,Passing,quarterbackRating,Quarterback Rating,RAT,82.938,82.9,90.75520324707031,90.755,24,24th
+0,All Splits,Any,rushing,Rushing,avgGain,Average Gain,AG,536.94,536.9,,,18,18th
+0,All Splits,Any,rushing,Rushing,ESPNRBRating,ESPN RB Rating,ESPNRB,2870,2870.00,,,5,5th
+0,All Splits,Any,rushing,Rushing,longRushing,Long Rushing,LNG,49,49,24,24,15,15th
+0,All Splits,Any,rushing,Rushing,miscYards,Miscellaneous Yards,MISC,0,0,,,1,Tied-1st
+0,All Splits,Any,rushing,Rushing,netTotalYards,Net Total Yards,NTYDS,5509,"5,509",323,323,19,19th
+0,All Splits,Any,rushing,Rushing,netYardsPerGame,Net Yards Per Game,CMP,324.05884,324.1,,,19,19th
+0,All Splits,Any,rushing,Rushing,rushingAttempts,Rushing Attempts,CAR,471,471,27,27,13,13th
+0,All Splits,Any,rushing,Rushing,rushingBigPlays,20+ Yard Rushing Plays,BIG,23,23,,,1,1st
+0,All Splits,Any,rushing,Rushing,rushingFirstDowns,Rushing 1st downs,FD,127,127,7,7,6,6th
+0,All Splits,Any,rushing,Rushing,rushingFumbles,Rushing Fumbles,FUM,23,23,,,1,1st
+0,All Splits,Any,rushing,Rushing,rushingFumblesLost,Rushing Fumbles Lost,LST,0,0,,,28,Tied-28th
+0,All Splits,Any,rushing,Rushing,rushingTouchdowns,Rushing Touchdowns,TD,17,17,1,1,9,Tied-9th
+0,All Splits,Any,rushing,Rushing,rushingYards,Rushing Yards,YDS,2365,"2,365",139,139,4,4th
+0,All Splits,Any,rushing,Rushing,rushingYardsPerGame,Rushing Yards Per Game,YDS/G,139.118,139.1,,,4,4th
+0,All Splits,Any,rushing,Rushing,stuffs,Stuffs,STF,64,64,,,5,5th
+0,All Splits,Any,rushing,Rushing,stuffYardsLost,Stuff Yards Lost,SYDSL,-129,-129,,,27,27th
+0,All Splits,Any,rushing,Rushing,teamGamesPlayed,Team Games Played,GP,17,17,,,1,Tied-1st
+0,All Splits,Any,rushing,Rushing,totalOffensivePlays,Total Offensive Plays,OP,1068,1068,61,61,51,51st
+0,All Splits,Any,rushing,Rushing,totalPoints,Total Points,PTS,330,330,18,18,24,24th
+0,All Splits,Any,rushing,Rushing,totalPointsPerGame,Total Points Per Game,TP/G,19.412,19.4,,,24,24th
+0,All Splits,Any,rushing,Rushing,totalTouchdowns,Total Touchdowns,TD,36,36,2,2,23,Tied-23rd
+0,All Splits,Any,rushing,Rushing,totalYards,Total Yards,TYDS,5795,"5,795",324,324,20,20th
+0,All Splits,Any,rushing,Rushing,totalYardsFromScrimmage,Total Yards From Scrimmage,SCRIM,5795,5795,340,340,1,Tied-1st
+0,All Splits,Any,rushing,Rushing,twoPointRushConvs,Two Point Rush Conversion,2PTC,0,0,,,4,Tied-4th
+0,All Splits,Any,rushing,Rushing,twoPtRush,Two Point Rush,2PTR,3,3,,,2,2nd
+0,All Splits,Any,rushing,Rushing,twoPtRushAttempts,Two Point Rush Attempts,CMP,6,6,1,1,2,2nd
+0,All Splits,Any,rushing,Rushing,yardsFromScrimmagePerGame,Yards From Scrimmage Per Game,SCRIM/G,340.88235,340.9,,,20,20th
+0,All Splits,Any,rushing,Rushing,yardsPerGame,Yards Per Game,YDS/G,340.882,340.9,,,20,20th
+0,All Splits,Any,rushing,Rushing,yardsPerRushAttempt,Yards Per Rush Attempt,AVG,5.021,5.0,4.960000038146973,4.96,2,2nd
+0,All Splits,Any,receiving,Receiving,avgGain,Average Gain,AG,536.94,536.9,,,18,18th
+0,All Splits,Any,receiving,Receiving,ESPNWRRating,ESPN Widereceiver Rating,ESPNWR,5835,5835.00,,,25,25th
+0,All Splits,Any,receiving,Receiving,longReception,Long Reception,LNG,69,69,33,33,20,20th
+0,All Splits,Any,receiving,Receiving,miscYards,Miscellaneous Yards,MISC,0,0,,,1,Tied-1st
+0,All Splits,Any,receiving,Receiving,netTotalYards,Net Total Yards,NTYDS,5509,"5,509",323,323,19,19th
+0,All Splits,Any,receiving,Receiving,netYardsPerGame,Net Yards Per Game,CMP,324.05884,324.1,,,19,19th
+0,All Splits,Any,receiving,Receiving,receivingBigPlays,20+ Yard Receiving Plays,BIG,38,38,,,28,28th
+0,All Splits,Any,receiving,Receiving,receivingFirstDowns,Receiving First Downs,FD,173,173,,,23,Tied-23rd
+0,All Splits,Any,receiving,Receiving,receivingFumbles,Receiving Fumbles,FUM,10,10,,,12,Tied-12th
+0,All Splits,Any,receiving,Receiving,receivingFumblesLost,Receiving Fumbles Lost,LST,4,4,,,19,Tied-19th
+0,All Splits,Any,receiving,Receiving,receivingTargets,Receiving Targets,TGTS,540,540,31,31,21,21st
+0,All Splits,Any,receiving,Receiving,receivingTouchdowns,Receiving Touchdowns,TD,18,18,1,1,24,Tied-24th
+0,All Splits,Any,receiving,Receiving,receivingYards,Receiving Yards,YDS,3430,"3,430",201,201,26,26th
+0,All Splits,Any,receiving,Receiving,receivingYardsAfterCatch,Receiving Yards After Catch,YAC,1678,1678,98,98,28,28th
+0,All Splits,Any,receiving,Receiving,receivingYardsAtCatch,Receiving Yards At Catch,Y@C,1752,1752,103,103,25,25th
+0,All Splits,Any,receiving,Receiving,receivingYardsPerGame,Receiving Yards Per Game,YDS/G,201.765,201.8,,,26,26th
+0,All Splits,Any,receiving,Receiving,receptions,Receptions,REC,355,355,20,20,19,Tied-19th
+0,All Splits,Any,receiving,Receiving,teamGamesPlayed,Team Games Played,GP,17,17,,,1,Tied-1st
+0,All Splits,Any,receiving,Receiving,totalOffensivePlays,Total Offensive Plays,OP,1068,1068,61,61,51,51st
+0,All Splits,Any,receiving,Receiving,totalPoints,Total Points,PTS,330,330,18,18,24,24th
+0,All Splits,Any,receiving,Receiving,totalPointsPerGame,Total Points Per Game,TP/G,19.412,19.4,,,24,24th
+0,All Splits,Any,receiving,Receiving,totalTouchdowns,Total Touchdowns,TD,36,36,2,2,23,Tied-23rd
+0,All Splits,Any,receiving,Receiving,totalYards,Total Yards,TYDS,5795,"5,795",324,324,20,20th
+0,All Splits,Any,receiving,Receiving,totalYardsFromScrimmage,Total Yards From Scrimmage,SCRIM,5795,5795,340,340,1,Tied-1st
+0,All Splits,Any,receiving,Receiving,twoPointRecConvs,Two Point Receiving Conversion,2PTC,540,540,31,31,21,21st
+0,All Splits,Any,receiving,Receiving,twoPtReception,Two Point Receptions,2PTR,1,1,,,12,Tied-12th
+0,All Splits,Any,receiving,Receiving,twoPtReceptionAttempts,Two Point Reception Attempts,CMP,7,7,1,1,1,1st
+0,All Splits,Any,receiving,Receiving,yardsFromScrimmagePerGame,Yards From Scrimmage Per Game,SCRIM/G,340.88235,340.9,,,20,20th
+0,All Splits,Any,receiving,Receiving,yardsPerGame,Yards Per Game,YDS/G,340.882,340.9,,,20,20th
+0,All Splits,Any,receiving,Receiving,yardsPerReception,Yards Per Reception,AVG,9.662,9.7,9.670999526977539,9.671,30,30th
+0,All Splits,Any,defensive,Defense,assistTackles,Assist Tackles,AST,449,449,24,24,10,Tied-10th
+0,All Splits,Any,defensive,Defense,avgInterceptionYards,Average Interception Yards,AVG,8.909,8.9,7.480999946594238,7.481,25,25th
+0,All Splits,Any,defensive,Defense,avgSackYards,Average Sack Yards,YDS/SACK,7.061,7.1,6.965000152587891,6.965,9,9th
+0,All Splits,Any,defensive,Defense,avgStuffYards,Average Stuff Yards,YDS/STF,4.651,4.7,,,29,29th
+0,All Splits,Any,defensive,Defense,blockedFieldGoalTouchdowns,Block Field Goal Touchdown,BFGTD,0,0,,,2,Tied-2nd
+0,All Splits,Any,defensive,Defense,blockedPuntTouchdowns,Blocked Punt Touchdowns,BPTD,0,0,,,8,Tied-8th
+0,All Splits,Any,defensive,Defense,defensiveTouchdowns,Defensive Touchdown,TD,1,1,,,19,Tied-19th
+0,All Splits,Any,defensive,Defense,hurries,Hurries,HUR,0,0,,,1,Tied-1st
+0,All Splits,Any,defensive,Defense,kicksBlocked,Kicks Blocked,KB,0,0,,,22,Tied-22nd
+0,All Splits,Any,defensive,Defense,longInterception,Long Interception,LNG,46,46,,,18,18th
+0,All Splits,Any,defensive,Defense,miscTouchdowns,Miscellaneous Touchdowns,MISCTD,0,0,,,3,Tied-3rd
+0,All Splits,Any,defensive,Defense,passesBattedDown,Passes Batted Down,BATD,0,0,,,1,Tied-1st
+0,All Splits,Any,defensive,Defense,passesDefended,Passes Defended,PD,66,66,3,3,25,Tied-25th
+0,All Splits,Any,defensive,Defense,twoPtReturns,Two Point Returns,2PTR,0,0,,,2,Tied-2nd
+0,All Splits,Any,defensive,Defense,sacks,Sacks,SACK,33,33,1.940999984741211,1.941,30,30th
+0,All Splits,Any,defensive,Defense,sackYards,Sack Yards,SCKYDS,233,233,13.706000328063965,13.706,29,29th
+0,All Splits,Any,defensive,Defense,safeties,Safeties,SAFE,0,0,,,9,Tied-9th
+0,All Splits,Any,defensive,Defense,soloTackles,Solo Tackles,SOLO,769,769,41,41,66,Tied-66th
+0,All Splits,Any,defensive,Defense,stuffs,Stuffs,STF,43,43,3,3,9,Tied-9th
+0,All Splits,Any,defensive,Defense,stuffYards,Stuff Yards,STFYDS,200,200,,,29,29th
+0,All Splits,Any,defensive,Defense,tacklesForLoss,Tackles For Loss,TFL,76,76,4.4710001945495605,4.471,21,Tied-21st
+0,All Splits,Any,defensive,Defense,teamGamesPlayed,Team Games Played,GP,17,17,,,1,Tied-1st
+0,All Splits,Any,defensive,Defense,totalTackles,Total Tackles,TOT,1218,1218,65,65,76,Tied-76th
+0,All Splits,Any,defensive,Defense,yardsAllowed,Yards Allowed,YA,0,0,,,1,Tied-1st
+0,All Splits,Any,defensive,Defense,pointsAllowed,Points Allowed,PA,0,0,,,1,Tied-1st
+0,All Splits,Any,defensive,Defense,onePtSafetiesMade,One Point Safeties Made,OPSM,0,0,,,1,Tied-1st
+0,All Splits,Any,defensive,Defense,missedFieldGoalReturnTd,Missed Field Goal Return TD,MFGRTD,0,0,,,1,Tied-1st
+0,All Splits,Any,defensive,Defense,blockedPuntEzRecTd,Blocked Punt Ez Rec TD,BPERTD,0,0,,,1,Tied-1st
+0,All Splits,Any,defensiveInterceptions,Defensive Interceptions,interceptions,Interceptions,INT,11,11,,,19,Tied-19th
+0,All Splits,Any,defensiveInterceptions,Defensive Interceptions,interceptionTouchdowns,Interception Touchdowns,TD,0,0,,,24,Tied-24th
+0,All Splits,Any,defensiveInterceptions,Defensive Interceptions,interceptionYards,Interception Yards,YDS,98,98,5,5,23,23rd
+0,All Splits,Any,kicking,Kicking,avgKickoffReturnYards,Average Kickoff Return Yards,YDS/KR,21.222,21.2,14.597999572753906,14.598,2,2nd
+0,All Splits,Any,kicking,Kicking,avgKickoffYards,Average Kickoff Yards,YDS/K,61.342,61.3,5.789000034332275,5.789,4,4th
+0,All Splits,Any,kicking,Kicking,extraPointAttempts,Extra Point Attempts,XPA,23,23,1,1,4,4th
+0,All Splits,Any,kicking,Kicking,extraPointPct,Extra Point Percentage,XP%,95.652,95.7,80.39199829101562,80.392,3,3rd
+0,All Splits,Any,kicking,Kicking,extraPointsBlocked,Extra Point Blocked,XPB,0,0,,,1,Tied-1st
+0,All Splits,Any,kicking,Kicking,extraPointsBlockedPct,Extra Points Blocked Percentage,XPB%,0,0,,,1,Tied-1st
+0,All Splits,Any,kicking,Kicking,extraPointsMade,Extra Points Made,XPM,22,22,1,1,4,4th
+0,All Splits,Any,kicking,Kicking,fairCatches,Fair Catches,FC,2,2,,,3,3rd
+0,All Splits,Any,kicking,Kicking,fairCatchPct,Fair Catch Percentage,FC%,2.532,2.5,9.1899995803833,9.19,3,3rd
+0,All Splits,Any,kicking,Kicking,fieldGoalAttempts,Field Goal Attempts,FGA,33,33,1,1,3,3rd
+0,All Splits,Any,kicking,Kicking,fieldGoalAttempts1_19,Field Goal Attempts 1-19,FGA 1-19,0,0,,,1,Tied-1st
+0,All Splits,Any,kicking,Kicking,fieldGoalAttempts20_29,Field Goal Attempts 20-29,FGA 20-29,6,6,,,4,4th
+0,All Splits,Any,kicking,Kicking,fieldGoalAttempts30_39,Field Goal Attempts 30-39,FGA 30-39,8,8,,,3,3rd
+0,All Splits,Any,kicking,Kicking,fieldGoalAttempts40_49,Field Goal Attempts 40-49,FGA 40-49,7,7,,,3,3rd
+0,All Splits,Any,kicking,Kicking,fieldGoalAttempts50_59,Field Goal Attempts 50-59,FGA 50-59,11,11,,,1,1st
+0,All Splits,Any,kicking,Kicking,fieldGoalAttempts60_99,Field Goal Attempts 60-99,FGA 60-99,1,1,,,1,1st
+0,All Splits,Any,kicking,Kicking,fieldGoalAttempts50,Field Goal Attempts 50+,FGA 50+,12,12,,,2,2nd
+0,All Splits,Any,kicking,Kicking,fieldGoalAttemptYards,Field Goal Attempt Yards,FGAYDS,1413,"1,413",89,89,3,3rd
+0,All Splits,Any,kicking,Kicking,fieldGoalPct,Field Goal Percentage,FG%,84.848,84.8,74.51000213623047,74.51,1,1st
+0,All Splits,Any,kicking,Kicking,fieldGoalsBlocked,Field Goals Blocked,FGB,0,0,,,1,Tied-1st
+0,All Splits,Any,kicking,Kicking,fieldGoalsBlockedPct,Field Goals Blocked Percentage,CMP,0,0.0,,,1,Tied-1st
+0,All Splits,Any,kicking,Kicking,fieldGoalsMade,Field Goal Made,FGM,28,28,1,1,3,3rd
+0,All Splits,Any,kicking,Kicking,fieldGoalsMade1_19,Field Goals Made 1-19,FGM 1-19,0,0,,,1,Tied-1st
+0,All Splits,Any,kicking,Kicking,fieldGoalsMade20_29,Field Goals Made 20-29,FGM 20-29,6,6,,,4,4th
+0,All Splits,Any,kicking,Kicking,fieldGoalsMade30_39,Field Goals Made 30-39,FGM 30-39,7,7,,,3,Tied-3rd
+0,All Splits,Any,kicking,Kicking,fieldGoalsMade40_49,Field Goals Made 40-49,FGM 40-49,6,6,,,3,3rd
+0,All Splits,Any,kicking,Kicking,fieldGoalsMade50_59,Field Goals Made 50-59,FGM 50-59,8,8,,,1,1st
+0,All Splits,Any,kicking,Kicking,fieldGoalsMade60_99,Field Goals Made 60-99,FGM 60-99,1,1,,,1,1st
+0,All Splits,Any,kicking,Kicking,fieldGoalsMade50,Field Goals Made 50+,50+,9,9,,,2,2nd
+0,All Splits,Any,kicking,Kicking,fieldGoalsMadeYards,Field Goals Made Yards,FGMYDS,1174,"1,174",75,75,2,2nd
+0,All Splits,Any,kicking,Kicking,fieldGoalsMissedYards,Field Goals Missed Yards,FGMSYD,239,239,14,14,3,3rd
+0,All Splits,Any,kicking,Kicking,kickoffReturns,Kickoff Returns,KR,18,18,1,1,3,3rd
+0,All Splits,Any,kicking,Kicking,kickoffReturnTouchdowns,Kickoff Return Touchdowns,KRTD,0,0,,,1,Tied-1st
+0,All Splits,Any,kicking,Kicking,kickoffReturnYards,Kickoff Return Yards,KRYDS,382,382,22,22,2,2nd
+0,All Splits,Any,kicking,Kicking,kickoffs,Kickoffs,K,79,79,4,4,4,4th
+0,All Splits,Any,kicking,Kicking,kickoffYards,Kickoff Yards,KYDS,4846,"4,846",25,25,4,4th
+0,All Splits,Any,kicking,Kicking,longFieldGoalAttempt,Long Field Goal Attempt,LFGA,62,62,,,1,1st
+0,All Splits,Any,kicking,Kicking,longFieldGoalMade,Long Field Goal Made,LNG,62,62,40,40,1,1st
+0,All Splits,Any,kicking,Kicking,longKickoff,Long Kickoff,LK,70,70,25,25,3,3rd
+0,All Splits,Any,kicking,Kicking,teamGamesPlayed,Team Games Played,GP,17,17,,,1,Tied-1st
+0,All Splits,Any,kicking,Kicking,totalKickingPoints,Total Kicking Points,PTS,106,106,6,6,4,4th
+0,All Splits,Any,kicking,Kicking,touchbackPct,Touchback Percentage,TB%,83.544,84,83.26399993896484,83.264,2,2nd
+0,All Splits,Any,kicking,Kicking,touchbacks,Touchbacks,TB,66,66,3,3,2,2nd
+0,All Splits,Any,returning,Returning,defFumbleReturns,Defensive Fumbles Returns,DFR,0,0,,,1,Tied-1st
+0,All Splits,Any,returning,Returning,defFumbleReturnYards,Defensive Fumble Return Yards,DFRYDS,0,0,,,1,Tied-1st
+0,All Splits,Any,returning,Returning,fumbleRecoveries,Fumble Recoveries,FR,6,6,,,27,Tied-27th
+0,All Splits,Any,returning,Returning,fumbleRecoveryYards,Fumble Recovery Yards,YDS,4,4,,,30,30th
+0,All Splits,Any,returning,Returning,kickReturnFairCatches,Kick Return Fair Catches,KRFC,1,1,,,16,Tied-16th
+0,All Splits,Any,returning,Returning,kickReturnFairCatchPct,Kick Return Fair Catch Percentage,KRFC%,5.263158,5.26,,,53,53rd
+0,All Splits,Any,returning,Returning,kickReturnFumbles,Kick Return Fumbles,KRF,0,0,,,1,Tied-1st
+0,All Splits,Any,returning,Returning,kickReturnFumblesLost,Kick Return Fumbles Lost,KRFL,0,0,,,1,Tied-1st
+0,All Splits,Any,returning,Returning,kickReturns,Kick Returns,ATT,18,18,1,1,14,Tied-14th
+0,All Splits,Any,returning,Returning,kickReturnTouchdowns,Kick Return Touchdowns,TD,0,0,,,4,Tied-4th
+0,All Splits,Any,returning,Returning,kickReturnYards,Kick Return Yards,YDS,382,382,22,22,20,20th
+0,All Splits,Any,returning,Returning,longKickReturn,Long Kick Return,LNG,40,40,15,15,15,Tied-15th
+0,All Splits,Any,returning,Returning,longPuntReturn,Long Punt Return,LNG,49,49,11,11,14,14th
+0,All Splits,Any,returning,Returning,miscFumbleReturns,Miscellaneous Fumbles Returns,MFR,0,0,,,1,Tied-1st
+0,All Splits,Any,returning,Returning,miscFumbleReturnYards,Miscellaneous Fumble Return Yards,MFRYDS,0,0,,,1,Tied-1st
+0,All Splits,Any,returning,Returning,oppFumbleRecoveries,Opposition Fumble Recoveries,OPFR,6,6,,,25,Tied-25th
+0,All Splits,Any,returning,Returning,oppFumbleRecoveryYards,Opposition Fumble Recovery Yards,OFRYDS,1,1,,,26,Tied-26th
+0,All Splits,Any,returning,Returning,oppSpecialTeamFumbleReturns,Opposition Special Team Fumble Returns,OPSTFR,0,0,,,1,Tied-1st
+0,All Splits,Any,returning,Returning,oppSpecialTeamFumbleReturnYards,Opposition Special Team Fumble Return Yards,OFRYDS,0,0,,,1,Tied-1st
+0,All Splits,Any,returning,Returning,puntReturnFairCatches,Punt Return Fair Catches,FC,11,11,,,32,32nd
+0,All Splits,Any,returning,Returning,puntReturnFairCatchPct,Punt Return Fair Catch Percentage,PRFC%,26.190477,26.19,,,177,177th
+0,All Splits,Any,returning,Returning,puntReturnFumbles,Punt Return Fumbles,PRF,0,0,,,1,Tied-1st
+0,All Splits,Any,returning,Returning,puntReturnFumblesLost,Punt Return Fumbles Lost,PRFL,0,0,,,1,Tied-1st
+0,All Splits,Any,returning,Returning,puntReturns,Punt Returns,ATT,31,31,1,1,14,Tied-14th
+0,All Splits,Any,returning,Returning,puntReturnsStartedInsideThe10,Punt Returns Started Inside the 10,PR 10,0,0,,,1,Tied-1st
+0,All Splits,Any,returning,Returning,puntReturnsStartedInsideThe20,Punt Returns Started Inside the 20,PR 20,0,0,,,1,Tied-1st
+0,All Splits,Any,returning,Returning,puntReturnTouchdowns,Punt Return Touchdowns,TD,0,0,,,9,Tied-9th
+0,All Splits,Any,returning,Returning,puntReturnYards,Punt Return Yards,YDS,286,286,16,16,18,18th
+0,All Splits,Any,returning,Returning,specialTeamFumbleReturns,Special Team Fumbles Returns,STFR,0,0,,,1,Tied-1st
+0,All Splits,Any,returning,Returning,specialTeamFumbleReturnYards,Special Team Fumble Return Yards,STFRYD,0,0,,,1,Tied-1st
+0,All Splits,Any,returning,Returning,teamGamesPlayed,Team Games Played,GP,17,17,,,1,Tied-1st
+0,All Splits,Any,returning,Returning,yardsPerKickReturn,Yards Per Kick Return,AVG,21.222221,21.2,22,22,1,Tied-1st
+0,All Splits,Any,returning,Returning,yardsPerPuntReturn,Yards Per Punt Return,AVG,9.225806,9.2,16,16,1,Tied-1st
+0,All Splits,Any,returning,Returning,yardsPerReturn,Yards Per Return,YDS/R,13.632653,13.6,19,19,1,Tied-1st
+0,All Splits,Any,punting,Punting,avgPuntReturnYards,Average Punt Return Yards,AVG,10.167,10.2,8.302000045776367,8.302,13,13th
+0,All Splits,Any,punting,Punting,fairCatches,Fair Catches,FC,12,12,,,28,Tied-28th
+0,All Splits,Any,punting,Punting,grossAvgPuntYards,Gross Average Punt Yards,AVG,49.563,49.6,46.60499954223633,46.605,6,6th
+0,All Splits,Any,punting,Punting,longPunt,Long Punt,LNG,77,77,55,55,4,4th
+0,All Splits,Any,punting,Punting,netAvgPuntYards,Net Average Punt Yards,NET,43.844,43.8,41.25,41.25,11,11th
+0,All Splits,Any,punting,Punting,puntReturns,Punt Returns,ATT,36,36,2,2,7,7th
+0,All Splits,Any,punting,Punting,puntReturnYards,Punt Return Yards,YDS,366,366,21,21,8,8th
+0,All Splits,Any,punting,Punting,punts,Punts,PUNTS,64,64,3,3,21,21st
+0,All Splits,Any,punting,Punting,puntsBlocked,Punts Blocked,PBLK,0,0,,,6,Tied-6th
+0,All Splits,Any,punting,Punting,puntsBlockedPct,Punts Blocked Percentage,PBLK%,0,0.00,,,6,Tied-6th
+0,All Splits,Any,punting,Punting,puntsInside10,Punts Inside 10,P 10,5,5,,,31,31st
+0,All Splits,Any,punting,Punting,puntsInside10Pct,Punts Inside 10 Percentage,P 10%,7.813,7.81,,,31,31st
+0,All Splits,Any,punting,Punting,puntsInside20,Punts Inside 20,IN20,13,13,,,32,32nd
+0,All Splits,Any,punting,Punting,puntsInside20Pct,Punts Inside 20 Percentage,IN20%,20.313,20.31,18.94099998474121,18.941,32,32nd
+0,All Splits,Any,punting,Punting,puntYards,Punt Yards,YDS,3172,"3,172",186,186,19,19th
+0,All Splits,Any,punting,Punting,teamGamesPlayed,Team Games Played,GP,17,17,,,1,Tied-1st
+0,All Splits,Any,punting,Punting,touchbackPct,Touchback Percentage,TB%,4.688,4.69,4.118000030517578,4.118,25,25th
+0,All Splits,Any,punting,Punting,touchbacks,Touchbacks,TB,3,3,,,24,Tied-24th
+0,All Splits,Any,scoring,Scoring,defensivePoints,Defensive Points,DP,0,0,2,2,14,Tied-14th
+0,All Splits,Any,scoring,Scoring,fieldGoals,Field Goals,FG,28,28,1,1,20,20th
+0,All Splits,Any,scoring,Scoring,kickExtraPoints,Kick Extra Points,PAT,22,22,1,1,30,30th
+0,All Splits,Any,scoring,Scoring,miscPoints,Miscellaneous Points,MISP,0,0,,,1,Tied-1st
+0,All Splits,Any,scoring,Scoring,passingTouchdowns,Passing Touchdowns,PASS,18,18,1,1,24,Tied-24th
+0,All Splits,Any,scoring,Scoring,receivingTouchdowns,Receiving Touchdowns,REC,18,18,1,1,24,Tied-24th
+0,All Splits,Any,scoring,Scoring,returnTouchdowns,Return Touchdowns,RET,1,1,,,24,Tied-24th
+0,All Splits,Any,scoring,Scoring,rushingTouchdowns,Rushing Touchdowns,RUSH,17,17,1,1,9,Tied-9th
+0,All Splits,Any,scoring,Scoring,totalPoints,Total Points,PTS,330,330,19,19,24,24th
+0,All Splits,Any,scoring,Scoring,totalPointsPerGame,Total Points Per Game,TP/G,19.412,19.4,,,24,24th
+0,All Splits,Any,scoring,Scoring,totalTouchdowns,Total Touchdowns,TD,36,36,2,2,23,Tied-23rd
+0,All Splits,Any,scoring,Scoring,totalTwoPointConvs,Total Two Point Conversions,2PT,4,4,,,2,Tied-2nd
+0,All Splits,Any,scoring,Scoring,twoPointPassConvs,Two Point Pass Conversions,2PTPC,1,1,,,12,Tied-12th
+0,All Splits,Any,scoring,Scoring,twoPointRecConvs,Two Point Receiving Conversion,2PTRCC,1,1,,,12,Tied-12th
+0,All Splits,Any,scoring,Scoring,twoPointRushConvs,Two Point Rush Conversion,2PTRUC,3,3,,,2,2nd
+0,All Splits,Any,scoring,Scoring,onePtSafetiesMade,One Point Safeties Made,OPSM,0,0,,,1,Tied-1st
+0,All Splits,Any,miscellaneous,Miscellaneous,firstDowns,Total 1st downs,CMP,330,330,19,19,14,14th
+0,All Splits,Any,miscellaneous,Miscellaneous,firstDownsPassing,Passing 1st downs,FDP,173,173,10,10,23,Tied-23rd
+0,All Splits,Any,miscellaneous,Miscellaneous,firstDownsPenalty,1st downs by penalty,FDPEN,30,30,1,1,16,Tied-16th
+0,All Splits,Any,miscellaneous,Miscellaneous,firstDownsPerGame,First Downs Per Game,FD/G,19.412,19.41,19,19,14,14th
+0,All Splits,Any,miscellaneous,Miscellaneous,firstDownsRushing,Rushing 1st downs,FDR,127,127,7,7,6,6th
+0,All Splits,Any,miscellaneous,Miscellaneous,fourthDownAttempts,First Downs Attempts,FDA,34,34,2,2,4,4th
+0,All Splits,Any,miscellaneous,Miscellaneous,fourthDownConvPct,4th down %,4THC%,44.118,44.12,34.31399917602539,34.314,27,27th
+0,All Splits,Any,miscellaneous,Miscellaneous,fourthDownConvs,Fourth Down Conversions,4THC,15,15,,,10,Tied-10th
+0,All Splits,Any,miscellaneous,Miscellaneous,fumblesLost,Fumbles Lost,LST,6,6,,,25,Tied-25th
+0,All Splits,Any,miscellaneous,Miscellaneous,possessionTimeSeconds,Possession Time Seconds,POSS,29879,29879,1757,"1,757",25,25th
+0,All Splits,Any,miscellaneous,Miscellaneous,redzoneEfficiencyPct,Red Zone Efficiency Percentage,CMP,73.75,73.75,,,3,3rd
+0,All Splits,Any,miscellaneous,Miscellaneous,redzoneFieldGoalPct,Red Zone Field Goal Percentage,RZFG%,25.58,25.58,,,20,Tied-20th
+0,All Splits,Any,miscellaneous,Miscellaneous,redzoneScoringPct,Red Zone Scoring Percentage,RZ%,88.37,88.37,59,59,3,3rd
+0,All Splits,Any,miscellaneous,Miscellaneous,redzoneTouchdownPct,Red Zone Touchdown Percentage,RZTD%,62.79,62.79,,,6,6th
+0,All Splits,Any,miscellaneous,Miscellaneous,thirdDownAttempts,Third Down Attempts,3RDA,225,225,13,13,15,Tied-15th
+0,All Splits,Any,miscellaneous,Miscellaneous,thirdDownConvPct,3rd down %,3RDC%,39.111,39.11,38.61399841308594,38.614,14,14th
+0,All Splits,Any,miscellaneous,Miscellaneous,thirdDownConvs,Third Down Conversions,3RDC,88,88,5,5,13,Tied-13th
+0,All Splits,Any,miscellaneous,Miscellaneous,totalGiveaways,Total Giveaways,TGV,18,18,,,22,Tied-22nd
+0,All Splits,Any,miscellaneous,Miscellaneous,totalPenalties,Total Penalties,TPEN,101,101,5,5,11,Tied-11th
+0,All Splits,Any,miscellaneous,Miscellaneous,totalPenaltyYards,Total Penalty Yards,TPY,859,859,50,50,10,10th
+0,All Splits,Any,miscellaneous,Miscellaneous,totalTakeaways,Total Takeaways,TT,17,17,,,27,Tied-27th
+0,All Splits,Any,miscellaneous,Miscellaneous,totalDrives,Total Drives,D,0,0,,,1,Tied-1st
+0,All Splits,Any,miscellaneous,Miscellaneous,turnOverDifferential,Turnover Ratio,DIFF,-1,-1,,,19,19th

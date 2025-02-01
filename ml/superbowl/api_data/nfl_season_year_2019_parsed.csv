@@ -1,0 +1,5 @@
+Year,Season Name,Abbreviation,Start Date,End Date,Has Groups,Has Standings,Slug
+2019,Preseason,pre,2019-07-31T07:00Z,2019-09-05T06:59Z,False,True,preseason
+2019,Regular Season,reg,2019-09-05T07:00Z,2020-01-01T07:59Z,False,True,regular-season
+2019,Postseason,post,2020-01-01T08:00Z,2020-02-06T07:59Z,False,False,post-season
+2019,Off Season,off,2020-02-06T08:00Z,2020-08-05T06:59Z,False,False,off-season
