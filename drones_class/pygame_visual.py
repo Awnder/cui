@@ -4,32 +4,25 @@ import tello_sim
 import dragonflight
 import logging
 import cv2
+import time
 import threading
 
 # https://pyimagesearch.com/2015/12/21/increasing-webcam-fps-with-python-and-opencv/
 # https://www.reddit.com/r/computervision/comments/g9ikr6/help_with_latency_in_video/?rdt=52617
 
 
-### GLOBAL VARIABLES FOR VIDEO FEED ###
-webcam_data = {'surface': None, 'rect': None}
+### GLOBAL VARIABLES FOR VIDEO FEED THREADING ###
+current_frame = None
+frame_lock = threading.Lock()
 
-def video_feed(drone, stop_thread_event, display_video_live=False, SCREEN_WIDTH=960, SCREEN_HEIGHT=720):
-    drone.streamon()
-
-    while not stop_thread_event.is_set():
+def capture_frames(drone, capture: bool):
+    """ threading function to capture frames from the drone """
+    global current_frame
+    while capture:
         frame = drone.get_frame_read().frame
-        if display_video_live and frame is not None:
-            cv2_frame = cv2.flip(frame, 1)
-            print('getting frame')
-            webcam_surface = pygame.surfarray.make_surface(cv2_frame)
-            webcam_surface = pygame.transform.rotate(webcam_surface, -90)
-            webcam_rect = webcam_surface.get_rect()
-            webcam_rect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
-
-            print('updating global variables')
-            # updating global variables outside of thread
-            webcam_data['surface'] = webcam_surface
-            webcam_data['rect'] = webcam_rect
+        with frame_lock:
+            current_frame = frame
+        time.sleep(0.03) # capture every 30ms or about 33fps
 
 def main():
     ### PYGAME SETUP ###
@@ -49,9 +42,6 @@ def main():
 
     # Make an all black surface (black is default color: 0,0,0)
     background = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
-
-    # Initialize mouse variables
-    mouse_pos = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
 
     # Create a surface from an image
     logo_surface = pygame.image.load('dragon_drone_logo2.jpg')
@@ -87,7 +77,7 @@ def main():
     display_logo = True
     FPS = '30' # set drone camera fps - 5, 15, or 30
     stop_thread_event = threading.Event()
-    video_thread = threading.Thread(target=video_feed, args=(drone, stop_thread_event, False, SCREEN_WIDTH, SCREEN_HEIGHT), daemon=True)
+    video_thread = threading.Thread(target=capture_frames, args=(drone, True), daemon=True)
     video_thread.start()
 
     ### GAME LOOP ###
@@ -230,10 +220,16 @@ def main():
         if display_logo:
             screen.blit(logo_surface, logo_rect)
         else:
-            if webcam_data['surface'] is None and webcam_data['rect'] is None:
-                screen.blit(logo_surface, logo_rect)
-            else:
-                screen.blit(webcam_data['surface'], webcam_data['rect'])
+            with frame_lock:
+                if current_frame is not None:
+                    cv2_frame = cv2.flip(current_frame, 1)
+                    webcam_surface = pygame.surfarray.make_surface(cv2_frame)
+                    webcam_surface = pygame.transform.rotate(webcam_surface, -90)
+                    webcam_rect = webcam_surface.get_rect()
+                    webcam_rect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
+                    screen.blit(webcam_surface, webcam_rect)
+                else:
+                    screen.blit(logo_surface, logo_rect)
 
         # if display_logo:
         #     screen.blit(logo_surface, logo_rect)
@@ -271,8 +267,6 @@ def main():
         clock.tick(int(FPS))
 
     # Close down everything
-    stop_thread_event.set()
-    video_thread.join()
     drone.streamoff()
     cv2.destroyAllWindows()
     pygame.quit()
