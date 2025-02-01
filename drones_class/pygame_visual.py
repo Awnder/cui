@@ -1,28 +1,32 @@
-# Professor Tallman's Code
-
 import pygame
 from djitellopy import Tello
 import tello_sim
 import dragonflight
 import logging
 import cv2
-import asyncio
+import threading
 
-# async def turn_on_camera(drone, font):
-#     """ turns on camera returns a text surface to update user on camera turning on """
-#     await drone.streamon()
-#     text_surface = font.render(f"Camera is loading...")
-#     text_surface = text_surface.get_rect()
-#     text_surface.center = (80, 20)
-#     return text_surface
+# https://pyimagesearch.com/2015/12/21/increasing-webcam-fps-with-python-and-opencv/
+# https://www.reddit.com/r/computervision/comments/g9ikr6/help_with_latency_in_video/?rdt=52617
+
+
+### GLOBAL VARIABLES FOR VIDEO FEED ###
+webcam_surface = None
+webcam_rect = None
+
+def video_feed(drone, stop_thread_event, display_video_live=False, SCREEN_WIDTH=960, SCREEN_HEIGHT=720):
+    drone.streamon()
+
+    while not stop_thread_event.isSet():
+        frame = drone.get_frame_read().frame
+        if display_video_live and frame is not None:
+            cv2_frame = cv2.flip(frame, 1)
+            webcam_surface = pygame.surfarray.make_surface(cv2_frame)
+            webcam_surface = pygame.transform.rotate(webcam_surface, -90)
+            webcam_rect = webcam_surface.get_rect()
+            webcam_rect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
 
 def main():
-    ### CAMERA STUFF ###
-    clock = pygame.time.Clock()
-    show_logo = True
-    initializing_camera = False
-    fps = '30' # set drone camera fps - 5, 15, or 30
-
     ### PYGAME SETUP ###
     SCREEN_WIDTH = 960
     SCREEN_HEIGHT = 720
@@ -72,6 +76,14 @@ def main():
     # mytello = tello_sim.DroneSim()
     mytello = Tello()
     drone = dragonflight.Dragon(mytello, mission_params, logging.WARNING)
+
+    ### THREADING VIDEO SETUP ###
+    clock = pygame.time.Clock()
+    display_logo = True
+    FPS = '30' # set drone camera fps - 5, 15, or 30
+    stop_thread_event = threading.Event()
+    video_thread = threading.Thread(target=video_feed, args=(drone, stop_thread_event, False, SCREEN_WIDTH, SCREEN_HEIGHT), daemon=True)
+    video_thread.start()
 
     ### GAME LOOP ###
     running = True
@@ -155,12 +167,12 @@ def main():
             drone.flip_right()
 
         if keys[pygame.K_c]:
-            if show_logo:
+            if display_logo:
                 drone.streamon()
-                show_logo = not show_logo
+                display_logo = not display_logo
             else:
                 drone.streamoff()
-                show_logo = not show_logo
+                display_logo = not display_logo
 
         # Send command to drone
         drone.send_rc_control(velocity_y, velocity_x, velocity_z, rotation)
@@ -210,19 +222,23 @@ def main():
         ### BLIPPING TO SCREEN ###
         screen.blit(background, (0, 0))
 
-        if show_logo:
+        if display_logo:
             screen.blit(logo_surface, logo_rect)
         else:
-            cv2_frame = drone.get_frame_read().frame
+            screen.blit(webcam_surface, webcam_rect)
 
-            if cv2_frame is not None:
-                cv2_frame = cv2.flip(cv2_frame, 1)
-                webcam_surface = pygame.surfarray.make_surface(cv2_frame)
-                webcam_surface = pygame.transform.rotate(webcam_surface, -90)
-                webcam_rect = webcam_surface.get_rect()
-                webcam_rect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
-                screen.blit(webcam_surface, webcam_rect)
+        # if display_logo:
+        #     screen.blit(logo_surface, logo_rect)
+        # else:
+        #     cv2_frame = drone.get_frame_read().frame
 
+        #     if cv2_frame is not None:
+        #         cv2_frame = cv2.flip(cv2_frame, 1)
+        #         webcam_surface = pygame.surfarray.make_surface(cv2_frame)
+        #         webcam_surface = pygame.transform.rotate(webcam_surface, -90)
+        #         webcam_rect = webcam_surface.get_rect()
+        #         webcam_rect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
+        #         screen.blit(webcam_surface, webcam_rect)
 
         screen.blit(battery_surface, battery_rect)
         screen.blit(height_surface, height_rect)
@@ -244,9 +260,11 @@ def main():
 
         ### UPDATING SCREEN ###
         pygame.display.update()
-        clock.tick(int(fps))
+        clock.tick(int(FPS))
 
     # Close down everything
+    stop_thread_event.set()
+    video_thread.join()
     drone.streamoff()
     cv2.destroyAllWindows()
     pygame.quit()
