@@ -7,21 +7,20 @@ import cv2
 import time
 import threading
 
-# https://pyimagesearch.com/2015/12/21/increasing-webcam-fps-with-python-and-opencv/
-# https://www.reddit.com/r/computervision/comments/g9ikr6/help_with_latency_in_video/?rdt=52617
-
-
 ### GLOBAL VARIABLES FOR VIDEO FEED THREADING ###
 current_frame = None
+capture_event = threading.Event()
 frame_lock = threading.Lock()
 
-def capture_frames(drone, capture: bool):
+def capture_frames(drone):
     """ threading function to capture frames from the drone """
     global current_frame
-    while capture:
-        frame = drone.get_frame_read().frame
-        with frame_lock:
-            current_frame = frame
+    global capture_event
+    while True:
+        if capture_event.is_set():
+            frame = drone.get_frame_read().frame
+            with frame_lock:
+                current_frame = frame
         time.sleep(0.03) # capture every 30ms or about 33fps
 
 def main():
@@ -76,8 +75,7 @@ def main():
     clock = pygame.time.Clock()
     display_logo = True
     FPS = '30' # set drone camera fps - 5, 15, or 30
-    stop_thread_event = threading.Event()
-    video_thread = threading.Thread(target=capture_frames, args=(drone, True), daemon=True)
+    video_thread = threading.Thread(target=capture_frames, args=(drone,), daemon=True)
     video_thread.start()
 
     ### GAME LOOP ###
@@ -101,6 +99,19 @@ def main():
 
                 if event.key == pygame.K_ESCAPE:
                     running = False
+
+                if event.key == pygame.K_c:
+                    global capture_event
+                    if display_logo:
+                        drone.streamon()
+                        capture_event.set()
+                        print(capture_event.is_set())
+                        display_logo = not display_logo
+                    else:
+                        drone.streamoff()
+                        capture_event.clear()
+                        print(capture_event.is_set())
+                        display_logo = not display_logo
 
         ### SIMULTANEOUSLY PRESSED KEYS ###
         keys = pygame.key.get_pressed()
@@ -160,14 +171,6 @@ def main():
 
         if keys[pygame.K_RIGHT]:
             drone.flip_right()
-
-        if keys[pygame.K_c]:
-            if display_logo:
-                drone.streamon()
-                display_logo = not display_logo
-            else:
-                drone.streamoff()
-                display_logo = not display_logo
 
         # Send command to drone
         drone.send_rc_control(velocity_y, velocity_x, velocity_z, rotation)
