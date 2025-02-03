@@ -11,6 +11,7 @@ import json
 import jc_nfl_team_stats
 import jc_nfl_team_listing_v1_data
 import jc_nfl_season_year_x
+import jc_nfl_scoreboard_year_x
 
 # predict score for eagles and chiefs - 2 predictions
 # 2 models - one for each team or 1 model run twice
@@ -85,8 +86,12 @@ def retrieve_api_data(url: str, restapi: str, data_directory: str=None, enable_r
     if enable_rest_request:
         data = _rest_request(url, restapi)
 
-        save_json_data(f'{url_cleaned}.json', data)
-        return load_json_data(f'{url_cleaned}.json')
+        if data_directory is None:
+            save_json_data(f'{url_cleaned}.json', data)
+            return load_json_data(f'{url_cleaned}.json')
+        else:
+            save_json_data(f'{data_directory}/{url_cleaned}.json', data)
+            return load_json_data(f'{data_directory}/{url_cleaned}.json')
     else:
         if data_directory is None:
             current_dir_files = os.listdir(os.getcwd())
@@ -94,8 +99,12 @@ def retrieve_api_data(url: str, restapi: str, data_directory: str=None, enable_r
             current_dir_files = os.listdir(data_directory) 
 
         for file in current_dir_files:
-            if file == f'{url_cleaned}.json':
-                return load_json_data(f'{url_cleaned}.json')
+            if data_directory is None:
+                if file == f'{url_cleaned}.json':
+                    return load_json_data(f'{url_cleaned}.json')
+            else:
+                if file == f'{data_directory}/{url_cleaned}.json':
+                    return load_json_data(f'{data_directory}/{url_cleaned}.json')
 
 
 def _rest_request(url: str, restapi: str) -> str:
@@ -138,22 +147,25 @@ def parse_json_data(json_filename: str, csv_filename: str, function_name: str) -
     elif function_name == 'nfl-team-listing_v1_data':
         jc_nfl_team_listing_v1_data.parse_json_data(json_filename, csv_filename)
     elif function_name == 'nfl-season_year_x':
-         jc_nfl_season_year_x.parse_json_data(json_filename, csv_filename)
+        jc_nfl_season_year_x.parse_json_data(json_filename, csv_filename)
+    elif function_name == 'nfl-scoreboard_year_x':
+        jc_nfl_scoreboard_year_x.parse_json_data(json_filename, csv_filename)
 
 
 if __name__ == '__main__':
-    get_route = '/nfl-season?year=2020'
+    get_route = '/nfl-scoreboard?year=2023'
     restapi = 'api-nfl-v1.p.rapidapi.com'
     # headers = _configure_headers()
     # content = run_agent(url, headers)	
     # parse_bs4_content(content)
-    # retrieve_api_data(get_route, restapi, enable_rest_request=True)
+    # retrieve_api_data(get_route, restapi, 'api_data', enable_rest_request=False)
 
     
     # PARSING JSON DATA
     # parse_json_data('api_data/nfl_team_stats.json', 'api_data/nfl_team_stats_parsed.csv', 'nfl_team_stats')
     # parse_json_data('api_data/nfl-team-listing_v1_data.json', 'api_data/nfl_team_listing_v1_parsed.csv', 'nfl-team-listing_v1_data')
-    parse_json_data('api_data/nfl-season_year_2020.json', 'api_data/nfl_season_year_2020_parsed.csv', 'nfl-season_year_x')
+    # parse_json_data('api_data/nfl-season_year_2020.json', 'api_data/nfl_season_year_2020_parsed.csv', 'nfl-season_year_x')
+    parse_json_data('api_data/nfl-scoreboard_year_2023.json', 'api_data/nfl-scoreboard_2023_parsed.csv', 'nfl-scoreboard_year_x')
 
 # INSTRUCTIONS:
 # 1) Identify important nfl information in this sample of json data.
