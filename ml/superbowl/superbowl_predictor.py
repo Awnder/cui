@@ -37,34 +37,6 @@ import jc_nfl_scoreboard_year_x
 # --- T2: y=score totalPassYards(T2) totalRushYards(T2) takeaways(T2) avgPointsPerGame(T2)
 # 3) hybrid
 
-def run_agent(url: str, headers: dict):
-	""" Run the agent to scrape the given URL """
-	request = urllib.request.Request(url, headers=headers)
-	with urllib.request.urlopen(request) as response:
-		content = response.read().decode('UTF-8')
-
-	return content
-
-def parse_bs4_content(content: str):
-	""" Parse the content of the webpage """
-	soup = BeautifulSoup(content, "html.parser")
-	html = soup.html
-	body = html.body
-	print(body)
-
-def _configure_headers():
-	""" Configure the headers for the request """
-	mozilla = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'
-	applewebkit = 'AppleWebKit/537.36 (KHTML, like Gecko)'
-	chrome = 'Chrome/97.0.4692.71 Safari/537.36'
-	safari = 'Safari/537.36'
-	user_contact_info = '** Webscraping project to predict Superbowl winners (contact: andrew.shiroma@eagles.cui.edu) **'
-	custom_user_agent = f"{mozilla} {applewebkit} {chrome} {safari} {user_contact_info}"
-
-	return {
-		'User-Agent': custom_user_agent
-	}
-
 def retrieve_api_data(url: str, restapi: str, data_directory: str=None, enable_rest_request=False) -> dict:
     """
     Wrapper function to retrieve data from a REST API. Will load data if url matches filename in current directory. Otherwise, will make a request to the REST API and save data as json file.
@@ -155,11 +127,6 @@ def parse_json_data(json_filename: str, csv_filename: str, function_name: str) -
 if __name__ == '__main__':
     get_route = '/nfl-scoreboard?year=2023'
     restapi = 'api-nfl-v1.p.rapidapi.com'
-    # headers = _configure_headers()
-    # content = run_agent(url, headers)	
-    # parse_bs4_content(content)
-    # retrieve_api_data(get_route, restapi, 'api_data', enable_rest_request=False)
-
     
     # PARSING JSON DATA
     # parse_json_data('api_data/nfl_team_stats.json', 'api_data/nfl_team_stats_parsed.csv', 'nfl_team_stats')
