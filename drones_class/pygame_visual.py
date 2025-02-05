@@ -179,7 +179,7 @@ def main():
         ### GETTING DRONE STATES ###
         battery = drone.get_battery()
         height = drone.get_height()
-        barometer = drone.get_barometer()
+        barometer = round(drone.get_barometer(),2)
         temp = drone.get_temperature()
         
         # TOP LEFT OF SCREEN
@@ -203,10 +203,6 @@ def main():
         controls_surface = font.render(f"WASD: move, QE: rotate, T/L: takeoff/land, C: camera, Arrows: flips", True, COLOR_WHITE)
         controls_rect = controls_surface.get_rect()
         controls_rect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT - 20)
-
-        absolute_coord_surface = font.render(f"Absolute Position: ({absolute_x // 10}, {absolute_y // 10}, {absolute_z // 10}) at {(absolute_rotation // 10) % 360}°", True, COLOR_WHITE)
-        absolute_coord_rect = absolute_coord_surface.get_rect()
-        absolute_coord_rect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT - 40) 
 
         # TOP RIGHT OF SCREEN
         mparams_ceiling_surface = font.render(f"Mission Ceiling: {mission_params['ceiling']}", True, COLOR_WHITE)
@@ -252,7 +248,6 @@ def main():
         screen.blit(barometer_surface, barometer_rect)
         screen.blit(temp_surface, temp_rect)
         screen.blit(controls_surface, controls_rect)
-        screen.blit(absolute_coord_surface, absolute_coord_rect)
         screen.blit(mparams_ceiling_surface, mparams_ceiling_rect)
         screen.blit(mparams_floor_surface, mparams_floor_rect)
 

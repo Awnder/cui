@@ -189,8 +189,9 @@ def main():
     print(PREDICTION_IDS)
 
     # seasons go back to 1922 - but unsure of data quality - sticking with 10 years of data
-    YEARS = [2014, 2024]
-    STATS = ['avgInterceptionYards', 'avgSackYards', 'turnOverDifferential', 'avgStuffYards', 'avgGain', 'possessionTimeSeconds', 'yardsPerGame', 'totalPointsPerGame']
+    YEARS = [2014, 2023]
+    STATS = ['avgInterceptionYards', 'avgSackYards', 'turnOverDifferential', 
+             'avgStuffYards', 'avgGain', 'possessionTimeSeconds', 'yardsPerGame', 'totalPointsPerGame']
 
     # for year in range(YEARS[0], YEARS[1]+1):
     #     for team_id in TEAM_IDS:
@@ -204,7 +205,7 @@ def main():
 
     ### actual prediction
     # for team_id in PREDICTION_IDS:
-    get_route = f'/nfl-team-statistics?id={21}&year={2025}'
+    get_route = f'/nfl-team-statistics?id={21}&year={2024}' # 2024 is current year for superbowl predictions
     data = retrieve_api_data(get_route, restapi)
     print(data)
     # current_data = load_team_data_to_dataframe(PREDICTION_IDS, PREDICTION_NAMES, [2025, 2025], STATS)
