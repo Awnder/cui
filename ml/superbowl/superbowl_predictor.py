@@ -161,6 +161,8 @@ def train_linear_regression_model(total_df: pd.DataFrame, test: bool=False) -> t
 
         X_train = pd.concat([X_train_encoded, X_train_names_encoded], axis=1)
         X_test = pd.concat([X_test_encoded, X_test_names_encoded], axis=1)
+        X_train.sort_index(axis=1, inplace=True)
+        X_test.sort_index(axis=1, inplace=True)
 
         model = LinearRegression()
         model.fit(X_train, y_train)
@@ -239,9 +241,6 @@ def main():
                 X_data[col] = 0
 
         X_data.sort_index(axis=1, inplace=True) # data must be in same order as fit, sorting alphabetically
-        
-        print(f'Data for {team_name}:')
-        print(X_data[['avgInterceptionYards', 'avgSackYards', 'turnOverDifferential', 'avgStuffYards', 'avgGain', 'possessionTimeSeconds', 'yardsPerGame']])
         
         # predict!
         prediction_score = model.predict(X_data).astype(int)
