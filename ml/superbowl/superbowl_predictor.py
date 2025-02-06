@@ -116,23 +116,17 @@ def load_team_data_to_dataframe(TEAM_IDS: list, TEAM_NAMES: list, year_range: li
     for year in range(year_range[0], year_range[1]+1):
         for team_id, team_name in zip(TEAM_IDS, TEAM_NAMES):
             df = df_nfl_team_statistics.json_to_dataframe(f'api_data/nfl-team-statistics_id_{team_id}&year_{year}.json')
-            df = _transform_team_stats_dataframe(df, stats_to_use, team_name)
+            df = df[['stat_name', 'stat_value']].drop_duplicates(subset=['stat_name']) # isolate the stat columns
+            df = df.T # transpose so features are now columns
+            df.columns = df.iloc[0] # set first row as column names
+            df = df.drop(df.index[0])
+            df = df.loc[:, stats_to_use] # only keep the features we want
+            df['team'] = team_name
+
             total_df = pd.concat([total_df, df], axis=0)
 
     total_df.reset_index(drop=True, inplace=True)
     return total_df
-
-def _transform_team_stats_dataframe(data: pd.DataFrame, stats: list[str], team: str) -> pd.DataFrame:
-    """ Transform team stats data into a usable format """
-    data = data[['stat_name', 'stat_value']].drop_duplicates(subset=['stat_name']) # isolate the stat columns
-    # data.drop_duplicates(subset=['stat_name'], inplace=True) # drop duplicates
-    data = data.T # transpose so features are now columns
-    data.columns = data.iloc[0] # set first row as column names
-    data = data.drop(data.index[0])
-    data = data.loc[:, stats] # only keep the features we want
-    data['team'] = team
-    
-    return data
 
 ### LINEAR REGRESSION FUNCTIONS
 def scaler_normalize_data(X_train: pd.DataFrame, X_test: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
@@ -142,7 +136,7 @@ def scaler_normalize_data(X_train: pd.DataFrame, X_test: pd.DataFrame) -> tuple[
     X_train_encoded = pd.DataFrame(X_train_encoded, columns=X_train.drop('team', axis=1).columns)
     X_test_encoded = mmscalar.transform(X_test.drop('team', axis=1))
     X_test_encoded = pd.DataFrame(X_test_encoded, columns=X_test.drop('team', axis=1).columns)
-    return X_train_encoded, X_test_encoded
+    return mmscalar, X_train_encoded, X_test_encoded
 
 def hotencoder_normalize_data(X_train: pd.DataFrame, X_test: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
     """ Normalize names using one hot encoding """
@@ -151,30 +145,47 @@ def hotencoder_normalize_data(X_train: pd.DataFrame, X_test: pd.DataFrame) -> tu
     X_train_names_encoded = pd.DataFrame(X_train_names_encoded.toarray(), columns=ohencoder.get_feature_names_out())
     X_test_names_encoded = ohencoder.transform(X_test['team'].to_numpy().reshape(-1, 1))
     X_test_names_encoded = pd.DataFrame(X_test_names_encoded.toarray(), columns=ohencoder.get_feature_names_out())
-    return X_train_names_encoded, X_test_names_encoded
+    return ohencoder, X_train_names_encoded, X_test_names_encoded
 
-def test_linear_regression(total_df: pd.DataFrame) -> None:
-    """ Test linear regression model """
+def train_linear_regression_model(total_df: pd.DataFrame, test: bool=False) -> tuple[LinearRegression, OneHotEncoder, MinMaxScaler]:
+    """ Test linear regression model, if test is True, will split data into train and test sets """
     X_data = total_df.drop('totalPointsPerGame', axis=1)
     y_data = total_df[['totalPointsPerGame']]
 
-    X_train, X_test, y_train, y_test = train_test_split(X_data, y_data, test_size=0.2)
+    if test:
+        print('testing linear regression model')
+        X_train, X_test, y_train, y_test = train_test_split(X_data, y_data, test_size=0.2)
 
-    X_train_names_encoded, X_test_names_encoded = hotencoder_normalize_data(X_train, X_test)
-    X_train_encoded, X_test_encoded = scaler_normalize_data(X_train, X_test)
+        ohencoder, X_train_names_encoded, X_test_names_encoded = hotencoder_normalize_data(X_train, X_test)
+        mmscaler, X_train_encoded, X_test_encoded = scaler_normalize_data(X_train, X_test)
 
-    X_train = pd.concat([X_train_encoded, X_train_names_encoded], axis=1)
-    X_test = pd.concat([X_test_encoded, X_test_names_encoded], axis=1)
+        X_train = pd.concat([X_train_encoded, X_train_names_encoded], axis=1)
+        X_test = pd.concat([X_test_encoded, X_test_names_encoded], axis=1)
 
-    model = LinearRegression()
-    model.fit(X_train, y_train)
+        model = LinearRegression()
+        model.fit(X_train, y_train)
 
-    y_pred = model.predict(X_test)
+        y_pred = model.predict(X_test)
 
-    for i in range(len(y_pred)):
-        print('Predicted:', y_pred[i], 'Actual:', y_test.iloc[i].values[0])
-      
-    print('Model Score:', mean_squared_error(y_test, y_pred))
+        for i in range(len(y_pred)):
+            print('Predicted:', y_pred[i], 'Actual:', y_test.iloc[i].values[0])
+          
+        print('Model Score:', mean_squared_error(y_test, y_pred))
+        
+        return model, ohencoder, mmscaler
+    else:
+        print('training linear regression model and returning it for predictions')
+        ohencoder, X_train_names_encoded, _ = hotencoder_normalize_data(X_data, X_data)
+        mmscaler, X_train_encoded, _ = scaler_normalize_data(X_data, X_data)
+
+        X_train = pd.concat([X_train_encoded, X_train_names_encoded], axis=1)
+        X_train.sort_index(axis=1, inplace=True)
+
+        model = LinearRegression()
+        model.fit(X_train, y_data)
+
+        return model, ohencoder, mmscaler
+        
 
 def main():
     restapi = 'api-nfl-v1.p.rapidapi.com'
@@ -186,32 +197,56 @@ def main():
     TEAM_NAMES = team_ids_df['displayName'].tolist()
     PREDICTION_NAMES = ['Philadelphia Eagles', 'Kansas City Chiefs']
     PREDICTION_IDS = team_ids_df[team_ids_df['displayName'].isin(PREDICTION_NAMES)]['id'].tolist()
-    print(PREDICTION_IDS)
 
     # seasons go back to 1922 - but unsure of data quality - sticking with 10 years of data
     YEARS = [2014, 2023]
-    STATS = ['avgInterceptionYards', 'avgSackYards', 'turnOverDifferential', 
-             'avgStuffYards', 'avgGain', 'possessionTimeSeconds', 'yardsPerGame', 'totalPointsPerGame']
+    STATS = ['avgInterceptionYards', 'avgSackYards', 'turnOverDifferential', 'avgStuffYards', 'avgGain', 'possessionTimeSeconds', 'yardsPerGame', 'totalPointsPerGame']
+    # STATS = ['totalYards', 'totalPenaltyYards', 'sackYardsLost', 'turnOverDifferential', 'totalGiveaways', 'totalTakeaways', 'possessionTimeSeconds', 'yardsPerGame', 'totalPointsPerGame']
 
-    # for year in range(YEARS[0], YEARS[1]+1):
-    #     for team_id in TEAM_IDS:
-    #         get_route = f'/nfl-team-statistics?id={team_id}&year={year}'
-    #         retrieve_api_data(get_route, restapi)
+    print('retrieving team data')
+    for year in range(YEARS[0], YEARS[1]+1):
+        for team_id in TEAM_IDS:
+            get_route = f'/nfl-team-statistics?id={team_id}&year={year}'
+            retrieve_api_data(get_route, restapi)
 
-    # total_df = load_team_data_to_dataframe(TEAM_IDS, TEAM_NAMES, YEARS, STATS)
+    print('loading team data into dataframe')
+    total_df = load_team_data_to_dataframe(TEAM_IDS, TEAM_NAMES, YEARS, STATS)
 
     ### Linear Regression
-    # test_linear_regression(total_df)
+    model, ohencoder, mmscaler = train_linear_regression_model(total_df)
+
+    ohencoder.transform(total_df['team'].to_numpy().reshape(-1, 1))
+    other_team_names = ohencoder.get_feature_names_out()
 
     ### actual prediction
-    # for team_id in PREDICTION_IDS:
-    get_route = f'/nfl-team-statistics?id={21}&year={2024}' # 2024 is current year for superbowl predictions
-    data = retrieve_api_data(get_route, restapi)
-    print(data)
-    # current_data = load_team_data_to_dataframe(PREDICTION_IDS, PREDICTION_NAMES, [2025, 2025], STATS)
-    # print(current_data)
+    for team_id, team_name in zip(PREDICTION_IDS, PREDICTION_NAMES):
+        # get current team data
+        get_route = f'/nfl-team-statistics?id={team_id}&year={2024}' # 2024 is current year for superbowl predictions
+        retrieve_api_data(get_route, restapi)
+        current_team_df = load_team_data_to_dataframe([team_id], [team_name], [2024, 2024], STATS)
+        current_team_df.drop('totalPointsPerGame', axis=1, inplace=True)
 
-    
+        # normalize data using previously fitted MinMaxScaler and OneHotEncoder 
+        X_train_encoded = mmscaler.transform(current_team_df.drop('team', axis=1))
+        X_train_encoded = pd.DataFrame(X_train_encoded, columns=current_team_df.drop('team', axis=1).columns)
+        X_train_names_encoded = ohencoder.transform(current_team_df['team'].to_numpy().reshape(-1, 1))
+        X_train_names_encoded = pd.DataFrame(X_train_names_encoded.toarray(), columns=ohencoder.get_feature_names_out())
+
+        X_data = pd.concat([X_train_encoded, X_train_names_encoded], axis=1)
+
+        for col in other_team_names:
+            if col not in X_data.columns:
+                X_data[col] = 0
+
+        X_data.sort_index(axis=1, inplace=True) # data must be in same order as fit, sorting alphabetically
+        
+        print(f'Data for {team_name}:')
+        print(X_data[['avgInterceptionYards', 'avgSackYards', 'turnOverDifferential', 'avgStuffYards', 'avgGain', 'possessionTimeSeconds', 'yardsPerGame']])
+        
+        # predict!
+        prediction_score = model.predict(X_data).astype(int)
+        print(f'{PREDICTION_NAMES[PREDICTION_IDS.index(team_id)]} predicted score:', prediction_score)     
+
 
 if __name__ == '__main__':
     main()
