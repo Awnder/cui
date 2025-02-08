@@ -3,8 +3,6 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
-import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
 import http.client
 from dotenv import load_dotenv
@@ -12,32 +10,8 @@ import os
 import json
 import df_nfl_team_statistics
 import df_nfl_team_listing
-from datetime import datetime
-from dateutil.relativedelta import relativedelta
 
 # predict score for eagles and chiefs - 2 predictions
-# 2 models - one for each team or 1 model run twice
-# 1) collect data
-# 2) clean & normalize
-# --- API Data missing 2020 carolina panthers - can drop, choose mean
-# --- sigmoid standardization
-# --- 2014 jets vs bills game postponed - some fields dne or 0
-# 3) choose features
-# --- training features must be all available for predictions
-# --- ex: can't do passing yards for QB current game bc you only know that after the game is done
-# --- instead, use passing yards for season(s) average
-# 4) train / chose model
-# --- always set y values are the score (bc thats what youre trying to predict)
-# 5) predict
-
-# some approaches
-# 1) historical results (might have less data available)
-# --- T1: y=score offRank(T1) defRank(T2) avgPointsPerGame(T1) 
-# --- T2: y=score offRank(T2) defRank(T1) avgPointsPerGame(T2) -- remember to ensure for/against values are correct
-# 2) seasonal results for eagles and chiefs
-# --- T1: y=score totalPassYards(T1) totalRushYards(T1) takeaways(T1) avgPointsPerGame(T1)
-# --- T2: y=score totalPassYards(T2) totalRushYards(T2) takeaways(T2) avgPointsPerGame(T2)
-# 3) hybrid
 
 # (Get NFL Team Detail by Team ID) team listing gives team ids
 # (Get NFL Team Statistics) nfl team stats gives team stats for a season using id (same as Get NFL Team Stats by Team ID)
@@ -215,7 +189,7 @@ def main():
     total_df = load_team_data_to_dataframe(TEAM_IDS, TEAM_NAMES, YEARS, STATS)
 
     ### Linear Regression
-    model, ohencoder, mmscaler = train_linear_regression_model(total_df)
+    model, ohencoder, mmscaler = train_linear_regression_model(total_df, True)
 
     ohencoder.transform(total_df['team'].to_numpy().reshape(-1, 1))
     other_team_names = ohencoder.get_feature_names_out()
