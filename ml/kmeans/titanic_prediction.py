@@ -35,18 +35,21 @@ def main():
 	X_train["Sex"] = X_train["Sex"].map({"male": 0, "female": 1})
 	X_test["Sex"] = X_test["Sex"].map({"male": 0, "female": 1})
 	
+
+	X_train.drop(columns=["Pclass", "Age", "Fare"], inplace=True)
+	X_test.drop(columns=["Pclass", "Age", "Fare"], inplace=True)
 	# fill missing ages using KNN - replaces missing values with mean from nearest neighbors
-	knn_imputer = KNNImputer(n_neighbors=3)
-	X_train["Age"] = knn_imputer.fit_transform(X_train[["Age"]])
-	X_test["Age"] = knn_imputer.transform(X_test[["Age"]])
+	# knn_imputer = KNNImputer(n_neighbors=3)
+	# X_train["Age"] = knn_imputer.fit_transform(X_train[["Age"]])
+	# X_test["Age"] = knn_imputer.transform(X_test[["Age"]])
 	
 	# fill single missing class 3 fare value using mean from only class 3 - this code groups by class and fills missing values with the mean of that class
-	X_test["Fare"] = X_test.groupby("Pclass")["Fare"].transform(lambda x: x.fillna(x.mean()))
+	# X_test["Fare"] = X_test.groupby("Pclass")["Fare"].transform(lambda x: x.fillna(x.mean()))
 
 	# normalize age and fare data
-	scaler = MinMaxScaler()
-	X_train.loc[:, ["Age", "Fare"]] = pd.DataFrame(scaler.fit_transform(X_train[["Age", "Fare"]].to_numpy()), columns=["Age", "Fare"], index=X_train.index)
-	X_test.loc[:, ["Age", "Fare"]] = pd.DataFrame(scaler.transform(X_test[["Age", "Fare"]].to_numpy()), columns=["Age", "Fare"], index=X_test.index)
+	# scaler = MinMaxScaler()
+	# X_train.loc[:, ["Age", "Fare"]] = pd.DataFrame(scaler.fit_transform(X_train[["Age", "Fare"]].to_numpy()), columns=["Age", "Fare"], index=X_train.index)
+	# X_test.loc[:, ["Age", "Fare"]] = pd.DataFrame(scaler.transform(X_test[["Age", "Fare"]].to_numpy()), columns=["Age", "Fare"], index=X_test.index)
 
 	### PREDICTION ###
 	knn = KNeighborsClassifier(n_neighbors=3)
