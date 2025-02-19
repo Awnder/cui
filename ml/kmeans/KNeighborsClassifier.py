@@ -1,5 +1,4 @@
 import numpy as np
-import random
 from sklearn.utils import Bunch
 
 
@@ -56,8 +55,33 @@ class KNeighborsClassifier:
 		Returns:
 			y: np.ndarray, of shape (n_samples)
 		"""
-		if self.data is None:
-			raise ValueError("fit the model first")
+		neigh_ind = self.kneighbors(X, self.n_neighbors, return_distance=False)
+
+		# count the labels and return the majority class
+		# ai to help with this one
+		y_pred = np.array([np.argmax(np.bincount(self.labels[indices])) for indices in neigh_ind])
+		return y_pred
+
+	def kneighbors(self, X: np.ndarray = None, n_neighbors: int = None, return_distance: bool = True) -> tuple[np.ndarray, np.ndarray]:
+		"""Find the K-neighbors of a point.
+		Parameters:
+			X: np.ndarray, optional
+				The input data to find the neighbors for. If None, the training data will be used.
+			n_neighbors: int, optional
+				Number of neighbors to get. If None, the default number of neighbors will be used.
+			return_distance: bool, default=True
+				Whether or not to return the distances.
+		Returns:
+			neigh_dist: np.ndarray, of shape (n_samples, n_neighbors)
+				Array representing the distances to points, only present if return_distance=True.
+			neigh_ind: np.ndarray, of shape (n_samples, n_neighbors)
+				Indices of the nearest points in the population matrix.
+		"""
+		if self.data is None and X is None:
+			raise ValueError("fit the model first or provide data")
+
+		data = self.data if X is None else X
+		n_neighbors = self.n_neighbors if n_neighbors is None else n_neighbors
 
 		distances = None
 		if self.metric == "euclidean":
@@ -68,46 +92,20 @@ class KNeighborsClassifier:
 			distances = self._cosine_distance(X, self.data)
 		else:
 			raise ValueError("metric must be euclidean, manhattan, or cosine")
-
-		# diagonal is the distance to itself, so set to infinity
-		# this way it is not counted as its own neighbor
+			
+		# diagonal is the distance to itself, so set to infinity so points aren't counted as their own neighbor
 		np.fill_diagonal(distances, np.inf)
 
-		# sort distances to find the closest neighbors to that point
-		# then use slice notation to get the closest kneighbors
-		# use the indecies of the samples to lookup the indecies of the labels (self.labels)
-		# count the labels and return the majority class
-		print('distances\n',distances)
-		nearest_neighbor_indecies = np.argsort(distances, axis=1)[:, :self.n_neighbors]
-		print('nni\n',nearest_neighbor_indecies)
-		# ai to help with this one
-		y_pred = np.array([np.argmax(np.bincount(self.labels[indices])) for indices in nearest_neighbor_indecies])
-		print('y_pred\n',y_pred)
+		neigh_dist = np.sort(distances, axis=1)[:, :self.n_neighbors] # slice to get 0 to n_neighbors
+		neigh_ind = np.argsort(distances, axis=1)[:, :self.n_neighbors]
 
+		print(neigh_dist)
+		print(neigh_ind)
 
-	def kneighbors(self, X: np.ndarray = None, n_neighbors: int = None, return_distance: bool = True) -> np.ndarray:
-		"""
-		Find the K-neighbors of a point.
-		Parameters:
-			X : np.ndarray, optional
-				The input data to find the neighbors for. If None, the training data will be used.
-			n_neighbors : int, optional
-				Number of neighbors to get. If None, the default number of neighbors will be used.
-			return_distance : bool, default=True
-				If True, return the distances between the neighbors and the input data.
-		Returns:
-			np.ndarray
-				Array representing the indices of the nearest neighbors. If return_distance is True,
-				it will also return the distances to the neighbors.
-		"""
-		# the purpose of this function is the same as predict, but it returns the indices of the neighbors
-		# instead of the labels of the neighbors
-
-		data = self.data if X is None else X
-		n_neighbors = self.n_neighbors if n_neighbors is None else n_neighbors
-			
-		distances = self.predict(data)
-		# indices = np.argsort(distances, axis=1)[:, :n_neighbors]
+		if return_distance:
+			return neigh_dist, neigh_ind
+		else:
+			return neigh_ind
 
 	def score(self):
 		pass
@@ -136,19 +134,15 @@ class KNeighborsClassifier:
 
 if __name__ == "__main__":
 	knn = KNeighborsClassifier(n_neighbors=3, metric="euclidean")
-	# data_bunch = Bunch(data=np.array([[1, 2], [3, 4], [5, 6]]), target=np.array([0, 1, 0]), feature_names=["feature1", "feature2"], target_names=["class1", "class2"])
+	data_bunch = Bunch(data=np.array([[1, 2], [1, 1], [70, 70]]), target=np.array([0, 0, 1]), feature_names=["feature1", "feature2"], target_names=["class1", "class2"])
 
-	# d = knn.fit(data_bunch, data_bunch.target)
+	f = knn.fit(data_bunch, data_bunch.target)
 	# d = knn.fit(np.array([[1, 2], [3, 4], [5, 6]]), np.array([0, 1, 0]))
-	# Create larger arrays of data and labels
-	data = np.random.rand(100, 5)  # 100 samples, 5 features each
-	labels = np.random.randint(0, 3, 100)  # 100 labels, 3 classes
 
-	# Fit the model with the larger dataset
-	knn.fit(data, labels)
-	# print(d.n_features_in_)
-	# print(d.feature_names_in_)
-	# print(d.n_samples_fit_)
-	# print(d.data, d.labels)
+	p = knn.predict(np.array([[0, 2], [1, 1], [71, 70]]))
 
-	knn.predict(np.array([[1, 2], [3, 4], [5, 6]]))
+	print(f.n_features_in_)
+	print(f.feature_names_in_)
+	print(f.n_samples_fit_)
+	print(f.data, f.labels)
+	print(p)
