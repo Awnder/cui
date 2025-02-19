@@ -5,13 +5,13 @@ from sklearn.utils import Bunch
 
 class KNeighborsClassifier:
 	def __init__(self, n_neighbors: int = 5, metric: str = "euclidean"):
-		"""
-		bare initialization of KNeighborsClassifier class
+		"""Bare initialization of KNeighborsClassifier class
 		Parameters:
 			n_neighbors: int, number of neighbors to use by default for kneighbors queries
 			metric: str, the distance metric to use for the tree, can be euclidean, manhattan, or cosine
 		"""
 		self.metric = metric
+		self.n_neighbors = n_neighbors
 		self.data = None
 		self.labels = None
 		self.classes_ = None
@@ -20,8 +20,7 @@ class KNeighborsClassifier:
 		self.n_samples_fit_ = None
 
 	def fit(self, X: np.ndarray, y: np.ndarray) -> object:
-		"""
-		Fit the model using X as training data and y as target values
+		"""Fit the model using X as training data and y as target values
 		Parameters:
 			X_train: np.ndarray, of shape (n_samples, n_features) or sklearn.utils.Bunch for feature names
 				If Bunch, expects the following attributes:
@@ -51,8 +50,7 @@ class KNeighborsClassifier:
 		return self
 
 	def predict(self, X: np.ndarray) -> np.ndarray:
-		"""
-		Predict the class labels for the provided data
+		"""Predict the class labels for the provided data
 		Parameters:
 			X: np.ndarray, of shape (n_samples, n_features)
 		Returns:
@@ -61,6 +59,7 @@ class KNeighborsClassifier:
 		if self.data is None:
 			raise ValueError("fit the model first")
 
+		distances = None
 		if self.metric == "euclidean":
 			distances = self._euclidean_distance(X, self.data)
 		elif self.metric == "manhattan":
@@ -73,8 +72,13 @@ class KNeighborsClassifier:
 		# diagonal is the distance to itself, so set to infinity
 		# this way it is not counted as its own neighbor
 		np.fill_diagonal(distances, np.inf)
+		print('distances\n',distances)
+		nearest_neighbor_indecies = np.argsort(distances, axis=1)[:, :self.n_neighbors]
+		print('nni\n',nearest_neighbor_indecies)
+		# ai to help with this one
+		y_pred = np.array([np.argmax(np.bincount(self.labels[indices])) for indices in nearest_neighbor_indecies])
+		print('y_pred\n',y_pred)
 
-		print(distances)
 
 	def kneighbors(self, X: np.ndarray = None, n_neighbors: int = None, return_distance: bool = True) -> np.ndarray:
 		"""
@@ -95,7 +99,7 @@ class KNeighborsClassifier:
 		n_neighbors = self.n_neighbors if n_neighbors is None else n_neighbors
 			
 		distances = self.predict(data)
-		indices = np.argsort(distances, axis=1)[:, :n_neighbors]
+		# indices = np.argsort(distances, axis=1)[:, :n_neighbors]
 
 	def score(self):
 		pass
@@ -124,10 +128,16 @@ class KNeighborsClassifier:
 
 if __name__ == "__main__":
 	knn = KNeighborsClassifier(n_neighbors=3, metric="euclidean")
-	data_bunch = Bunch(data=np.array([[1, 2], [3, 4], [5, 6]]), target=np.array([0, 1, 0]), feature_names=["feature1", "feature2"], target_names=["class1", "class2"])
+	# data_bunch = Bunch(data=np.array([[1, 2], [3, 4], [5, 6]]), target=np.array([0, 1, 0]), feature_names=["feature1", "feature2"], target_names=["class1", "class2"])
 
-	d = knn.fit(data_bunch, data_bunch.target)
+	# d = knn.fit(data_bunch, data_bunch.target)
 	# d = knn.fit(np.array([[1, 2], [3, 4], [5, 6]]), np.array([0, 1, 0]))
+	# Create larger arrays of data and labels
+	data = np.random.rand(100, 5)  # 100 samples, 5 features each
+	labels = np.random.randint(0, 3, 100)  # 100 labels, 3 classes
+
+	# Fit the model with the larger dataset
+	knn.fit(data, labels)
 	# print(d.n_features_in_)
 	# print(d.feature_names_in_)
 	# print(d.n_samples_fit_)
