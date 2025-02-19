@@ -85,11 +85,11 @@ class KNeighborsClassifier:
 
 		distances = None
 		if self.metric == "euclidean":
-			distances = self._euclidean_distance(X, self.data)
+			distances = self._euclidean_distance(X, data)
 		elif self.metric == "manhattan":
-			distances = self._manhattan_distance(X, self.data)
+			distances = self._manhattan_distance(X, data)
 		elif self.metric == "cosine":
-			distances = self._cosine_distance(X, self.data)
+			distances = self._cosine_distance(X, data)
 		else:
 			raise ValueError("metric must be euclidean, manhattan, or cosine")
 			
@@ -99,16 +99,29 @@ class KNeighborsClassifier:
 		neigh_dist = np.sort(distances, axis=1)[:, :self.n_neighbors] # slice to get 0 to n_neighbors
 		neigh_ind = np.argsort(distances, axis=1)[:, :self.n_neighbors]
 
-		print(neigh_dist)
-		print(neigh_ind)
-
 		if return_distance:
 			return neigh_dist, neigh_ind
 		else:
 			return neigh_ind
 
-	def score(self):
-		pass
+	def score(self, X: np.ndarray, y: np.ndarray) -> float:
+		"""Return the mean accuracy on the given test data and labels
+		Parameters:
+			X: np.ndarray, of shape (n_samples, n_features), test samples
+			y: np.ndarray, of shape (n_samples), true labels for X
+		Returns:
+			score: float, mean accuracy of self.predict(X) with respect to y
+		"""
+		neigh_dist, _ = self.kneighbors(X, self.n_neighbors, return_distance=True)
+
+		# mask to remove inf from average
+		inf_mask = np.ma.log(neigh_dist)
+
+		# getting total average
+		neigh_avg = np.average(inf_mask)
+
+		return neigh_avg
+
 
 	def _euclidean_distance(self, p1: np.ndarray, p2: np.ndarray) -> np.ndarray:
 		"""
@@ -136,13 +149,9 @@ if __name__ == "__main__":
 	knn = KNeighborsClassifier(n_neighbors=3, metric="euclidean")
 	data_bunch = Bunch(data=np.array([[1, 2], [1, 1], [70, 70]]), target=np.array([0, 0, 1]), feature_names=["feature1", "feature2"], target_names=["class1", "class2"])
 
-	f = knn.fit(data_bunch, data_bunch.target)
-	# d = knn.fit(np.array([[1, 2], [3, 4], [5, 6]]), np.array([0, 1, 0]))
+	knn = knn.fit(data_bunch, data_bunch.target)
 
 	p = knn.predict(np.array([[0, 2], [1, 1], [71, 70]]))
 
-	print(f.n_features_in_)
-	print(f.feature_names_in_)
-	print(f.n_samples_fit_)
-	print(f.data, f.labels)
-	print(p)
+	s = knn.score(np.array([[0, 2], [1, 1], [71, 70]]), np.array([0, 0, 1]))
+	# print(s)
