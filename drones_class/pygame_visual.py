@@ -54,11 +54,6 @@ def main():
     velocity_z = 0
     rotation = 0
 
-    absolute_x = 0
-    absolute_y = 0
-    absolute_z = 0
-    absolute_rotation = 0
-
     mission_params = {
         'drone_name': 'dragon',
         'mission_name': 'mission: pygame',
@@ -97,6 +92,18 @@ def main():
                 if event.key == pygame.K_l and not drone._grounded:
                     drone.land()
 
+                if event.key == pygame.K_UP:
+                    drone.flip_forward()
+                
+                if event.key == pygame.K_DOWN:
+                    drone.flip_backward()
+                    
+                if event.key == pygame.K_LEFT:
+                    drone.flip_left()
+
+                if event.key == pygame.K_RIGHT:
+                    drone.flip_right()
+
                 if event.key == pygame.K_ESCAPE:
                     running = False
 
@@ -120,10 +127,8 @@ def main():
             velocity_x = 0
         elif keys[pygame.K_w]:
             velocity_x = 100
-            absolute_x += 100
         elif keys[pygame.K_s]:
             velocity_x = -100
-            absolute_x -= 100
         else:
             velocity_x = 0
 
@@ -131,10 +136,8 @@ def main():
             velocity_y = 0
         elif keys[pygame.K_a]:
             velocity_y = -100
-            absolute_y -= 100
         elif keys[pygame.K_d]:
             velocity_y = 100
-            absolute_y += 100
         else:
             velocity_y = 0
 
@@ -142,10 +145,8 @@ def main():
             velocity_z = 0
         elif keys[pygame.K_SPACE]:
             velocity_z = 100
-            absolute_z += 100
         elif keys[pygame.K_LSHIFT]:
             velocity_z = -100
-            absolute_z -= 100
         else:
             velocity_z = 0
 
@@ -153,28 +154,28 @@ def main():
             rotation = 0
         elif keys[pygame.K_q]:
             rotation = -100
-            absolute_rotation -= 100
         elif keys[pygame.K_e]:
             rotation = 100
-            absolute_rotation += 100
         else:
             rotation = 0
 
-        if keys[pygame.K_UP]:
-            drone.flip_forward()
+        # if keys[pygame.K_UP]:
+        #     drone.flip_forward()
         
-        if keys[pygame.K_DOWN]:
-            drone.flip_backward()
+        # if keys[pygame.K_DOWN]:
+        #     drone.flip_backward()
 
-        if keys[pygame.K_LEFT]:
-            drone.flip_left()
+        # if keys[pygame.K_LEFT]:
+        #     drone.flip_left()
 
-        if keys[pygame.K_RIGHT]:
-            drone.flip_right()
+        # if keys[pygame.K_RIGHT]:
+        #     drone.flip_right()
 
         # Send command to drone
-        drone.send_rc_control(velocity_y, velocity_x, velocity_z, rotation)
-
+        try:
+            drone.send_rc_control(velocity_y, velocity_x, velocity_z, rotation)
+        except Exception as e:
+            print(f"Error on rc control: {e}")
 
         ### GETTING DRONE STATES ###
         battery = drone.get_battery()

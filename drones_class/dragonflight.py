@@ -3,8 +3,8 @@
 import dji_matrix as djim
 import logging, logging.config
 from datetime import datetime
-import time
 import math
+import asyncio
 
 # LOGGING CONFIGURATION
 # from Professor Tallman
