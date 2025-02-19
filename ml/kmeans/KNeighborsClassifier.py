@@ -74,6 +74,11 @@ class KNeighborsClassifier:
 		# this way it is not counted as its own neighbor
 		np.fill_diagonal(distances, np.inf)
 
+		# sort distances to find the closest neighbors to that point
+		# then use slice notation to get the closest kneighbors
+		# use the indecies of the samples to lookup the indecies of the labels (self.labels)
+		# count the labels and return the majority class
+
 		print(distances)
 
 	def kneighbors(self, X: np.ndarray = None, n_neighbors: int = None, return_distance: bool = True) -> np.ndarray:
@@ -91,6 +96,9 @@ class KNeighborsClassifier:
 				Array representing the indices of the nearest neighbors. If return_distance is True,
 				it will also return the distances to the neighbors.
 		"""
+		# the purpose of this function is the same as predict, but it returns the indices of the neighbors
+		# instead of the labels of the neighbors
+
 		data = self.data if X is None else X
 		n_neighbors = self.n_neighbors if n_neighbors is None else n_neighbors
 			
