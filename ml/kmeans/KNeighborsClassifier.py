@@ -112,16 +112,16 @@ class KNeighborsClassifier:
 		Returns:
 			score: float, mean accuracy of self.predict(X) with respect to y
 		"""
-		neigh_dist, _ = self.kneighbors(X, self.n_neighbors, return_distance=True)
+		_, neigh_ind = self.kneighbors(X, self.n_neighbors, return_distance=True)
 
-		# mask to remove inf from average
-		inf_mask = np.ma.log(neigh_dist)
+		y_pred = np.array([np.argmax(np.bincount(self.labels[indices])) for indices in neigh_ind])
 
-		# getting total average
-		neigh_avg = np.average(inf_mask)
+		# accuracy: correct predictions / total predictions
+		# y_pred == y compares each prediction to see if correct, returns bool array
+		# np.mean calculates avg of this array to get a score between 0 and 1
+		score = np.mean(y_pred == y)
 
-		return neigh_avg
-
+		return score
 
 	def _euclidean_distance(self, p1: np.ndarray, p2: np.ndarray) -> np.ndarray:
 		"""
@@ -154,4 +154,4 @@ if __name__ == "__main__":
 	p = knn.predict(np.array([[0, 2], [1, 1], [71, 70]]))
 
 	s = knn.score(np.array([[0, 2], [1, 1], [71, 70]]), np.array([0, 0, 1]))
-	# print(s)
+	print(s)
