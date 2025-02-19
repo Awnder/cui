@@ -112,9 +112,7 @@ class KNeighborsClassifier:
 		Returns:
 			score: float, mean accuracy of self.predict(X) with respect to y
 		"""
-		_, neigh_ind = self.kneighbors(X, self.n_neighbors, return_distance=True)
-
-		y_pred = np.array([np.argmax(np.bincount(self.labels[indices])) for indices in neigh_ind])
+		y_pred = self.predict(X)
 
 		# accuracy: correct predictions / total predictions
 		# y_pred == y compares each prediction to see if correct, returns bool array
