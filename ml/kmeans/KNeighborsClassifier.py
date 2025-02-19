@@ -112,14 +112,10 @@ class KNeighborsClassifier:
 		Returns:
 			score: float, mean accuracy of self.predict(X) with respect to y
 		"""
-		y_pred = self.predict(X)
-
 		# accuracy: correct predictions / total predictions
 		# y_pred == y compares each prediction to see if correct, returns bool array
 		# np.mean calculates avg of this array to get a score between 0 and 1
-		score = np.mean(y_pred == y)
-
-		return score
+		return np.mean(self.predict(X) == y)
 
 	def _euclidean_distance(self, p1: np.ndarray, p2: np.ndarray) -> np.ndarray:
 		"""
