@@ -16,15 +16,15 @@ class HandwritingRecognition:
     def fetch_mnist(self):
         """Fetches the MNIST dataset from OpenML."""
         mnist = None
-        if os.path.exists("mnist_784.csv"):
-            mnist = np.loadtxt("mnist_784.csv", delimiter=",")
-            X = mnist[:, 1:].astype(np.uint8)
-            y = mnist[:, 0].astype(np.uint8)
-        else:
-            mnist = fetch_openml('mnist_784', parser="auto", version=1, as_frame=False)
-            X = mnist.data.astype(np.uint8)
-            y = mnist.target.astype(np.uint8)
-            np.savetxt("mnist_784.csv", np.column_stack((y, X)), delimiter=",", fmt='%d')
+        # if os.path.exists("mnist_784.csv"):
+        #     mnist = np.loadtxt("mnist_784.csv", delimiter=",")
+        #     X = mnist[:, 1:].astype(np.uint8)
+        #     y = mnist[:, 0].astype(np.uint8)
+        # else:
+        mnist = fetch_openml('mnist_784', parser="auto", version=1, as_frame=False)
+        X = mnist.data.astype(np.uint8)
+        y = mnist.target.astype(np.uint8)
+        # np.savetxt("mnist_784.csv", np.column_stack((y, X)), delimiter=",", fmt='%d')
         
         return X, y
 
