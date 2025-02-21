@@ -159,18 +159,6 @@ def main():
         else:
             rotation = 0
 
-        # if keys[pygame.K_UP]:
-        #     drone.flip_forward()
-        
-        # if keys[pygame.K_DOWN]:
-        #     drone.flip_backward()
-
-        # if keys[pygame.K_LEFT]:
-        #     drone.flip_left()
-
-        # if keys[pygame.K_RIGHT]:
-        #     drone.flip_right()
-
         # Send command to drone
         try:
             drone.send_rc_control(velocity_y, velocity_x, velocity_z, rotation)
