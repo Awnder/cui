@@ -4,7 +4,11 @@ import numpy as np
 import tkinter as tk
 from PIL import Image, ImageTk
 from sklearn.datasets import fetch_openml
-
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.linear_model import LogisticRegression
 
 class HandwritingRecognition:
     def __init__(self):
@@ -27,14 +31,30 @@ class HandwritingRecognition:
         # np.savetxt("mnist_784.csv", np.column_stack((y, X)), delimiter=",", fmt='%d')
         
         return X, y
+    
+    def train_models(self):
+        """Trains the models on the MNIST dataset."""
+        X_train, X_test, y_train, y_test = train_test_split(self.X, self.y, test_size=0.2)
+        models = {
+            "Random Forest": RandomForestClassifier(n_estimators=25),
+            "Decision Tree": DecisionTreeClassifier(),
+            "Logistic Regression": LogisticRegression(max_iter=3),
+        }
+
+        for model_name, model in models.items():
+            print('fitting model:', model_name)
+            model.fit(X_train, y_train)
+            y_pred = model.predict(X_test)
+            score = accuracy_score(y_test, y_pred)
+            print(f"{model_name} accuracy: {score}")
+
+    def guess_digit(self, drawspace):
+        pass
 
     def clear_drawing(self, drawspace):
         """Clears the drawing canvas and internal array."""
         drawspace.delete("all")  # clear canvas
         self.test_sample[:] = self.black_pixel  # internal representation of drawing
-
-    def guess_digit(self, drawspace):
-        pass
 
     def draw_handwriting(self, event, drawspace):
         """Draws on the canvas and internal array based on mouse coordinates."""
@@ -76,6 +96,7 @@ class HandwritingRecognition:
 
 if __name__ == "__main__":
     hr = HandwritingRecognition()
-    # hr.draw_window()
     print(hr.X.shape)
     print(hr.y.shape)
+    hr.train_models()
+    hr.draw_window()
