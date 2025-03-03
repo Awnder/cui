@@ -1,15 +1,16 @@
 import os
+import asyncio
 import pandas as pd
 import numpy as np
 import tkinter as tk
 from tkinter import ttk
-from PIL import Image, ImageTk, ImageGrab, ImageOps
+from PIL import Image, ImageTk, ImageGrab, ImageOps, ImageDraw
 from sklearn.datasets import fetch_openml
 from sklearn.metrics import accuracy_score, classification_report
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.neighbors import KNeighborsClassifier
-
+from sklearn.linear_model import LogisticRegression
 
 class HandwritingRecognition:
     def __init__(self, custom_data=False):
@@ -25,8 +26,8 @@ class HandwritingRecognition:
         mnist = None
         if os.path.exists("mnist_784.csv"):
             mnist = np.loadtxt("mnist_784.csv", delimiter=",")
-            X = mnist[:, 1:].astype(np.uint8)
-            y = mnist[:, 0].astype(np.uint8)
+            X = mnist[:, 1:].astype(np.uint8)[:5000] # limit to speed up training
+            y = mnist[:, 0].astype(np.uint8)[:5000]
         else:
             mnist = fetch_openml("mnist_784", parser="auto", version=1, as_frame=False)
             X = mnist.data.astype(np.uint8)
@@ -45,20 +46,36 @@ class HandwritingRecognition:
 
         return X, y
 
-    def train_models(self) -> tuple[RandomForestClassifier, KNeighborsClassifier]:
+    async def train_models(self) -> tuple[RandomForestClassifier, KNeighborsClassifier, LogisticRegression]:
         """Finds best hyperparameters and trains RandomForest on the MNIST dataset."""
-        X_train, X_test, y_train, y_test = train_test_split(self.X, self.y)
+        # X_train, X_test, y_train, y_test = train_test_split(self.X, self.y)
 
+        rf = await self._train_random_forest()
+        knn = await self._train_knn()
+        lr = await self._train_logistic_regression()
+
+        # rf.fit(X_train, y_train)
+        # knn.fit(X_train, y_train)
+
+        # y_pred = rf.predict(X_test)
+        # print(classification_report(y_test, y_pred))
+
+        return rf, knn, lr
+    
+    async def _train_random_forest(self) -> RandomForestClassifier:
         rf = RandomForestClassifier(n_estimators=20)
-        rf.fit(X_train, y_train)
-        knn = KNeighborsClassifier(n_neighbors=5)
-        knn.fit(X_train, y_train)
+        rf.fit(self.X, self.y)
+        return rf
 
-        y_pred = rf.predict(X_test)
-
-        print(classification_report(y_test, y_pred))
-
-        return rf, knn
+    async def _train_knn(self) -> KNeighborsClassifier:
+        knn = KNeighborsClassifier(n_neighbors=3)
+        knn.fit(self.X, self.y)
+        return knn
+    
+    async def _train_logistic_regression(self) -> LogisticRegression:
+        lr = LogisticRegression()
+        lr.fit(self.X, self.y)
+        return lr
 
     def canvas_to_array(self, drawspace: tk.Canvas) -> tk.Image:
         """Captures, grayscales, and resizes the image drawn on the canvas."""
@@ -74,13 +91,13 @@ class HandwritingRecognition:
         image = image.resize((28, 28), Image.Resampling.LANCZOS) # high quality resizing
 
         # display the captured image
-        # new_window = tk.Toplevel()
-        # new_window.title("Captured Image")
-        # new_window.geometry("200x200")
-        # img = ImageTk.PhotoImage(image.resize((200, 200), Image.Resampling.LANCZOS))
-        # panel = tk.Label(new_window, image=img)
-        # panel.image = img  # keep a reference to avoid garbage collection
-        # panel.pack()
+        new_window = tk.Toplevel()
+        new_window.title("Captured Image")
+        new_window.geometry("200x200")
+        img = ImageTk.PhotoImage(image.resize((200, 200), Image.Resampling.LANCZOS))
+        panel = tk.Label(new_window, image=img)
+        panel.image = img  # keep a reference to avoid garbage collection
+        panel.pack()
 
         numpy_array = np.array(image)
         numpy_array = (numpy_array > 128).astype(np.uint8) * 255  # 0 black, 255 white
@@ -94,19 +111,21 @@ class HandwritingRecognition:
         pred_rf = self.rf.predict(numpy_array)
         neighbors = self.knn.kneighbors(numpy_array, n_neighbors=3, return_distance=False)
 
+        print('rf', pred_rf)
+        print('neighbors:', self.knn.predict(numpy_array))
+
         main_pred_lbl.config(text=f"Prediction: {pred_rf[0]}")
         
         # Display the top 3 neighbors
-        neighbor_images = [self.X[neighbors[0][i]].reshape(28, 28) for i in range(3)]
-        neighbor_imgs = [ImageTk.PhotoImage(image=Image.fromarray(img).resize((50, 50), Image.Resampling.LANCZOS)) for img in neighbor_images]
+        neighbor_image_arrays = [self.X[neighbors[0][i]].reshape(28, 28) for i in range(3)]
+        neighbor_images = [ImageTk.PhotoImage(image=Image.fromarray(img).resize((50, 50), Image.Resampling.LANCZOS)) for img in neighbor_image_arrays]
 
-        pred_lbls[0].config(image=neighbor_imgs[0])
-        pred_lbls[0].image = neighbor_imgs[0]  # keep a reference to avoid garbage collection
-        pred_lbls[1].config(image=neighbor_imgs[1])
-        pred_lbls[1].image = neighbor_imgs[1]  # keep a reference to avoid garbage collection
-        pred_lbls[2].config(image=neighbor_imgs[2])
-        pred_lbls[2].image = neighbor_imgs[2]  # keep a reference to avoid garbage collection
-        
+        pred_lbls[0].config(image=neighbor_images[0])
+        pred_lbls[0].image = neighbor_images[0]  # keep a reference to avoid garbage collection
+        pred_lbls[1].config(image=neighbor_images[1])
+        pred_lbls[1].image = neighbor_images[1]
+        pred_lbls[2].config(image=neighbor_images[2])
+        pred_lbls[2].image = neighbor_images[2]
 
     def add_custom_data(self, drawspace: tk.Canvas, custom_data_combobox: ttk.Combobox) -> None:
         """Adds custom data to the CSV file."""
@@ -130,7 +149,7 @@ class HandwritingRecognition:
         # xy-coordinates and radius of the circle being drawn
         drawspace.create_line(
             (self.last_x, self.last_y, event.x, event.y),
-            width=5,
+            width=10,
             fill="black",
             capstyle=tk.ROUND,
             smooth=tk.TRUE,
@@ -156,6 +175,9 @@ class HandwritingRecognition:
             highlightthickness=1,
             highlightbackground="steelblue",
         )
+        # imagespace = Image.new("L", size=(200, 200), color="white")
+        # imagespace_draw = ImageDraw.Draw(imagespace)
+
         title_lbl = tk.Label(window, text="Draw a digit", font=("Helvetica", 16))
         main_pred_lbl = tk.Label(window, text="", font=("Helvetica", 16))
         pred1_lbl = tk.Label(window, image=None)
