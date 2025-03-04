@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import TargetEncoder
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.neighbors import KNeighborsClassifier
@@ -27,12 +28,13 @@ class MushroomClassifier:
 
     def fit_predict(self):
         """Trains RandomForest, KNeighbors, and LogisticRegression models."""
-        # not using train_test_split because we want to encode the test data with the training data
-        # don't want data leakage!
         X_train = self.X[:6000]
         X_test = self.X[6000:]
         y_train = self.y[:6000]
         y_test = self.y[6000:]
+
+        # for whatever reason train_test_split has data leakage here
+        # X_train, X_test, y_train, y_test = train_test_split(self.X, self.y, test_size=0.2)
 
         enc = TargetEncoder()
         X_train = pd.DataFrame(enc.fit_transform(X_train, y_train), columns=X_train.columns)
