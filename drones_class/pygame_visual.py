@@ -59,8 +59,8 @@ def main():
         'mission_name': 'mission: pygame',
         'ceiling': 10000,
         'floor': -10000,
-        'min_takeoff_power': 30,
-        'min_operating_power': 10,
+        'min_takeoff_power': 0,
+        'min_operating_power': 0,
     }
     # mytello = tello_sim.DroneSim()
     mytello = Tello()
