@@ -1,9 +1,10 @@
 import numpy as np
 import pandas as pd
-from sklearn.preprocessing import TargetEncoder
+from sklearn.preprocessing import TargetEncoder, StandardScaler
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.linear_model import LogisticRegression
+from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import classification_report
 from sklearn.decomposition import PCA
 
@@ -11,9 +12,7 @@ from sklearn.decomposition import PCA
 class MushroomClassifier:
     def __init__(self):
         self.X, self.y = self._load_data()
-        self.rf = None
-        self.knn = None
-        self.lr = None
+        self.model_reports = []
 
     def _load_data(self) -> tuple[pd.DataFrame, pd.DataFrame]:
         """Loads the mushroom dataset."""
@@ -36,6 +35,10 @@ class MushroomClassifier:
         X_train = pd.DataFrame(enc.fit_transform(X_train, y_train), columns=self.X.columns)
         X_test = pd.DataFrame(enc.transform(X_test), columns=self.X.columns)
 
+        scaler = StandardScaler()
+        X_train = pd.DataFrame(scaler.fit_transform(X_train), columns=self.X.columns)
+        X_test = pd.DataFrame(scaler.transform(X_test), columns=self.X.columns)
+
         if style == "matrix":
             # correlation matrix to remove highly correlated columns
             corr = X_train.corr()
@@ -56,43 +59,38 @@ class MushroomClassifier:
 
         return X_train, X_test, y_train, y_test
 
-    def fit_predict(self, style="matrix"):
+    def fit_predict(self, style="matrix") -> None:
         """Trains RandomForest, KNeighbors, and LogisticRegression models."""
+        self.model_reports = []
         X_train, X_test, y_train, y_test = self._preprocess_data(style)
         
         rf = RandomForestClassifier(n_estimators=20)
         rf.fit(X_train, y_train)
-        rf_pred = rf.predict(X_test)
 
         knn = KNeighborsClassifier(n_neighbors=3)
         knn.fit(X_train, y_train)
-        knn_pred = knn.predict(X_test)
 
         lr = LogisticRegression(max_iter=1000)
         lr.fit(X_train, y_train)
-        lr_pred = lr.predict(X_test)
 
-        self.rf = rf
-        self.knn = knn
-        self.lr = lr
-        self.rf_report = classification_report(y_test, rf_pred, output_dict=True)
-        self.knn_report = classification_report(y_test, knn_pred, output_dict=True)
-        self.lr_report = classification_report(y_test, lr_pred, output_dict=True)
+        mlp = MLPClassifier(hidden_layer_sizes=(20, 10))
+        mlp.fit(X_train, y_train)
+
+        for model in [rf, knn, lr, mlp]:
+            self.model_reports.append(classification_report(y_test, model.predict(X_test), output_dict=True))
 
     def best_recall(self) -> str:
         """Prints the model and classification report with the best recall to predict poisonous mushrooms."""
-        reports = [self.rf_report, self.knn_report, self.lr_report]
-        recalls = [report["p"]["recall"] for report in reports]
-        best_model = ["RandomForest", "KNeighbors", "LogisticRegression"][recalls.index(max(recalls))]
+        recalls = [report["p"]["recall"] for report in self.model_reports]
+        best_model = ["RandomForest", "KNeighbors", "LogisticRegression", "MLPClassifier"][recalls.index(max(recalls))]
 
         print(f"Best model: {best_model}")
         print(f"Recall: {max(recalls)}")
         
     def best_precision(self) -> str:
         """Prints the model and classification report with the best precision to predict poisonous mushrooms."""
-        reports = [self.rf_report, self.knn_report, self.lr_report]
-        precisions = [report["p"]["precision"] for report in reports]
-        best_model = ["RandomForest", "KNeighbors", "LogisticRegression"][precisions.index(max(precisions))]
+        precisions = [report["p"]["precision"] for report in self.model_reports]
+        best_model = ["RandomForest", "KNeighbors", "LogisticRegression", "MLPClassifier"][precisions.index(max(precisions))]
 
         print(f"Best model: {best_model}")
         print(f"Precision: {max(precisions)}")
