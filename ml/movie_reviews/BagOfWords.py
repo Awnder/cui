@@ -1,13 +1,12 @@
-import nltk
 from nltk.corpus import stopwords
 import requests
 import tarfile
-import multiprocessing
+import string
 import os
 
 class BagOfWords:
     def __init__(self):
-        self.stopwords = set(stopwords.words('english'))
+        pass
 
     def _get_imdb_data(self, dir_dest_path: str = 'aclImdb'):
         '''Downloads and extracts Imdb data'''
@@ -71,9 +70,40 @@ class BagOfWords:
                         target = file[:-4].split('_')[1]
                         content = in_f.read()
                         out_f.write(f'{target},{content}\n')
-                        
+
+    def word_tokenize(self, text: str):
+        '''Tokenizes the input text and removes stopwords'''
+        bag_of_words = []
+        negation_words = ['not', 'no', 'never', 'none', 'nobody', 'nothing', 'nowhere']
+        
+        text = text.replace('\n', ' ').replace('\r', ' ')
+        text = text.translate(str.maketrans('', '', string.punctuation)) # remove punctuation
+        tokens = text.split()
+
+        for i, word in enumerate(tokens):
+            # remove stopwords like "the", "is", "and", etc.
+            if word.lower() in set(stopwords.words('english')):
+                continue
+            
+            # handle negation words by creating trigrams
+            # e.g., "not good" becomes "not good" instead of just "good"
+            if word.lower() in negation_words:
+                trigram = [word]
+                if i + 1 < len(tokens):
+                    trigram.append(tokens[i + 1])
+                if i + 2 < len(tokens):
+                    trigram.append(tokens[i + 2])
+                bag_of_words.append(' '.join(trigram).lower())
+            else:
+                bag_of_words.append(word.lower())
+
+        bag_of_words.sort()
+        return bag_of_words[10000:]
+
 
 if __name__ == "__main__":
     bag_of_words = BagOfWords()
     bag_of_words._get_imdb_data()
     bag_of_words._create_imdb_csv()
+    with open('aclimdb/test/pos/0_10.txt', 'r', encoding='utf-8') as f:
+        text = f.read()
