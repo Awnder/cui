@@ -102,8 +102,10 @@ class BagOfWords:
 
 
 if __name__ == "__main__":
-    bag_of_words = BagOfWords()
-    bag_of_words._get_imdb_data()
-    bag_of_words._create_imdb_csv()
+    BOW = BagOfWords()
+    BOW._get_imdb_data()
+    BOW._create_imdb_csv()
     with open('aclimdb/test/pos/0_10.txt', 'r', encoding='utf-8') as f:
         text = f.read()
+        print(text)
+        print(BOW.word_tokenize(text))
