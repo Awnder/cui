@@ -1,12 +1,17 @@
 from nltk.corpus import stopwords
+from collections import defaultdict
 import requests
 import tarfile
 import string
+import re
 import os
 
 class BagOfWords:
     def __init__(self):
-        pass
+        self._get_imdb_data()
+        self._create_imdb_csv()
+
+        self.bag_of_words = defaultdict(int)
 
     def _get_imdb_data(self, dir_dest_path: str = 'aclImdb'):
         '''Downloads and extracts Imdb data'''
@@ -71,41 +76,41 @@ class BagOfWords:
                         content = in_f.read()
                         out_f.write(f'{target},{content}\n')
 
+    def get_imdb_data(self):
+        if os.path.exists('train.csv'):
+            with open('train.csv', 'r', encoding='utf-8') as f:
+                train_data = f.read()
+                self.word_tokenize(train_data)
+
+                
+
     def word_tokenize(self, text: str):
         '''Tokenizes the input text and removes stopwords'''
-        bag_of_words = []
-        negation_words = ['not', 'no', 'never', 'none', 'nobody', 'nothing', 'nowhere']
-        
-        text = text.replace('\n', ' ').replace('\r', ' ')
+        text = text.replace('\n', ' ').replace('\r', ' ') # remove newlines
         text = text.translate(str.maketrans('', '', string.punctuation)) # remove punctuation
+        text = re.compile(r'<[^>]+>').sub('', text) # remove HTML tags
+        text = text.lower() # convert to lowercase
         tokens = text.split()
 
         for i, word in enumerate(tokens):
             # remove stopwords like "the", "is", "and", etc.
-            if word.lower() in set(stopwords.words('english')):
+            if word in set(stopwords.words('english')):
                 continue
             
             # handle negation words by creating trigrams
             # e.g., "not good" becomes "not good" instead of just "good"
-            if word.lower() in negation_words:
+            if word.lower() == 'not':
                 trigram = [word]
                 if i + 1 < len(tokens):
                     trigram.append(tokens[i + 1])
                 if i + 2 < len(tokens):
                     trigram.append(tokens[i + 2])
-                bag_of_words.append(' '.join(trigram).lower())
+                self.bag_of_words[' '.join(trigram)] += 1
             else:
-                bag_of_words.append(word.lower())
+                self.bag_of_words[word] += 1
 
-        bag_of_words.sort()
-        return bag_of_words[10000:]
+        return self.bag_of_words
 
 
 if __name__ == "__main__":
     BOW = BagOfWords()
-    BOW._get_imdb_data()
-    BOW._create_imdb_csv()
-    with open('aclimdb/test/pos/0_10.txt', 'r', encoding='utf-8') as f:
-        text = f.read()
-        print(text)
-        print(BOW.word_tokenize(text))
