@@ -114,3 +114,5 @@ class BagOfWords:
 
 if __name__ == "__main__":
     BOW = BagOfWords()
+    BOW.get_imdb_data()
+    print(BOW.bag_of_words)  # Display the bag of words
