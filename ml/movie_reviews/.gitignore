@@ -1,5 +1,7 @@
-test.csv
-train.csv
+test_pos.csv
+test_neg.csv
+train_pos.csv
+train_neg.csv
 
 aclimdb
 
