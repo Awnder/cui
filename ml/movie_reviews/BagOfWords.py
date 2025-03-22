@@ -52,6 +52,13 @@ class BagOfWords:
         else:
             return sorted(self.bag_of_words.items(), key=lambda item: item[1], reverse=True).keys()[:top]
 
+    def get_size(self) -> int:
+        '''Returns the size of the bag of words
+        Returns:
+            int: Size of the bag of words
+        '''
+        return len(self.bag_of_words)
+
     def empty(self) -> dict:
         '''Resets the bag of words to an empty state
         Returns:

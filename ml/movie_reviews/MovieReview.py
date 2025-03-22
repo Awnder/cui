@@ -3,12 +3,32 @@ import tarfile
 import os
 import csv
 from BagOfWords import BagOfWords
+import tensorflow as tf
 
 class MovieReview:
     def __init__(self):
-        self._get_imdb_data()
+        self._download_imdb_data()
         self._create_imdb_csv()
         self.bag_of_words = BagOfWords(extra_stopwords=["movie", "film", "br", "one"])
+
+    def fit(self):
+        """Fits the model on the training data"""
+        if not os.path.exists("train_pos.csv") or not os.path.exists("train_neg.csv"):
+            self._download_imdb_data()
+            self._create_imdb_csv()
+            self.create_bag_of_words()
+
+        model = tf.keras.Sequential([
+            tf.keras.layers.Embedding(input_dim=self.bag_of_words.get_size(), output_dim=128, input_length=100),
+            tf.keras.layers.LSTM(128, return_sequences=True),
+            tf.keras.layers.LSTM(64),
+            tf.keras.layers.Dense(1, activation='sigmoid')
+        ])
+        
+        model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+
+        history = model.fit(epochs=500, validation_split=0.2)
+
 
     def create_bag_of_words(self, percentage: float = 0.5) -> None:
         """Creates a bag of words from the training data
@@ -16,36 +36,44 @@ class MovieReview:
             percentage (float): Percentage of the training data to use for creating the bag of words
         """
         if os.path.exists("train_pos.csv"):
-            self._bag_csv("train_pos.csv", percentage)                
+            with open("train_pos.csv", "r", encoding="utf-8") as f:
+                reader = csv.reader(f, delimiter=",")
+                total_lines = sum(1 for row in reader)
+
+                amount = int(total_lines * percentage)
+                count = 0
+                f.seek(0)
+
+                for row in reader:
+                    count += 1
+                    target = row[0]
+                    content = row[1]
+
+                    if count > amount:
+                        break
+
+                    self.bag_of_words.bag(content)          
 
         if os.path.exists("train_neg.csv"):
-            self._bag_csv("train_neg.csv", percentage)
+            with open("train_neg.csv", "r", encoding="utf-8") as f:
+                reader = csv.reader(f, delimiter=",")
+                total_lines = sum(1 for row in reader)
 
-    def _bag_csv(self, file_path: str, percentage: float) -> None:
-        """Reads a CSV file and returns its content
-        Args:
-            file_path (str): Path to the CSV file
-        """
-        with open(file_path, "r", encoding="utf-8") as f:
-            reader = csv.reader(f, delimiter=",")
-            total_lines = sum(1 for row in reader)
+                amount = int(total_lines * percentage)
+                count = 0
+                f.seek(0)
 
-            amount = int(total_lines * percentage)
-            count = 0
-            f.seek(0)
+                for row in reader:
+                    count += 1
+                    target = row[0]
+                    content = row[1]
 
-            for row in reader:
-                count += 1
-                target = row[0]
-                content = row[1]
+                    if count > amount:
+                        break
 
-                if count > amount:
-                    break
+                    self.bag_of_words.bag(content)   
 
-                self.bag_of_words.bag(content)
-
-
-    def _get_imdb_data(self, dir_dest_path: str = "aclImdb") -> None:
+    def _download_imdb_data(self, dir_dest_path: str = "aclImdb") -> None:
         """Downloads and extracts Imdb data
         Args:
             dir_dest_path (str): Destination path for the extracted data
